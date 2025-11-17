@@ -40,6 +40,7 @@ serve(async (req) => {
    - Green bin: Organic/wet waste (food scraps, garden waste)
    - Red bin: Hazardous waste (medical, chemicals, batteries)
    - Yellow bin: E-waste (electronics, batteries)
+5. Confidence level (0-100) indicating how certain you are about the classification
 
 Return a JSON array with all items found. Be thorough and identify every visible waste item.`,
           },
@@ -48,7 +49,7 @@ Return a JSON array with all items found. Be thorough and identify every visible
             content: [
               {
                 type: "text",
-                text: "Analyze this image and identify ALL waste items. Return a JSON array with format: [{\"item\": \"item name\", \"category\": \"category\", \"disposal\": \"how to dispose\", \"binColor\": \"color name\"}]",
+                text: "Analyze this image and identify ALL waste items. Return a JSON array with format: [{\"item\": \"item name\", \"category\": \"category\", \"disposal\": \"how to dispose\", \"binColor\": \"color name\", \"confidence\": 95}]",
               },
               {
                 type: "image_url",

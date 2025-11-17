@@ -7,6 +7,7 @@ interface WasteItem {
   category: string;
   disposal: string;
   binColor: string;
+  confidence: number;
 }
 
 interface WasteResultsProps {
@@ -47,12 +48,17 @@ export const WasteResults = ({ predictions }: WasteResultsProps) => {
                   {getCategoryIcon(item.category)}
                   {item.item}
                 </CardTitle>
-                <Badge
-                  className={`${getBinColorClass(item.binColor)} text-white`}
-                  variant="secondary"
-                >
-                  {item.binColor} Bin
-                </Badge>
+                <div className="flex flex-col items-end gap-1">
+                  <Badge
+                    className={`${getBinColorClass(item.binColor)} text-white`}
+                    variant="secondary"
+                  >
+                    {item.binColor} Bin
+                  </Badge>
+                  <Badge variant="outline" className="text-xs">
+                    {item.confidence}% confident
+                  </Badge>
+                </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
