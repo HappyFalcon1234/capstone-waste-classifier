@@ -12,6 +12,7 @@ interface WasteItem {
   category: string;
   disposal: string;
   binColor: string;
+  confidence: number;
 }
 
 const Index = () => {
