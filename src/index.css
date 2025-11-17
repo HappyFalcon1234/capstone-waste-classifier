@@ -8,6 +8,45 @@ All colors MUST be HSL.
 
 @layer base {
   :root {
+    --background: 0 0% 100%;
+    --foreground: 145 10% 10%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 145 10% 10%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 145 10% 10%;
+
+    --primary: 142 76% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 145 10% 95%;
+    --secondary-foreground: 145 10% 10%;
+
+    --muted: 145 10% 95%;
+    --muted-foreground: 145 10% 40%;
+
+    --accent: 142 76% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 145 10% 90%;
+    --input: 145 10% 90%;
+    --ring: 142 76% 45%;
+
+    --radius: 0.75rem;
+
+    --recyclable: 210 100% 50%;
+    --organic: 142 76% 45%;
+    --hazardous: 0 84% 60%;
+    
+    --gradient-eco: linear-gradient(135deg, hsl(142 76% 45% / 0.1), hsl(0 0% 100%));
+    --shadow-glow: 0 0 30px hsl(142 76% 45% / 0.15);
+  }
+
+  .dark {
     --background: 145 10% 10%;
     --foreground: 145 5% 95%;
 
@@ -35,9 +74,7 @@ All colors MUST be HSL.
     --border: 145 15% 20%;
     --input: 145 15% 20%;
     --ring: 142 76% 45%;
-
-    --radius: 0.75rem;
-
+    
     --recyclable: 210 100% 50%;
     --organic: 142 76% 45%;
     --hazardous: 0 84% 60%;
