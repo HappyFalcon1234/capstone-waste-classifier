@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { FeedbackButtons } from "@/components/FeedbackButtons";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
@@ -57,14 +58,17 @@ const Index = () => {
       {/* Header */}
       <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
         <div className="container mx-auto px-4 py-4">
-          <div className="flex items-center gap-3">
-            <div className="p-2 bg-primary/10 rounded-lg">
-              <Leaf className="h-6 w-6 text-primary" />
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="p-2 bg-primary/10 rounded-lg">
+                <Leaf className="h-6 w-6 text-primary" />
+              </div>
+              <div>
+                <h1 className="text-2xl font-bold text-foreground">WasteWise</h1>
+                <p className="text-sm text-muted-foreground">AI-Powered Waste Classification</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-2xl font-bold text-foreground">WasteWise</h1>
-              <p className="text-sm text-muted-foreground">AI-Powered Waste Classification</p>
-            </div>
+            <ThemeToggle />
           </div>
         </div>
       </header>
