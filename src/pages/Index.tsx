@@ -64,7 +64,7 @@ const Index = () => {
                 <Leaf className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">WasteWise</h1>
+                <h1 className="text-2xl font-bold text-foreground">Capstone Project</h1>
                 <p className="text-sm text-muted-foreground">AI-Powered Waste Classification</p>
               </div>
             </div>
