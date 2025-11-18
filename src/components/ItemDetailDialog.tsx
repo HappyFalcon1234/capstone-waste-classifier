@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState, useEffect, useRef } from "react";
+import { useState } from "react";
 
 interface WasteItem {
   item: string;
@@ -18,12 +18,6 @@ interface WasteItem {
   disposal: string;
   binColor: string;
   confidence: number;
-  bbox?: {
-    x: number;
-    y: number;
-    width: number;
-    height: number;
-  };
 }
 
 interface ItemDetailDialogProps {
@@ -51,70 +45,6 @@ export const ItemDetailDialog = ({
   const { toast } = useToast();
   const [feedback, setFeedback] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const imageRef = useRef<HTMLImageElement>(null);
-
-  useEffect(() => {
-    if (!uploadedImage || !item || !canvasRef.current || !imageRef.current) {
-      console.log("Missing requirements:", { uploadedImage: !!uploadedImage, item: !!item, canvas: !!canvasRef.current, img: !!imageRef.current });
-      return;
-    }
-
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext("2d");
-    const img = imageRef.current;
-
-    if (!ctx) {
-      console.log("No canvas context");
-      return;
-    }
-
-    const drawHighlight = () => {
-      console.log("Drawing highlight for:", item.item, "bbox:", item.bbox);
-      
-      // Set canvas size to match image
-      canvas.width = img.naturalWidth || img.width;
-      canvas.height = img.naturalHeight || img.height;
-
-      console.log("Canvas size:", canvas.width, canvas.height);
-
-      // Draw the original image
-      ctx.drawImage(img, 0, 0);
-
-      // Draw translucent red rectangle over the item
-      if (item.bbox) {
-        const x = (item.bbox.x / 100) * canvas.width;
-        const y = (item.bbox.y / 100) * canvas.height;
-        const width = (item.bbox.width / 100) * canvas.width;
-        const height = (item.bbox.height / 100) * canvas.height;
-
-        console.log("Highlight rect:", { x, y, width, height });
-
-        ctx.fillStyle = "rgba(239, 68, 68, 0.4)"; // Translucent red
-        ctx.strokeStyle = "rgba(239, 68, 68, 1)"; // Solid red border
-        ctx.lineWidth = 4;
-        
-        ctx.fillRect(x, y, width, height);
-        ctx.strokeRect(x, y, width, height);
-      } else {
-        console.log("No bbox data for item");
-      }
-    };
-
-    if (img.complete && img.naturalWidth > 0) {
-      console.log("Image already loaded");
-      drawHighlight();
-    } else {
-      console.log("Waiting for image to load");
-      img.onload = () => {
-        console.log("Image loaded");
-        drawHighlight();
-      };
-      img.onerror = () => {
-        console.error("Image failed to load");
-      };
-    }
-  }, [uploadedImage, item]);
 
   if (!item) return null;
 
@@ -150,18 +80,11 @@ export const ItemDetailDialog = ({
           {/* Image Section */}
           {uploadedImage && (
             <div className="rounded-lg overflow-hidden border-2 border-primary/50 shadow-lg">
-              <div className="relative">
-                <img
-                  ref={imageRef}
-                  src={uploadedImage}
-                  alt="Uploaded waste"
-                  className="w-full h-auto hidden"
-                />
-                <canvas
-                  ref={canvasRef}
-                  className="w-full h-auto"
-                />
-              </div>
+              <img
+                src={uploadedImage}
+                alt="Uploaded waste"
+                className="w-full h-auto"
+              />
               <div className="bg-primary/10 p-3 text-center">
                 <p className="text-sm font-medium text-foreground">
                   Selected item: <span className="text-primary">{item.item}</span>

@@ -41,7 +41,6 @@ serve(async (req) => {
    - Red bin: Hazardous waste (medical, chemicals, batteries)
    - Yellow bin: E-waste (electronics, batteries)
 5. Confidence level (0-100) indicating how certain you are about the classification
-6. Bounding box coordinates (as percentages of image dimensions): x, y, width, height
 
 Return a JSON array with all items found. Be thorough and identify every visible waste item.`,
           },
@@ -50,7 +49,7 @@ Return a JSON array with all items found. Be thorough and identify every visible
             content: [
               {
                 type: "text",
-                text: "Analyze this image and identify ALL waste items. Return a JSON array with format: [{\"item\": \"item name\", \"category\": \"category\", \"disposal\": \"how to dispose\", \"binColor\": \"color name\", \"confidence\": 95, \"bbox\": {\"x\": 10, \"y\": 20, \"width\": 30, \"height\": 40}}]. Bounding box coordinates should be percentages (0-100) of the image dimensions.",
+                text: "Analyze this image and identify ALL waste items. Return a JSON array with format: [{\"item\": \"item name\", \"category\": \"category\", \"disposal\": \"how to dispose\", \"binColor\": \"color name\", \"confidence\": 95}]",
               },
               {
                 type: "image_url",
