@@ -55,18 +55,28 @@ export const ItemDetailDialog = ({
   const imageRef = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
-    if (!uploadedImage || !item?.bbox || !canvasRef.current || !imageRef.current) return;
+    if (!uploadedImage || !item || !canvasRef.current || !imageRef.current) {
+      console.log("Missing requirements:", { uploadedImage: !!uploadedImage, item: !!item, canvas: !!canvasRef.current, img: !!imageRef.current });
+      return;
+    }
 
     const canvas = canvasRef.current;
     const ctx = canvas.getContext("2d");
     const img = imageRef.current;
 
-    if (!ctx) return;
+    if (!ctx) {
+      console.log("No canvas context");
+      return;
+    }
 
     const drawHighlight = () => {
+      console.log("Drawing highlight for:", item.item, "bbox:", item.bbox);
+      
       // Set canvas size to match image
-      canvas.width = img.naturalWidth;
-      canvas.height = img.naturalHeight;
+      canvas.width = img.naturalWidth || img.width;
+      canvas.height = img.naturalHeight || img.height;
+
+      console.log("Canvas size:", canvas.width, canvas.height);
 
       // Draw the original image
       ctx.drawImage(img, 0, 0);
@@ -78,19 +88,31 @@ export const ItemDetailDialog = ({
         const width = (item.bbox.width / 100) * canvas.width;
         const height = (item.bbox.height / 100) * canvas.height;
 
-        ctx.fillStyle = "rgba(239, 68, 68, 0.3)"; // Translucent red
-        ctx.strokeStyle = "rgba(239, 68, 68, 0.8)"; // Stronger red border
-        ctx.lineWidth = 3;
+        console.log("Highlight rect:", { x, y, width, height });
+
+        ctx.fillStyle = "rgba(239, 68, 68, 0.4)"; // Translucent red
+        ctx.strokeStyle = "rgba(239, 68, 68, 1)"; // Solid red border
+        ctx.lineWidth = 4;
         
         ctx.fillRect(x, y, width, height);
         ctx.strokeRect(x, y, width, height);
+      } else {
+        console.log("No bbox data for item");
       }
     };
 
-    if (img.complete) {
+    if (img.complete && img.naturalWidth > 0) {
+      console.log("Image already loaded");
       drawHighlight();
     } else {
-      img.onload = drawHighlight;
+      console.log("Waiting for image to load");
+      img.onload = () => {
+        console.log("Image loaded");
+        drawHighlight();
+      };
+      img.onerror = () => {
+        console.error("Image failed to load");
+      };
     }
   }, [uploadedImage, item]);
 
