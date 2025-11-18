@@ -22,6 +22,17 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing }: ImageUploadProps) =>
       return;
     }
 
+    // Check file size (20MB limit)
+    const maxSize = 20 * 1024 * 1024; // 20MB in bytes
+    if (file.size > maxSize) {
+      toast({
+        title: "File too large",
+        description: "Please upload an image smaller than 20MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64 = reader.result as string;
@@ -98,7 +109,7 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing }: ImageUploadProps) =>
               Drag and drop or click to select
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              JPG, PNG, or WEBP (Max 10MB)
+              JPG, PNG, or WEBP (Max 20MB)
             </p>
           </>
         )}

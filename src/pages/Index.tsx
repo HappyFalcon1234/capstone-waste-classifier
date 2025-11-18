@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
-import { FeedbackButtons } from "@/components/FeedbackButtons";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
@@ -98,8 +97,7 @@ const Index = () => {
           {/* Results Section */}
           {predictions.length > 0 && (
             <section className="space-y-6">
-              <WasteResults predictions={predictions} />
-              <FeedbackButtons />
+              <WasteResults predictions={predictions} uploadedImage={uploadedImage || undefined} />
             </section>
           )}
 
