@@ -11,6 +11,12 @@ interface WasteItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  bbox?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 interface WasteResultsProps {

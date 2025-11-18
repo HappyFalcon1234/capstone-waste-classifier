@@ -10,7 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface WasteItem {
   item: string;
@@ -18,6 +18,12 @@ interface WasteItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  bbox?: {
+    x: number;
+    y: number;
+    width: number;
+    height: number;
+  };
 }
 
 interface ItemDetailDialogProps {
@@ -45,6 +51,48 @@ export const ItemDetailDialog = ({
   const { toast } = useToast();
   const [feedback, setFeedback] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const imageRef = useRef<HTMLImageElement>(null);
+
+  useEffect(() => {
+    if (!uploadedImage || !item?.bbox || !canvasRef.current || !imageRef.current) return;
+
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext("2d");
+    const img = imageRef.current;
+
+    if (!ctx) return;
+
+    const drawHighlight = () => {
+      // Set canvas size to match image
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+
+      // Draw the original image
+      ctx.drawImage(img, 0, 0);
+
+      // Draw translucent red rectangle over the item
+      if (item.bbox) {
+        const x = (item.bbox.x / 100) * canvas.width;
+        const y = (item.bbox.y / 100) * canvas.height;
+        const width = (item.bbox.width / 100) * canvas.width;
+        const height = (item.bbox.height / 100) * canvas.height;
+
+        ctx.fillStyle = "rgba(239, 68, 68, 0.3)"; // Translucent red
+        ctx.strokeStyle = "rgba(239, 68, 68, 0.8)"; // Stronger red border
+        ctx.lineWidth = 3;
+        
+        ctx.fillRect(x, y, width, height);
+        ctx.strokeRect(x, y, width, height);
+      }
+    };
+
+    if (img.complete) {
+      drawHighlight();
+    } else {
+      img.onload = drawHighlight;
+    }
+  }, [uploadedImage, item]);
 
   if (!item) return null;
 
@@ -80,11 +128,18 @@ export const ItemDetailDialog = ({
           {/* Image Section */}
           {uploadedImage && (
             <div className="rounded-lg overflow-hidden border-2 border-primary/50 shadow-lg">
-              <img
-                src={uploadedImage}
-                alt="Uploaded waste"
-                className="w-full h-auto"
-              />
+              <div className="relative">
+                <img
+                  ref={imageRef}
+                  src={uploadedImage}
+                  alt="Uploaded waste"
+                  className="w-full h-auto hidden"
+                />
+                <canvas
+                  ref={canvasRef}
+                  className="w-full h-auto"
+                />
+              </div>
               <div className="bg-primary/10 p-3 text-center">
                 <p className="text-sm font-medium text-foreground">
                   Selected item: <span className="text-primary">{item.item}</span>
