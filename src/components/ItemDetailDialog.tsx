@@ -77,14 +77,22 @@ export const ItemDetailDialog = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Image Section */}
+          {/* Image Section with Bounding Box */}
           {uploadedImage && (
-            <div className="rounded-lg overflow-hidden border-2 border-primary/50 shadow-lg">
-              <img
-                src={uploadedImage}
-                alt="Uploaded waste"
-                className="w-full h-auto"
-              />
+            <div className="rounded-lg overflow-hidden border-2 border-primary shadow-lg">
+              <div className="relative bg-muted/30 p-4 flex items-center justify-center">
+                <div className="relative inline-block max-w-full">
+                  <img
+                    src={uploadedImage}
+                    alt="Uploaded waste"
+                    className="max-h-[400px] w-auto object-contain"
+                  />
+                  {/* Simulated bounding box - centered for visual effect */}
+                  <div className="absolute inset-0 flex items-center justify-center">
+                    <div className="border-4 border-primary rounded-lg w-3/4 h-3/4 pointer-events-none shadow-lg" />
+                  </div>
+                </div>
+              </div>
               <div className="bg-primary/10 p-3 text-center">
                 <p className="text-sm font-medium text-foreground">
                   Selected item: <span className="text-primary">{item.item}</span>

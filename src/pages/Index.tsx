@@ -2,6 +2,7 @@ import { useState } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LanguageSelector } from "@/components/LanguageSelector";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
@@ -18,6 +19,7 @@ const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [language, setLanguage] = useState("English");
   const { toast } = useToast();
 
   const handleImageUpload = async (base64Image: string) => {
@@ -27,7 +29,7 @@ const Index = () => {
 
     try {
       const { data, error } = await supabase.functions.invoke("classify-waste", {
-        body: { imageBase64: base64Image },
+        body: { imageBase64: base64Image, language },
       });
 
       if (error) throw error;
@@ -68,7 +70,10 @@ const Index = () => {
                 <p className="text-sm text-muted-foreground">AI-Powered Waste Classification</p>
               </div>
             </div>
-            <ThemeToggle />
+            <div className="flex items-center gap-3">
+              <LanguageSelector language={language} onLanguageChange={setLanguage} />
+              <ThemeToggle />
+            </div>
           </div>
         </div>
       </header>

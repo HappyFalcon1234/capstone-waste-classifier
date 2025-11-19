@@ -11,7 +11,7 @@ serve(async (req) => {
   }
 
   try {
-    const { imageBase64 } = await req.json();
+    const { imageBase64, language = "English" } = await req.json();
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
     if (!LOVABLE_API_KEY) {
@@ -31,25 +31,25 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are an expert waste classification system for India. Analyze images and identify ALL waste items present. For each item, provide:
-1. Item name
+            content: `You are an expert waste classification system for India. Analyze images and identify ALL waste items present. Use simple, everyday language that anyone can understand. For each item, provide:
+1. Item name (use simple, common words - e.g., "Plastic Bottle" not "Polyethylene Terephthalate Container")
 2. Waste category (Recyclable, Organic/Wet Waste, Hazardous, or E-Waste)
-3. Disposal instructions specific to India
-4. Bin color according to Indian waste segregation:
-   - Blue bin: Recyclable waste (plastic, paper, metal, glass)
-   - Green bin: Organic/wet waste (food scraps, garden waste)
-   - Red bin: Hazardous waste (medical, chemicals, batteries)
-   - Yellow bin: E-waste (electronics, batteries)
+3. Disposal instructions specific to India (in simple language)
+4. Bin color according to Indian waste segregation (just the color name without the word "bin"):
+   - Blue: Recyclable waste (plastic, paper, metal, glass)
+   - Green: Organic/wet waste (food scraps, garden waste)
+   - Red: Hazardous waste (medical, chemicals, batteries)
+   - Yellow: E-waste (electronics, batteries)
 5. Confidence level (0-100) indicating how certain you are about the classification
 
-Return a JSON array with all items found. Be thorough and identify every visible waste item.`,
+Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.`,
           },
           {
             role: "user",
             content: [
               {
                 type: "text",
-                text: "Analyze this image and identify ALL waste items. Return a JSON array with format: [{\"item\": \"item name\", \"category\": \"category\", \"disposal\": \"how to dispose\", \"binColor\": \"color name\", \"confidence\": 95}]",
+                text: `Analyze this image and identify ALL waste items using simple language. Return a JSON array with format: [{"item": "simple item name", "category": "category", "disposal": "how to dispose", "binColor": "Blue/Green/Red/Yellow (just the color, no 'bin' word)", "confidence": 95}]. Respond in ${language}.`,
               },
               {
                 type: "image_url",
