@@ -11,6 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
+import { getTranslation, type Language } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -25,6 +26,7 @@ interface ItemDetailDialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   uploadedImage?: string;
+  language: Language;
 }
 
 const getBinColorClass = (binColor: string) => {
@@ -41,26 +43,29 @@ export const ItemDetailDialog = ({
   open,
   onOpenChange,
   uploadedImage,
+  language,
 }: ItemDetailDialogProps) => {
   const { toast } = useToast();
   const [feedback, setFeedback] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
+  
+  const t = (key: string) => getTranslation(language, key as any);
 
   if (!item) return null;
 
   const handleFeedback = (feedbackType: string) => {
     setSelectedFeedback(feedbackType);
     toast({
-      title: "Feedback Received",
-      description: `Thank you for letting us know the prediction was ${feedbackType.toLowerCase()}!`,
+      title: t("feedbackReceived"),
+      description: t("feedbackThanks"),
     });
   };
 
   const handleSubmitFeedback = () => {
     if (feedback.trim()) {
       toast({
-        title: "Additional Feedback Received",
-        description: "Thank you for your detailed feedback!",
+        title: t("feedbackReceived"),
+        description: t("detailedFeedbackThanks"),
       });
       setFeedback("");
     }
@@ -72,7 +77,7 @@ export const ItemDetailDialog = ({
         <DialogHeader>
           <DialogTitle className="text-2xl">{item.item}</DialogTitle>
           <DialogDescription>
-            Classification details and feedback
+            {t("classificationDetails")}
           </DialogDescription>
         </DialogHeader>
 
@@ -95,7 +100,7 @@ export const ItemDetailDialog = ({
               </div>
               <div className="bg-primary/10 p-3 text-center">
                 <p className="text-sm font-medium text-foreground">
-                  Selected item: <span className="text-primary">{item.item}</span>
+                  {t("selectedItem")}: <span className="text-primary">{item.item}</span>
                 </p>
               </div>
             </div>
@@ -111,20 +116,20 @@ export const ItemDetailDialog = ({
                 {item.binColor} Bin
               </Badge>
               <Badge variant="outline">
-                {item.confidence}% confident
+                {item.confidence}% {t("confident")}
               </Badge>
             </div>
 
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Category
+                {t("category")}
               </h3>
               <p className="text-foreground">{item.category}</p>
             </div>
 
             <div>
               <h3 className="text-sm font-semibold text-muted-foreground mb-1">
-                Disposal Instructions
+                {t("disposalInstructions")}
               </h3>
               <p className="text-foreground leading-relaxed">{item.disposal}</p>
             </div>
@@ -134,7 +139,7 @@ export const ItemDetailDialog = ({
           <div className="border-t border-border pt-4 space-y-4">
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-3">
-                Was this prediction correct?
+                {t("wasPredictionCorrect")}
               </p>
               <div className="flex gap-3">
                 <Button
@@ -143,7 +148,7 @@ export const ItemDetailDialog = ({
                   className="flex-1"
                 >
                   <ThumbsUp className="h-4 w-4 mr-2" />
-                  Yes
+                  {t("yes")}
                 </Button>
                 <Button
                   variant={selectedFeedback === "No" ? "default" : "outline"}
@@ -151,7 +156,7 @@ export const ItemDetailDialog = ({
                   className="flex-1"
                 >
                   <ThumbsDown className="h-4 w-4 mr-2" />
-                  No
+                  {t("no")}
                 </Button>
                 <Button
                   variant={selectedFeedback === "I Don't Know" ? "default" : "outline"}
@@ -159,17 +164,17 @@ export const ItemDetailDialog = ({
                   className="flex-1"
                 >
                   <HelpCircle className="h-4 w-4 mr-2" />
-                  Not Sure
+                  {t("notSure")}
                 </Button>
               </div>
             </div>
 
             <div>
               <p className="text-sm font-medium text-muted-foreground mb-2">
-                Additional feedback (optional)
+                {t("additionalFeedback")}
               </p>
               <Textarea
-                placeholder="Share any additional thoughts or corrections..."
+                placeholder={t("feedbackPlaceholder")}
                 value={feedback}
                 onChange={(e) => setFeedback(e.target.value)}
                 className="min-h-[80px]"
@@ -180,7 +185,7 @@ export const ItemDetailDialog = ({
                   className="mt-2 w-full"
                   variant="secondary"
                 >
-                  Submit Feedback
+                  {t("submitFeedback")}
                 </Button>
               )}
             </div>

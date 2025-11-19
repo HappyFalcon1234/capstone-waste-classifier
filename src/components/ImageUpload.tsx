@@ -2,15 +2,19 @@ import { useCallback, useState } from "react";
 import { Upload, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
+import { getTranslation, type Language } from "@/lib/translations";
 
 interface ImageUploadProps {
   onImageUpload: (base64: string) => void;
   isAnalyzing: boolean;
+  language: Language;
 }
 
-export const ImageUpload = ({ onImageUpload, isAnalyzing }: ImageUploadProps) => {
+export const ImageUpload = ({ onImageUpload, isAnalyzing, language }: ImageUploadProps) => {
   const [dragActive, setDragActive] = useState(false);
   const { toast } = useToast();
+  
+  const t = (key: string) => getTranslation(language, key as any);
 
   const handleFile = useCallback((file: File) => {
     if (!file.type.startsWith("image/")) {
@@ -96,20 +100,20 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing }: ImageUploadProps) =>
         {isAnalyzing ? (
           <>
             <Loader2 className="h-16 w-16 text-primary animate-spin mb-4" />
-            <p className="text-lg font-medium text-foreground">Analyzing waste...</p>
+            <p className="text-lg font-medium text-foreground">{t("analyzing")}</p>
             <p className="text-sm text-muted-foreground mt-2">This may take a moment</p>
           </>
         ) : (
           <>
             <Upload className="h-16 w-16 text-primary mb-4" />
             <p className="text-lg font-medium text-foreground mb-2">
-              Upload Waste Image
+              {t("uploadTitle")}
             </p>
             <p className="text-sm text-muted-foreground text-center">
-              Drag and drop or click to select
+              {t("uploadDescription")}
             </p>
             <p className="text-xs text-muted-foreground mt-2">
-              JPG, PNG, or WEBP (Max 20MB)
+              {t("maxFileSize")}
             </p>
           </>
         )}

@@ -6,6 +6,7 @@ import { LanguageSelector } from "@/components/LanguageSelector";
 import { useToast } from "@/hooks/use-toast";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
+import { getTranslation, type Language } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -19,8 +20,10 @@ const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
-  const [language, setLanguage] = useState("English");
+  const [language, setLanguage] = useState<Language>("English");
   const { toast } = useToast();
+  
+  const t = (key: string) => getTranslation(language, key as any);
 
   const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
@@ -37,8 +40,8 @@ const Index = () => {
       if (data?.predictions && Array.isArray(data.predictions)) {
         setPredictions(data.predictions);
         toast({
-          title: "Analysis Complete",
-          description: `Found ${data.predictions.length} waste item(s)`,
+          title: t("analysisComplete"),
+          description: `${t("foundItems")} ${data.predictions.length} ${t("items")}`,
         });
       } else {
         throw new Error("Invalid response format");
@@ -46,8 +49,8 @@ const Index = () => {
     } catch (error: any) {
       console.error("Error classifying waste:", error);
       toast({
-        title: "Analysis Failed",
-        description: error.message || "Failed to analyze the image. Please try again.",
+        title: t("analysisFailed"),
+        description: error.message || t("analysisFailedDesc"),
         variant: "destructive",
       });
     } finally {
@@ -66,8 +69,8 @@ const Index = () => {
                 <Leaf className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h1 className="text-2xl font-bold text-foreground">Capstone Project</h1>
-                <p className="text-sm text-muted-foreground">AI-Powered Waste Classification</p>
+                <h1 className="text-2xl font-bold text-foreground">{t("title")}</h1>
+                <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
               </div>
             </div>
             <div className="flex items-center gap-3">
@@ -83,7 +86,7 @@ const Index = () => {
         <div className="space-y-8">
           {/* Upload Section */}
           <section>
-            <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} />
+            <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} language={language} />
           </section>
 
           {/* Uploaded Image Preview */}
@@ -102,7 +105,7 @@ const Index = () => {
           {/* Results Section */}
           {predictions.length > 0 && (
             <section className="space-y-6">
-              <WasteResults predictions={predictions} uploadedImage={uploadedImage || undefined} />
+              <WasteResults predictions={predictions} uploadedImage={uploadedImage || undefined} language={language} />
             </section>
           )}
 
@@ -111,33 +114,31 @@ const Index = () => {
             <section className="text-center py-12">
               <div className="max-w-2xl mx-auto space-y-4">
                 <h2 className="text-3xl font-bold text-foreground">
-                  Smart Waste Segregation
+                  {t("smartSegregation")}
                 </h2>
                 <p className="text-muted-foreground text-lg">
-                  Upload an image of your waste and our AI will identify all items, 
-                  tell you what type of waste they are, and which colored bin to use 
-                  according to Indian waste management guidelines.
+                  {t("infoDescription")}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                   <div className="p-4 bg-card border border-border rounded-lg">
                     <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2"></div>
-                    <p className="text-sm font-medium">Blue Bin</p>
-                    <p className="text-xs text-muted-foreground">Recyclable</p>
+                    <p className="text-sm font-medium">{t("blueBin")}</p>
+                    <p className="text-xs text-muted-foreground">{t("recyclable")}</p>
                   </div>
                   <div className="p-4 bg-card border border-border rounded-lg">
                     <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2"></div>
-                    <p className="text-sm font-medium">Green Bin</p>
-                    <p className="text-xs text-muted-foreground">Organic</p>
+                    <p className="text-sm font-medium">{t("greenBin")}</p>
+                    <p className="text-xs text-muted-foreground">{t("organic")}</p>
                   </div>
                   <div className="p-4 bg-card border border-border rounded-lg">
                     <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2"></div>
-                    <p className="text-sm font-medium">Red Bin</p>
-                    <p className="text-xs text-muted-foreground">Hazardous</p>
+                    <p className="text-sm font-medium">{t("redBin")}</p>
+                    <p className="text-xs text-muted-foreground">{t("hazardous")}</p>
                   </div>
                   <div className="p-4 bg-card border border-border rounded-lg">
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2"></div>
-                    <p className="text-sm font-medium">Yellow Bin</p>
-                    <p className="text-xs text-muted-foreground">E-Waste</p>
+                    <p className="text-sm font-medium">{t("yellowBin")}</p>
+                    <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
                   </div>
                 </div>
               </div>
