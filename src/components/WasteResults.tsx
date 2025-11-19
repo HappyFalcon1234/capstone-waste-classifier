@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ItemDetailDialog } from "./ItemDetailDialog";
 import { BinExamplesDialog } from "./BinExamplesDialog";
+import { getTranslation, type Language } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -16,6 +17,7 @@ interface WasteItem {
 interface WasteResultsProps {
   predictions: WasteItem[];
   uploadedImage?: string;
+  language: Language;
 }
 
 const getBinColorClass = (binColor: string) => {
@@ -36,14 +38,16 @@ const getCategoryIcon = (category: string) => {
   return <Trash2 className="h-5 w-5" />;
 };
 
-export const WasteResults = ({ predictions, uploadedImage }: WasteResultsProps) => {
+export const WasteResults = ({ predictions, uploadedImage, language }: WasteResultsProps) => {
   const [selectedItem, setSelectedItem] = useState<WasteItem | null>(null);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
+  
+  const t = (key: string) => getTranslation(language, key as any);
 
   return (
     <div className="space-y-4">
       <h2 className="text-2xl font-bold text-foreground mb-4">
-        Detected Items ({predictions.length})
+        {t("detectedItems")} ({predictions.length})
       </h2>
       
       <div className="grid gap-4 md:grid-cols-2">
@@ -71,25 +75,25 @@ export const WasteResults = ({ predictions, uploadedImage }: WasteResultsProps) 
                     {item.binColor} Bin
                   </Badge>
                   <Badge variant="outline" className="text-xs">
-                    {item.confidence}% confident
+                    {item.confidence}% {t("confident")}
                   </Badge>
                 </div>
               </div>
             </CardHeader>
             <CardContent className="space-y-3">
               <div>
-                <p className="text-sm font-medium text-muted-foreground mb-1">Category</p>
+                <p className="text-sm font-medium text-muted-foreground mb-1">{t("category")}</p>
                 <p className="text-sm text-foreground">{item.category}</p>
               </div>
               <div>
                 <p className="text-sm font-medium text-muted-foreground mb-1">
-                  Disposal Instructions
+                  {t("disposalInstructions")}
                 </p>
                 <p className="text-sm text-foreground leading-relaxed">{item.disposal}</p>
               </div>
               <div className="flex items-center gap-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
                 <Info className="h-3 w-3" />
-                Click for more details and feedback
+                {t("clickForDetails")}
               </div>
             </CardContent>
           </Card>
@@ -101,12 +105,14 @@ export const WasteResults = ({ predictions, uploadedImage }: WasteResultsProps) 
         open={selectedItem !== null}
         onOpenChange={(open) => !open && setSelectedItem(null)}
         uploadedImage={uploadedImage}
+        language={language}
       />
 
       <BinExamplesDialog
         binColor={selectedBinColor}
         open={selectedBinColor !== null}
         onOpenChange={(open) => !open && setSelectedBinColor(null)}
+        language={language}
       />
     </div>
   );

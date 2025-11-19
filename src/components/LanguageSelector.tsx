@@ -6,10 +6,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { type Language } from "@/lib/translations";
 
 interface LanguageSelectorProps {
-  language: string;
-  onLanguageChange: (language: string) => void;
+  language: Language;
+  onLanguageChange: (language: Language) => void;
 }
 
 export const LanguageSelector = ({ language, onLanguageChange }: LanguageSelectorProps) => {
