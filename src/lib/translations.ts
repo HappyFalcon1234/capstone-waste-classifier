@@ -42,6 +42,13 @@ export const translations = {
     binExamplesDesc: "Common items for this bin type",
     close: "Close",
     maxFileSize: "Maximum file size: 20MB",
+    binColors: {
+      Blue: "Blue Bin",
+      Green: "Green Bin",
+      Red: "Red Bin",
+      Yellow: "Yellow Bin",
+      Black: "Black Bin",
+    },
   },
   Hindi: {
     title: "कैपस्टोन प्रोजेक्ट",
@@ -86,6 +93,13 @@ export const translations = {
     binExamplesDesc: "इस डिब्बे के प्रकार के लिए सामान्य वस्तुएं",
     close: "बंद करें",
     maxFileSize: "अधिकतम फ़ाइल आकार: 20MB",
+    binColors: {
+      Blue: "नीला डिब्बा",
+      Green: "हरा डिब्बा",
+      Red: "लाल डिब्बा",
+      Yellow: "पीला डिब्बा",
+      Black: "काला डिब्बा",
+    },
   },
   Tamil: {
     title: "கேப்ஸ்டோன் திட்டம்",
@@ -130,6 +144,13 @@ export const translations = {
     binExamplesDesc: "இந்த தொட்டி வகைக்கான பொதுவான பொருட்கள்",
     close: "மூடு",
     maxFileSize: "அதிகபட்ச கோப்பு அளவு: 20MB",
+    binColors: {
+      Blue: "நீல தொட்டி",
+      Green: "பச்சை தொட்டி",
+      Red: "சிவப்பு தொட்டி",
+      Yellow: "மஞ்சள் தொட்டி",
+      Black: "கருப்பு தொட்டி",
+    },
   },
   Telugu: {
     title: "క్యాప్‌స్టోన్ ప్రాజెక్ట్",
@@ -174,12 +195,24 @@ export const translations = {
     binExamplesDesc: "ఈ డబ్బా రకానికి సాధారణ వస్తువులు",
     close: "మూసివేయండి",
     maxFileSize: "గరిష్ట ఫైల్ పరిమాణం: 20MB",
+    binColors: {
+      Blue: "నీలం డబ్బా",
+      Green: "ఆకుపచ్చ డబ్బా",
+      Red: "ఎరుపు డబ్బా",
+      Yellow: "పసుపు డబ్బా",
+      Black: "నలుపు డబ్బా",
+    },
   },
 } as const;
 
 export type Language = keyof typeof translations;
-export type TranslationKey = keyof typeof translations.English;
+export type TranslationKey = Exclude<keyof typeof translations.English, 'binColors'>;
 
 export const getTranslation = (language: Language, key: TranslationKey): string => {
-  return translations[language][key];
+  return translations[language][key] as string;
+};
+
+export const getBinColorTranslation = (language: Language, color: string): string => {
+  const binColors = translations[language].binColors;
+  return (binColors as any)[color] || color;
 };

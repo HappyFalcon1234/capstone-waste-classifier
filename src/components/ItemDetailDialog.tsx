@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { getTranslation, type Language, translations } from "@/lib/translations";
+import { getTranslation, getBinColorTranslation, type Language } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -107,7 +107,7 @@ export const ItemDetailDialog = ({
                 className={`${getBinColorClass(item.binColor)} text-white`}
                 variant="secondary"
               >
-                {(translations[language].binColors as any)[item.binColor] || item.binColor}
+                {getBinColorTranslation(language, item.binColor)}
               </Badge>
               <Badge variant="outline">
                 {item.confidence}% {t("confident")}
