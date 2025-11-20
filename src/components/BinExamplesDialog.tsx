@@ -7,10 +7,13 @@ import {
 } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 
+import { getTranslation, type Language } from "@/lib/translations";
+
 interface BinExamplesDialogProps {
   binColor: string | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
+  language: Language;
 }
 
 const binExamples: Record<string, { title: string; examples: string[]; description: string }> = {
@@ -100,7 +103,9 @@ export const BinExamplesDialog = ({
   binColor,
   open,
   onOpenChange,
+  language,
 }: BinExamplesDialogProps) => {
+  const t = (key: string) => getTranslation(language, key as any);
   if (!binColor) return null;
 
   const colorKey = binColor.toLowerCase().split(" ")[0];

@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ItemDetailDialog } from "./ItemDetailDialog";
 import { BinExamplesDialog } from "./BinExamplesDialog";
-import { getTranslation, type Language } from "@/lib/translations";
+import { getTranslation, type Language, translations } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -72,7 +72,7 @@ export const WasteResults = ({ predictions, uploadedImage, language }: WasteResu
                       setSelectedBinColor(item.binColor);
                     }}
                   >
-                    {item.binColor} Bin
+                    {(translations[language].binColors as any)[item.binColor] || item.binColor}
                   </Badge>
                   <Badge variant="outline" className="text-xs">
                     {item.confidence}% {t("confident")}
