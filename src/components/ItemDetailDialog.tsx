@@ -11,7 +11,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
-import { getTranslation, type Language } from "@/lib/translations";
+import { getTranslation, type Language, translations } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -82,21 +82,15 @@ export const ItemDetailDialog = ({
         </DialogHeader>
 
         <div className="space-y-6">
-          {/* Image Section with Bounding Box */}
+          {/* Image Section */}
           {uploadedImage && (
             <div className="rounded-lg overflow-hidden border-2 border-primary shadow-lg">
-              <div className="relative bg-muted/30 p-4 flex items-center justify-center">
-                <div className="relative inline-block max-w-full">
-                  <img
-                    src={uploadedImage}
-                    alt="Uploaded waste"
-                    className="max-h-[400px] w-auto object-contain"
-                  />
-                  {/* Simulated bounding box - centered for visual effect */}
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="border-4 border-primary rounded-lg w-3/4 h-3/4 pointer-events-none shadow-lg" />
-                  </div>
-                </div>
+              <div className="bg-muted/30 p-4 flex items-center justify-center">
+                <img
+                  src={uploadedImage}
+                  alt="Uploaded waste"
+                  className="max-h-[400px] w-auto object-contain"
+                />
               </div>
               <div className="bg-primary/10 p-3 text-center">
                 <p className="text-sm font-medium text-foreground">
@@ -113,7 +107,7 @@ export const ItemDetailDialog = ({
                 className={`${getBinColorClass(item.binColor)} text-white`}
                 variant="secondary"
               >
-                {item.binColor} Bin
+                {(translations[language].binColors as any)[item.binColor] || item.binColor}
               </Badge>
               <Badge variant="outline">
                 {item.confidence}% {t("confident")}
