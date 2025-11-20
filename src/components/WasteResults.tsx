@@ -5,7 +5,6 @@ import { useState } from "react";
 import { ItemDetailDialog } from "./ItemDetailDialog";
 import { BinExamplesDialog } from "./BinExamplesDialog";
 import { getTranslation, getBinColorTranslation, type Language } from "@/lib/translations";
-
 interface WasteItem {
   item: string;
   category: string;
@@ -13,13 +12,11 @@ interface WasteItem {
   binColor: string;
   confidence: number;
 }
-
 interface WasteResultsProps {
   predictions: WasteItem[];
   uploadedImage?: string;
   language: Language;
 }
-
 const getBinColorClass = (binColor: string) => {
   const color = binColor.toLowerCase();
   if (color.includes("blue")) return "bg-recyclable";
@@ -28,7 +25,6 @@ const getBinColorClass = (binColor: string) => {
   if (color.includes("yellow")) return "bg-yellow-500";
   return "bg-muted";
 };
-
 const getCategoryIcon = (category: string) => {
   const cat = category.toLowerCase();
   if (cat.includes("recyclable")) return <Recycle className="h-5 w-5" />;
@@ -37,41 +33,32 @@ const getCategoryIcon = (category: string) => {
   if (cat.includes("e-waste")) return <Zap className="h-5 w-5" />;
   return <Trash2 className="h-5 w-5" />;
 };
-
-export const WasteResults = ({ predictions, uploadedImage, language }: WasteResultsProps) => {
+export const WasteResults = ({
+  predictions,
+  uploadedImage,
+  language
+}: WasteResultsProps) => {
   const [selectedItem, setSelectedItem] = useState<WasteItem | null>(null);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
-  
   const t = (key: string) => getTranslation(language, key as any);
-
-  return (
-    <div className="space-y-4">
+  return <div className="space-y-4">
       <h2 className="text-2xl font-bold text-foreground mb-4">
         {t("detectedItems")} ({predictions.length})
       </h2>
       
       <div className="grid gap-4 md:grid-cols-2">
-        {predictions.map((item, index) => (
-          <Card 
-            key={index} 
-            className="overflow-hidden border-border/50 hover:border-primary/50 transition-all cursor-pointer group"
-            onClick={() => setSelectedItem(item)}
-          >
+        {predictions.map((item, index) => <Card key={index} className="overflow-hidden border-border/50 hover:border-primary/50 transition-all cursor-pointer group" onClick={() => setSelectedItem(item)}>
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-lg flex items-center gap-2 font-bold">
                   {getCategoryIcon(item.category)}
                   {item.item}
                 </CardTitle>
                 <div className="flex flex-col items-end gap-1">
-                  <Badge
-                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80`}
-                    variant="secondary"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedBinColor(item.binColor);
-                    }}
-                  >
+                  <Badge className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80`} variant="secondary" onClick={e => {
+                e.stopPropagation();
+                setSelectedBinColor(item.binColor);
+              }}>
                     {getBinColorTranslation(language, item.binColor)}
                   </Badge>
                   <Badge variant="outline" className="text-xs">
@@ -96,24 +83,11 @@ export const WasteResults = ({ predictions, uploadedImage, language }: WasteResu
                 {t("clickForDetails")}
               </div>
             </CardContent>
-          </Card>
-        ))}
+          </Card>)}
       </div>
 
-      <ItemDetailDialog
-        item={selectedItem}
-        open={selectedItem !== null}
-        onOpenChange={(open) => !open && setSelectedItem(null)}
-        uploadedImage={uploadedImage}
-        language={language}
-      />
+      <ItemDetailDialog item={selectedItem} open={selectedItem !== null} onOpenChange={open => !open && setSelectedItem(null)} uploadedImage={uploadedImage} language={language} />
 
-      <BinExamplesDialog
-        binColor={selectedBinColor}
-        open={selectedBinColor !== null}
-        onOpenChange={(open) => !open && setSelectedBinColor(null)}
-        language={language}
-      />
-    </div>
-  );
+      <BinExamplesDialog binColor={selectedBinColor} open={selectedBinColor !== null} onOpenChange={open => !open && setSelectedBinColor(null)} language={language} />
+    </div>;
 };
