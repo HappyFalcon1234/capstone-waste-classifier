@@ -106,7 +106,7 @@ const Index = () => {
                 <h2 className="text-3xl font-bold text-foreground">
                   {t("smartSegregation")}
                 </h2>
-                <p className="text-muted-foreground text-base font-normal">
+                <p className="text-muted-foreground text-base font-medium">
                   {t("infoDescription")}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
