@@ -64,6 +64,12 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
+  const handleReset = () => {
+    setPredictions([]);
+    setUploadedImage(null);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
   const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
     setUploadedImage(base64Image);
@@ -106,15 +112,19 @@ const Index = () => {
       }`}>
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <button 
+              onClick={handleReset}
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+              aria-label="Reset app"
+            >
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Leaf className="h-6 w-6 text-primary" />
               </div>
-              <div>
+              <div className="text-left">
                 <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
                 <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
               </div>
-            </div>
+            </button>
             <div className="flex items-center gap-3">
               <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <ThemeToggle />
@@ -177,6 +187,78 @@ const Index = () => {
               </div>
             </section>}
         </div>
+
+        {/* Waste Management Info Section - Always visible at bottom */}
+        <section className="mt-16 border-t border-border/50 pt-12 pb-8">
+          <div className="max-w-4xl mx-auto space-y-8">
+            <div className="text-center space-y-2">
+              <h2 className="text-3xl font-bold text-foreground">
+                {t("wasteInfoTitle")}
+              </h2>
+              <p className="text-lg text-muted-foreground">
+                {t("wasteInfoSubtitle")}
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <span className="text-xl">📊</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t("wasteInfoProblem1Title")}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t("wasteInfoProblem1Desc")}
+                </p>
+              </div>
+
+              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <span className="text-xl">🗑️</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t("wasteInfoProblem2Title")}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t("wasteInfoProblem2Desc")}
+                </p>
+              </div>
+
+              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <span className="text-xl">🏥</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t("wasteInfoProblem3Title")}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t("wasteInfoProblem3Desc")}
+                </p>
+              </div>
+
+              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
+                <div className="flex items-center gap-3">
+                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
+                    <span className="text-xl">⚙️</span>
+                  </div>
+                  <h3 className="text-lg font-semibold text-foreground">
+                    {t("wasteInfoProblem4Title")}
+                  </h3>
+                </div>
+                <p className="text-sm text-muted-foreground leading-relaxed">
+                  {t("wasteInfoProblem4Desc")}
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
       </main>
     </div>;
 };
