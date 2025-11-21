@@ -33,13 +33,10 @@ const Index = () => {
       setIsHeaderVisible(true);
       return;
     }
-
     let lastScrollY = window.scrollY;
     let ticking = false;
-
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (currentScrollY < 50) {
@@ -52,24 +49,25 @@ const Index = () => {
             // Scrolling up - show header
             setIsHeaderVisible(true);
           }
-          
           lastScrollY = currentScrollY;
           ticking = false;
         });
-        
         ticking = true;
       }
     };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("scroll", handleScroll, {
+      passive: true
+    });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
   const handleReset = () => {
     setPredictions([]);
     setUploadedImage(null);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   };
-
   const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
     setUploadedImage(base64Image);
@@ -107,16 +105,10 @@ const Index = () => {
   };
   return <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
-        !isHeaderVisible ? '-translate-y-full' : 'translate-y-0'
-      }`}>
+      <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${!isHeaderVisible ? '-translate-y-full' : 'translate-y-0'}`}>
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <button 
-              onClick={handleReset}
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-              aria-label="Reset app"
-            >
+            <button onClick={handleReset} className="flex items-center gap-3 hover:opacity-80 transition-opacity" aria-label="Reset app">
               <div className="p-2 bg-primary/10 rounded-lg">
                 <Leaf className="h-6 w-6 text-primary" />
               </div>
@@ -192,10 +184,10 @@ const Index = () => {
         <section className="mt-16 border-t border-border/50 pt-12 pb-8">
           <div className="max-w-4xl mx-auto space-y-8">
             <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold text-foreground">
+              <h2 className="font-bold text-foreground text-3xl mt-0 mr-0 mb-0 ml-0 my-px">
                 {t("wasteInfoTitle")}
               </h2>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-muted-foreground text-xl">
                 {t("wasteInfoSubtitle")}
               </p>
             </div>
