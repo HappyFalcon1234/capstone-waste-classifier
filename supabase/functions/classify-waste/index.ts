@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -19,13 +20,38 @@ function isValidImageBase64(imageBase64: unknown): imageBase64 is string {
     return false;
   }
   
-  // Check if it's a valid data URI
-  if (!imageBase64.startsWith("data:image/")) {
+  // Validate data URI format and allowed image types only
+  const allowedFormats = [
+    'data:image/jpeg;base64,',
+    'data:image/jpg;base64,',
+    'data:image/png;base64,',
+    'data:image/gif;base64,',
+    'data:image/webp;base64,'
+  ];
+  
+  const hasValidFormat = allowedFormats.some(format => 
+    imageBase64.toLowerCase().startsWith(format)
+  );
+  
+  if (!hasValidFormat) {
     return false;
   }
   
   // Check size (base64 is ~1.33x original size)
-  const base64Data = imageBase64.split(",")[1] || imageBase64;
+  const base64Data = imageBase64.split(",")[1];
+  if (!base64Data) {
+    return false;
+  }
+  
+  // Validate base64 encoding
+  try {
+    if (!/^[A-Za-z0-9+/]+=*$/.test(base64Data)) {
+      return false;
+    }
+  } catch {
+    return false;
+  }
+  
   const estimatedSize = (base64Data.length * 3) / 4;
   const MAX_SIZE = 20 * 1024 * 1024; // 20MB
   
@@ -64,6 +90,46 @@ serve(async (req) => {
   }
 
   try {
+    // Initialize Supabase client with service role for rate limiting
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+    );
+
+    // Get client IP for rate limiting
+    const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
+                     req.headers.get('x-real-ip') || 
+                     'unknown';
+
+    // Check rate limit (10 requests per minute per IP)
+    const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
+    const { data: recentRequests, error: rateLimitError } = await supabase
+      .from('rate_limits')
+      .select('request_count')
+      .eq('ip_address', clientIP)
+      .eq('endpoint', 'classify-waste')
+      .gte('created_at', oneMinuteAgo);
+
+    if (rateLimitError) {
+      console.error('Rate limit check failed:', rateLimitError.message);
+    }
+
+    const requestCount = recentRequests?.reduce((sum, r) => sum + r.request_count, 0) || 0;
+
+    if (requestCount >= 10) {
+      return new Response(
+        JSON.stringify({ error: 'Rate limit exceeded. Maximum 10 requests per minute. Please try again later.' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+      );
+    }
+
+    // Log this request
+    await supabase.from('rate_limits').insert({
+      ip_address: clientIP,
+      endpoint: 'classify-waste',
+      request_count: 1
+    });
+
     const body = await req.json();
     const { imageBase64, language = "English" } = body;
 
