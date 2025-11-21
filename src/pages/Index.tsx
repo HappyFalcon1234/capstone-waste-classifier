@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { useToast } from "@/hooks/use-toast";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { getTranslation, type Language } from "@/lib/translations";
@@ -19,10 +20,50 @@ const Index = () => {
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("English");
+  const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const isMobile = useIsMobile();
   const {
     toast
   } = useToast();
   const t = (key: string) => getTranslation(language, key as any);
+
+  // Hide header on scroll down (mobile only)
+  useEffect(() => {
+    if (!isMobile) {
+      setIsHeaderVisible(true);
+      return;
+    }
+
+    let lastScrollY = window.scrollY;
+    let ticking = false;
+
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          if (currentScrollY < 50) {
+            // Always show header at top
+            setIsHeaderVisible(true);
+          } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
+            // Scrolling down - hide header
+            setIsHeaderVisible(false);
+          } else if (currentScrollY < lastScrollY) {
+            // Scrolling up - show header
+            setIsHeaderVisible(true);
+          }
+          
+          lastScrollY = currentScrollY;
+          ticking = false;
+        });
+        
+        ticking = true;
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isMobile]);
   const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
     setUploadedImage(base64Image);
@@ -60,8 +101,10 @@ const Index = () => {
   };
   return <div className="min-h-screen bg-background">
       {/* Header */}
-      <header className="border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10">
-        <div className="container mx-auto px-4 py-4">
+      <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
+        !isHeaderVisible ? '-translate-y-full' : 'translate-y-0'
+      }`}>
+        <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/10 rounded-lg">
@@ -81,7 +124,7 @@ const Index = () => {
       </header>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-8 max-w-6xl">
+      <main className="container mx-auto px-4 sm:px-6 py-8 max-w-6xl">
         <div className="space-y-8">
           {/* Upload Section */}
           <section>
