@@ -50,6 +50,7 @@ export default {
         recyclable: "hsl(var(--recyclable))",
         organic: "hsl(var(--organic))",
         hazardous: "hsl(var(--hazardous))",
+        "black-bin": "hsl(var(--black-bin))",
       },
       borderRadius: {
         lg: "var(--radius)",

@@ -23,6 +23,7 @@ const getBinColorClass = (binColor: string) => {
   if (color.includes("green")) return "bg-organic";
   if (color.includes("red")) return "bg-hazardous";
   if (color.includes("yellow")) return "bg-yellow-500";
+  if (color.includes("black")) return "bg-black-bin";
   return "bg-muted";
 };
 const getCategoryIcon = (category: string) => {

@@ -41,6 +41,7 @@ All colors MUST be HSL.
     --recyclable: 210 100% 50%;
     --organic: 142 76% 45%;
     --hazardous: 0 84% 60%;
+    --black-bin: 0 0% 50%;
     
     --gradient-eco: linear-gradient(135deg, hsl(145 65% 40% / 0.05), hsl(120 40% 98%));
     --shadow-glow: 0 0 30px hsl(145 65% 40% / 0.1);
@@ -78,6 +79,7 @@ All colors MUST be HSL.
     --recyclable: 210 100% 50%;
     --organic: 142 76% 45%;
     --hazardous: 0 84% 60%;
+    --black-bin: 0 0% 50%;
     
     --gradient-eco: linear-gradient(135deg, hsl(142 76% 45% / 0.2), hsl(145 15% 12%));
     --shadow-glow: 0 0 30px hsl(142 76% 45% / 0.2);
