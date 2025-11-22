@@ -3,11 +3,19 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
+import { StateSelector } from "@/components/StateSelector";
+import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
+import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
+import wasteGenerationImg from "@/assets/waste-generation.jpg";
+import wasteSegregationImg from "@/assets/waste-segregation.jpg";
+import environmentalImpactImg from "@/assets/environmental-impact.jpg";
+import limitedResourcesImg from "@/assets/limited-resources.jpg";
+
 interface WasteItem {
   item: string;
   category: string;
@@ -15,17 +23,45 @@ interface WasteItem {
   binColor: string;
   confidence: number;
 }
+
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [userState, setUserState] = useState<string | null>(null);
+  const [showStateSelector, setShowStateSelector] = useState(false);
+  const [showProjectInfo, setShowProjectInfo] = useState(false);
   const isMobile = useIsMobile();
-  const {
-    toast
-  } = useToast();
+  const { toast } = useToast();
+  const { setTheme } = useTheme();
   const t = (key: string) => getTranslation(language, key as any);
+
+  // Load preferences from localStorage
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    const savedState = localStorage.getItem("userState");
+    const savedTheme = localStorage.getItem("theme");
+
+    if (savedLanguage) {
+      setLanguage(savedLanguage as Language);
+    }
+    if (savedState) {
+      setUserState(savedState);
+    } else {
+      // First time visitor - show state selector
+      setShowStateSelector(true);
+    }
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, [setTheme]);
+
+  // Save language preference
+  useEffect(() => {
+    localStorage.setItem("preferredLanguage", language);
+  }, [language]);
 
   // Hide header on scroll down (mobile only)
   useEffect(() => {
@@ -43,13 +79,10 @@ const Index = () => {
       if (!ticking) {
         window.requestAnimationFrame(() => {
           if (currentScrollY < 50) {
-            // Always show header at top
             setIsHeaderVisible(true);
           } else if (currentScrollY > lastScrollY && currentScrollY > 100) {
-            // Scrolling down - hide header
             setIsHeaderVisible(false);
           } else if (currentScrollY < lastScrollY) {
-            // Scrolling up - show header
             setIsHeaderVisible(true);
           }
           
@@ -64,10 +97,17 @@ const Index = () => {
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isMobile]);
+
   const handleReset = () => {
     setPredictions([]);
     setUploadedImage(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleStateSelect = (state: string) => {
+    setUserState(state);
+    localStorage.setItem("userState", state);
+    setShowStateSelector(false);
   };
 
   const handleImageUpload = async (base64Image: string) => {
@@ -75,22 +115,22 @@ const Index = () => {
     setUploadedImage(base64Image);
     setPredictions([]);
     try {
-      const {
-        data,
-        error
-      } = await supabase.functions.invoke("classify-waste", {
+      const { data, error } = await supabase.functions.invoke("classify-waste", {
         body: {
           imageBase64: base64Image,
-          language
+          language,
+          state: userState
         }
       });
       if (error) throw error;
       if (data?.predictions && Array.isArray(data.predictions)) {
         setPredictions(data.predictions);
-        toast({
-          title: t("analysisComplete"),
-          description: `${t("foundItems")} ${data.predictions.length} ${t("items")}`
-        });
+        if (data.predictions.length > 0) {
+          toast({
+            title: t("analysisComplete"),
+            description: `${t("foundItems")} ${data.predictions.length} ${t("items")}`
+          });
+        }
       } else {
         throw new Error("Invalid response format");
       }
@@ -105,7 +145,16 @@ const Index = () => {
       setIsAnalyzing(false);
     }
   };
-  return <div className="min-h-screen bg-background">
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* State Selector Dialog */}
+      <StateSelector 
+        open={showStateSelector} 
+        onStateSelect={handleStateSelect}
+        language={language}
+      />
+
       {/* Header */}
       <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
         !isHeaderVisible ? '-translate-y-full' : 'translate-y-0'
@@ -126,6 +175,7 @@ const Index = () => {
               </div>
             </button>
             <div className="flex items-center gap-3">
+              <ProjectInfoDialog open={showProjectInfo} onOpenChange={setShowProjectInfo} />
               <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <ThemeToggle />
             </div>
@@ -142,19 +192,29 @@ const Index = () => {
           </section>
 
           {/* Uploaded Image Preview */}
-          {uploadedImage && <section className="flex justify-center">
+          {uploadedImage && (
+            <section className="flex justify-center">
               <div className="max-w-md w-full">
                 <img src={uploadedImage} alt="Uploaded waste" className="rounded-lg border border-border shadow-lg" />
               </div>
-            </section>}
+            </section>
+          )}
 
           {/* Results Section */}
-          {predictions.length > 0 && <section className="space-y-6">
-              <WasteResults predictions={predictions} uploadedImage={uploadedImage || undefined} language={language} />
-            </section>}
+          {uploadedImage && (
+            <section className="space-y-6">
+              <WasteResults 
+                predictions={predictions} 
+                uploadedImage={uploadedImage} 
+                language={language}
+                hasAnalyzed={!isAnalyzing}
+              />
+            </section>
+          )}
 
-          {/* Info Section */}
-          {predictions.length === 0 && !isAnalyzing && <section className="text-center py-12">
+          {/* Info Section - Only show when no image uploaded */}
+          {!uploadedImage && !isAnalyzing && (
+            <section className="text-center py-12">
               <div className="max-w-2xl mx-auto space-y-4">
                 <h2 className="text-3xl font-bold text-foreground">
                   {t("smartSegregation")}
@@ -185,81 +245,104 @@ const Index = () => {
                   </div>
                 </div>
               </div>
-            </section>}
+            </section>
+          )}
         </div>
 
-        {/* Waste Management Info Section - Always visible at bottom */}
-        <section className="mt-16 border-t border-border/50 pt-12 pb-8">
-          <div className="max-w-4xl mx-auto space-y-8">
-            <div className="text-center space-y-2">
-              <h2 className="text-3xl font-bold text-foreground">
+        {/* Waste Management Info Section - Always visible at bottom with more spacing */}
+        <section className="mt-32 border-t border-border/50 pt-16 pb-8">
+          <div className="max-w-5xl mx-auto space-y-12">
+            <div className="text-center space-y-3">
+              <h2 className="text-4xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
-              <p className="text-lg text-muted-foreground">
+              <p className="text-xl text-muted-foreground">
                 {t("wasteInfoSubtitle")}
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                    <span className="text-xl">📊</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {/* Rapid Waste Generation */}
+              <div className="space-y-4">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src={wasteGenerationImg} 
+                    alt="Rapid waste generation in India" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">
                     {t("wasteInfoProblem1Title")}
                   </h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {t("wasteInfoProblem1Desc")}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("wasteInfoProblem1Desc")}
-                </p>
               </div>
 
-              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                    <span className="text-xl">🗑️</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
+              {/* Poor Segregation */}
+              <div className="space-y-4">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src={wasteSegregationImg} 
+                    alt="Poor waste segregation" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">
                     {t("wasteInfoProblem2Title")}
                   </h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {t("wasteInfoProblem2Desc")}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("wasteInfoProblem2Desc")}
-                </p>
               </div>
 
-              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                    <span className="text-xl">🏥</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
+              {/* Health & Environment */}
+              <div className="space-y-4">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src={environmentalImpactImg} 
+                    alt="Environmental impact of waste" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">
                     {t("wasteInfoProblem3Title")}
                   </h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {t("wasteInfoProblem3Desc")}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("wasteInfoProblem3Desc")}
-                </p>
               </div>
 
-              <div className="p-6 bg-card border border-border rounded-lg space-y-3">
-                <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-full bg-destructive/10 flex items-center justify-center">
-                    <span className="text-xl">⚙️</span>
-                  </div>
-                  <h3 className="text-lg font-semibold text-foreground">
+              {/* Limited Resources */}
+              <div className="space-y-4">
+                <div className="aspect-video rounded-lg overflow-hidden">
+                  <img 
+                    src={limitedResourcesImg} 
+                    alt="Limited waste management resources" 
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <h3 className="text-xl font-semibold text-foreground">
                     {t("wasteInfoProblem4Title")}
                   </h3>
+                  <p className="text-base text-muted-foreground leading-relaxed">
+                    {t("wasteInfoProblem4Desc")}
+                  </p>
                 </div>
-                <p className="text-sm text-muted-foreground leading-relaxed">
-                  {t("wasteInfoProblem4Desc")}
-                </p>
               </div>
             </div>
           </div>
         </section>
       </main>
-    </div>;
+    </div>
+  );
 };
+
 export default Index;
