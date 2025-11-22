@@ -31,7 +31,6 @@ const Index = () => {
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [userState, setUserState] = useState<string | null>(null);
-  const [showProjectInfo, setShowProjectInfo] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { setTheme } = useTheme();
@@ -149,22 +148,24 @@ const Index = () => {
       }`}>
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <button 
-              onClick={handleReset}
-              className="flex items-center gap-3 hover:opacity-80 transition-opacity"
-              aria-label="Reset app"
-            >
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Leaf className="h-6 w-6 text-primary" />
-              </div>
-              <div className="text-left">
-                <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
-                <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-              </div>
-            </button>
+            <div className="flex items-center gap-2">
+              <ProjectInfoDialog />
+              <button 
+                onClick={handleReset}
+                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                aria-label="Reset app"
+              >
+                <div className="p-2 bg-primary/10 rounded-lg">
+                  <Leaf className="h-6 w-6 text-primary" />
+                </div>
+                <div className="text-left">
+                  <h1 className="text-foreground text-2xl font-bold">{t("title")}</h1>
+                  <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
+                </div>
+              </button>
+            </div>
             <div className="flex items-center gap-3">
               <StateSelector selectedState={userState} onStateChange={handleStateSelect} />
-              <ProjectInfoDialog open={showProjectInfo} onOpenChange={setShowProjectInfo} />
               <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <ThemeToggle />
             </div>
