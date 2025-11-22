@@ -1,43 +1,39 @@
 import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
 
-interface ProjectInfoDialogProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
-
-export const ProjectInfoDialog = ({ open, onOpenChange }: ProjectInfoDialogProps) => {
+export const ProjectInfoDialog = () => {
   return (
-    <>
-      <Button
-        variant="ghost"
-        size="icon"
-        onClick={() => onOpenChange(true)}
-        className="relative"
+    <Popover>
+      <PopoverTrigger asChild>
+        <Button
+          variant="ghost"
+          size="icon"
+          className="h-8 w-8"
+        >
+          <Info className="h-4 w-4" />
+          <span className="sr-only">Project information</span>
+        </Button>
+      </PopoverTrigger>
+      <PopoverContent 
+        className="w-80 bg-popover z-50" 
+        align="start"
+        side="bottom"
       >
-        <Info className="h-5 w-5" />
-        <span className="sr-only">Project information</span>
-      </Button>
-      <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="sm:max-w-md">
-          <DialogHeader>
-            <DialogTitle className="flex items-center gap-2">
-              <Info className="h-5 w-5" />
-              About This Project
-            </DialogTitle>
-            <DialogDescription className="pt-4 text-base leading-relaxed">
-              This is a Capstone Project by DVDT in the subject of AI for the Board Exam session 2025-2026.
-            </DialogDescription>
-          </DialogHeader>
-        </DialogContent>
-      </Dialog>
-    </>
+        <div className="space-y-2">
+          <div className="flex items-center gap-2">
+            <Info className="h-4 w-4 text-primary" />
+            <h4 className="font-semibold text-sm">About This Project</h4>
+          </div>
+          <p className="text-sm text-muted-foreground leading-relaxed">
+            This is a Capstone Project by DVDT in the subject of AI for the Board Exam session 2025-2026.
+          </p>
+        </div>
+      </PopoverContent>
+    </Popover>
   );
 };
