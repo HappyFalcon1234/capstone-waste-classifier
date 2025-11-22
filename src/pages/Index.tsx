@@ -31,7 +31,6 @@ const Index = () => {
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [userState, setUserState] = useState<string | null>(null);
-  const [showStateSelector, setShowStateSelector] = useState(false);
   const [showProjectInfo, setShowProjectInfo] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
@@ -49,9 +48,6 @@ const Index = () => {
     }
     if (savedState) {
       setUserState(savedState);
-    } else {
-      // First time visitor - show state selector
-      setShowStateSelector(true);
     }
     if (savedTheme) {
       setTheme(savedTheme);
@@ -107,7 +103,6 @@ const Index = () => {
   const handleStateSelect = (state: string) => {
     setUserState(state);
     localStorage.setItem("userState", state);
-    setShowStateSelector(false);
   };
 
   const handleImageUpload = async (base64Image: string) => {
@@ -148,13 +143,6 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      {/* State Selector Dialog */}
-      <StateSelector 
-        open={showStateSelector} 
-        onStateSelect={handleStateSelect}
-        language={language}
-      />
-
       {/* Header */}
       <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
         !isHeaderVisible ? '-translate-y-full' : 'translate-y-0'
@@ -175,6 +163,7 @@ const Index = () => {
               </div>
             </button>
             <div className="flex items-center gap-3">
+              <StateSelector selectedState={userState} onStateChange={handleStateSelect} />
               <ProjectInfoDialog open={showProjectInfo} onOpenChange={setShowProjectInfo} />
               <LanguageSelector language={language} onLanguageChange={setLanguage} />
               <ThemeToggle />
