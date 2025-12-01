@@ -3,12 +3,14 @@ import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
+import { BinExamplesDialog } from "@/components/BinExamplesDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
+import wasteSegregationSolution from "@/assets/waste-segregation-solution.jpg";
 
 interface WasteItem {
   item: string;
@@ -24,6 +26,7 @@ const Index = () => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
+  const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { setTheme } = useTheme();
@@ -202,26 +205,38 @@ const Index = () => {
                   {t("infoDescription")}
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
-                  <div className="p-4 bg-card border border-border rounded-lg">
+                  <button 
+                    onClick={() => setSelectedBinColor("Blue Bin")}
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                  >
                     <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("recyclable")}</p>
-                  </div>
-                  <div className="p-4 bg-card border border-border rounded-lg">
+                  </button>
+                  <button 
+                    onClick={() => setSelectedBinColor("Green Bin")}
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                  >
                     <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("organic")}</p>
-                  </div>
-                  <div className="p-4 bg-card border border-border rounded-lg">
+                  </button>
+                  <button 
+                    onClick={() => setSelectedBinColor("Red Bin")}
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                  >
                     <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("hazardous")}</p>
-                  </div>
-                  <div className="p-4 bg-card border border-border rounded-lg">
+                  </button>
+                  <button 
+                    onClick={() => setSelectedBinColor("Yellow Bin")}
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                  >
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
-                  </div>
+                  </button>
                 </div>
               </div>
             </section>
@@ -304,7 +319,7 @@ const Index = () => {
             <div className="space-y-6">
               <div className="w-full rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/src/assets/environmental-crisis.jpg"
+                  src={wasteSegregationSolution}
                   alt="Community-led waste segregation initiatives" 
                   className="w-full h-[600px] object-cover"
                 />
@@ -335,6 +350,13 @@ const Index = () => {
           </section>
         )}
       </main>
+
+      <BinExamplesDialog
+        binColor={selectedBinColor}
+        open={selectedBinColor !== null}
+        onOpenChange={(open) => !open && setSelectedBinColor(null)}
+        language={language}
+      />
     </div>
   );
 };
