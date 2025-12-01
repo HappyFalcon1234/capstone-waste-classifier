@@ -1,4 +1,4 @@
-import { Trash2, Recycle, AlertTriangle, Zap, Info } from "lucide-react";
+import { Trash2, Recycle, AlertTriangle, Zap, Info, HelpCircle } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -97,7 +97,7 @@ export const WasteResults = ({
                 </CardTitle>
                 <div className="flex flex-col items-end gap-1">
                   <Badge
-                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80`}
+                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-1`}
                     variant="secondary"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -105,6 +105,7 @@ export const WasteResults = ({
                     }}
                   >
                     {getBinColorTranslation(language, item.binColor)}
+                    <HelpCircle className="h-3 w-3" />
                   </Badge>
                   <Badge variant="outline" className="text-xs">
                     {item.confidence}% {t("confident")}
