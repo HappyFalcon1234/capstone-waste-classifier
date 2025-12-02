@@ -77,7 +77,7 @@ export const WasteResults = ({
   }
 
   return (
-    <div className="space-y-4">
+    <div className="space-y-4 animate-fade-in">
       <h2 className="text-2xl font-bold text-foreground mb-4">
         {t("detectedItems")} ({predictions.length})
       </h2>
@@ -86,18 +86,19 @@ export const WasteResults = ({
         {predictions.map((item, index) => (
           <Card
             key={index}
-            className="overflow-hidden border-border/50 hover:border-primary/50 transition-all cursor-pointer group"
+            className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:scale-[1.02] animate-fade-in"
+            style={{ animationDelay: `${index * 100}ms` }}
             onClick={() => setSelectedItem(item)}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg flex items-center gap-2 font-bold">
+                <CardTitle className="text-lg flex items-center gap-2 font-bold transition-colors group-hover:text-primary">
                   {getCategoryIcon(item.category)}
                   {item.item}
                 </CardTitle>
                 <div className="flex flex-col items-end gap-1">
                   <Badge
-                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80 transition-opacity flex items-center gap-1`}
+                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80 transition-all hover:scale-105 flex items-center gap-1`}
                     variant="secondary"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -107,7 +108,7 @@ export const WasteResults = ({
                     {getBinColorTranslation(language, item.binColor)}
                     <HelpCircle className="h-3 w-3" />
                   </Badge>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs transition-colors group-hover:border-primary/50">
                     {item.confidence}% {t("confident")}
                   </Badge>
                 </div>
@@ -124,7 +125,7 @@ export const WasteResults = ({
                 </p>
                 <p className="text-sm text-foreground leading-relaxed">{item.disposal}</p>
               </div>
-              <div className="flex items-center gap-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground opacity-0 group-hover:opacity-100 transition-all duration-300">
                 <Info className="h-3 w-3" />
                 {t("clickForDetails")}
               </div>

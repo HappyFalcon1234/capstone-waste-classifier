@@ -177,9 +177,9 @@ const Index = () => {
 
           {/* Uploaded Image Preview */}
           {uploadedImage && (
-            <section className="flex justify-center">
+            <section className="flex justify-center animate-fade-in">
               <div className="max-w-md w-full">
-                <img src={uploadedImage} alt="Uploaded waste" className="rounded-lg border border-border shadow-lg" />
+                <img src={uploadedImage} alt="Uploaded waste" className="rounded-lg border border-border shadow-lg transition-transform hover:scale-[1.02] duration-300" />
               </div>
             </section>
           )}
@@ -198,7 +198,7 @@ const Index = () => {
 
           {/* Info Section - Only show when no image uploaded */}
           {!uploadedImage && !isAnalyzing && (
-            <section className="text-center py-12">
+            <section className="text-center py-12 animate-fade-in">
               <div className="max-w-2xl mx-auto space-y-4">
                 <h2 className="text-3xl font-bold text-foreground">
                   {t("smartSegregation")}
@@ -209,33 +209,33 @@ const Index = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
                   <button 
                     onClick={() => setSelectedBinColor("Blue Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
                   >
-                    <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2"></div>
+                    <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("recyclable")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Green Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
                   >
-                    <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2"></div>
+                    <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("organic")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Red Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
                   >
-                    <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2"></div>
+                    <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("hazardous")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Yellow Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
                   >
-                    <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2"></div>
+                    <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
                   </button>
@@ -248,7 +248,7 @@ const Index = () => {
         {/* Waste Management Info Section - Always visible at bottom */}
         {!uploadedImage && (
           <section className="mt-24 space-y-20">
-            <div className="text-center space-y-6">
+            <div className="text-center space-y-6 animate-fade-in">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
@@ -258,8 +258,8 @@ const Index = () => {
             </div>
 
             {/* Section 1: Massive Waste Generation */}
-            <div className="space-y-6">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl">
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={wasteGeneration}
                   alt="Massive waste landfills across India" 
@@ -288,8 +288,8 @@ const Index = () => {
             </div>
 
             {/* Section 2: Plastic Pollution */}
-            <div className="space-y-6">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl">
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={environmentalImpact}
                   alt="Plastic pollution choking Indian rivers and oceans" 
@@ -318,8 +318,8 @@ const Index = () => {
             </div>
 
             {/* Section 3: The Solution - Waste Segregation */}
-            <div className="space-y-6">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl">
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={wasteSegregationSolution}
                   alt="Community-led waste segregation initiatives" 
