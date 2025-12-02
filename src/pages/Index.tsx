@@ -10,9 +10,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
+import wasteGeneration from "@/assets/waste-generation.jpg";
+import environmentalImpact from "@/assets/environmental-impact.jpg";
 import wasteSegregationSolution from "@/assets/waste-segregation-solution.jpg";
-import wasteLandfill from "@/assets/waste-landfill.jpg";
-import plasticPollution from "@/assets/plastic-pollution.jpg";
 
 interface WasteItem {
   item: string;
@@ -261,7 +261,7 @@ const Index = () => {
             <div className="space-y-6">
               <div className="w-full rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src={wasteLandfill}
+                  src={wasteGeneration}
                   alt="Massive waste landfills across India" 
                   className="w-full h-[400px] md:h-[600px] object-cover"
                 />
@@ -291,7 +291,7 @@ const Index = () => {
             <div className="space-y-6">
               <div className="w-full rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src={plasticPollution}
+                  src={environmentalImpact}
                   alt="Plastic pollution choking Indian rivers and oceans" 
                   className="w-full h-[400px] md:h-[600px] object-cover"
                 />
