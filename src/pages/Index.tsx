@@ -11,6 +11,8 @@ import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
 import wasteSegregationSolution from "@/assets/waste-segregation-solution.jpg";
+import wasteLandfill from "@/assets/waste-landfill.jpg";
+import plasticPollution from "@/assets/plastic-pollution.jpg";
 
 interface WasteItem {
   item: string;
@@ -246,7 +248,7 @@ const Index = () => {
         {/* Waste Management Info Section - Always visible at bottom */}
         {!uploadedImage && (
           <section className="mt-24 space-y-20">
-            <div className="text-center space-y-4">
+            <div className="text-center space-y-6">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
@@ -259,9 +261,9 @@ const Index = () => {
             <div className="space-y-6">
               <div className="w-full rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/src/assets/waste-landfill.jpg"
+                  src={wasteLandfill}
                   alt="Massive waste landfills across India" 
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
@@ -289,9 +291,9 @@ const Index = () => {
             <div className="space-y-6">
               <div className="w-full rounded-xl overflow-hidden shadow-2xl">
                 <img 
-                  src="/src/assets/plastic-pollution.jpg"
+                  src={plasticPollution}
                   alt="Plastic pollution choking Indian rivers and oceans" 
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
@@ -321,7 +323,7 @@ const Index = () => {
                 <img 
                   src={wasteSegregationSolution}
                   alt="Community-led waste segregation initiatives" 
-                  className="w-full h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
