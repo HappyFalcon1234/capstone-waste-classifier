@@ -7,7 +7,7 @@ import { BinExamplesDialog } from "@/components/BinExamplesDialog";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
-import { Leaf, ChevronDown } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
 import wasteGeneration from "@/assets/waste-generation.jpg";
@@ -240,12 +240,6 @@ const Index = () => {
                     <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
                   </button>
                 </div>
-              </div>
-
-              {/* Scroll Indicator */}
-              <div className="flex flex-col items-center gap-2 pt-8 animate-fade-in">
-                <p className="text-sm text-muted-foreground">{t("scrollToLearn") || "Scroll to learn more"}</p>
-                <ChevronDown className="h-6 w-6 text-muted-foreground animate-bounce" />
               </div>
             </section>
           )}
