@@ -4,7 +4,6 @@ import { WasteResults } from "@/components/WasteResults";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
 import { BinExamplesDialog } from "@/components/BinExamplesDialog";
-import { ParallaxImage } from "@/components/ParallaxImage";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
@@ -259,10 +258,14 @@ const Index = () => {
             </div>
 
             {/* Section 1: Massive Waste Generation */}
-            <ParallaxImage 
-              src={wasteGeneration}
-              alt="Massive waste landfills across India"
-            >
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+                <img 
+                  src={wasteGeneration}
+                  alt="Massive waste landfills across India" 
+                  className="w-full h-[400px] md:h-[600px] object-cover"
+                />
+              </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
                   India's Growing Waste Crisis
@@ -282,13 +285,17 @@ const Index = () => {
                   </p>
                 </div>
               </div>
-            </ParallaxImage>
+            </div>
 
             {/* Section 2: Plastic Pollution */}
-            <ParallaxImage 
-              src={environmentalImpact}
-              alt="Plastic pollution choking Indian rivers and oceans"
-            >
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+                <img 
+                  src={environmentalImpact}
+                  alt="Plastic pollution choking Indian rivers and oceans" 
+                  className="w-full h-[400px] md:h-[600px] object-cover"
+                />
+              </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
                   The Plastic Pandemic
@@ -308,13 +315,17 @@ const Index = () => {
                   </p>
                 </div>
               </div>
-            </ParallaxImage>
+            </div>
 
             {/* Section 3: The Solution - Waste Segregation */}
-            <ParallaxImage 
-              src={wasteSegregationSolution}
-              alt="Community-led waste segregation initiatives"
-            >
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+                <img 
+                  src={wasteSegregationSolution}
+                  alt="Community-led waste segregation initiatives" 
+                  className="w-full h-[400px] md:h-[600px] object-cover"
+                />
+              </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
                   The Power of Segregation at Source
@@ -337,7 +348,7 @@ const Index = () => {
                   </p>
                 </div>
               </div>
-            </ParallaxImage>
+            </div>
           </section>
         )}
       </main>
