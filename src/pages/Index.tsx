@@ -247,8 +247,8 @@ const Index = () => {
 
         {/* Waste Management Info Section - Always visible at bottom */}
         {!uploadedImage && (
-          <section className="mt-24 space-y-20">
-            <div className="text-center space-y-6 animate-fade-in">
+          <section className="mt-48 space-y-32">
+            <div className="text-center space-y-6 animate-fade-in pt-24">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
