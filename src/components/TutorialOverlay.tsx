@@ -11,7 +11,7 @@ interface CoachMark {
   selector: string;
   mobileSelector?: string;
   arrowDirection: 'up' | 'down' | 'left' | 'right';
-  cardPosition: 'above' | 'below' | 'left' | 'right';
+  preferredCardPosition: 'above' | 'below';
 }
 
 const coachMarks: CoachMark[] = [
@@ -22,7 +22,7 @@ const coachMarks: CoachMark[] = [
     icon: <Upload className="h-5 w-5" />,
     selector: '[data-tutorial="upload"]',
     arrowDirection: 'down',
-    cardPosition: 'above',
+    preferredCardPosition: 'above',
   },
   {
     id: 'bins',
@@ -31,7 +31,7 @@ const coachMarks: CoachMark[] = [
     icon: <Palette className="h-5 w-5" />,
     selector: '[data-tutorial="bins"]',
     arrowDirection: 'up',
-    cardPosition: 'above',
+    preferredCardPosition: 'above',
   },
   {
     id: 'settings',
@@ -40,7 +40,7 @@ const coachMarks: CoachMark[] = [
     icon: <Settings className="h-5 w-5" />,
     selector: '[data-tutorial="settings"]',
     arrowDirection: 'down',
-    cardPosition: 'below',
+    preferredCardPosition: 'below',
   },
   {
     id: 'info',
@@ -49,7 +49,7 @@ const coachMarks: CoachMark[] = [
     icon: <Info className="h-5 w-5" />,
     selector: '[data-tutorial="info"]',
     arrowDirection: 'up',
-    cardPosition: 'above',
+    preferredCardPosition: 'above',
   },
 ];
 
@@ -66,7 +66,28 @@ export function TutorialOverlay() {
   const [isVisible, setIsVisible] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
   const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
+  const [actualCardPosition, setActualCardPosition] = useState<'above' | 'below'>('above');
   const isMobile = useIsMobile();
+
+  const scrollToElement = useCallback((element: Element) => {
+    const rect = element.getBoundingClientRect();
+    const viewportHeight = window.innerHeight;
+    const cardHeight = 180; // Approximate card height
+    const padding = 100;
+    
+    // Check if element is in viewport with enough space for card
+    const needsScroll = 
+      rect.top < padding + cardHeight || 
+      rect.bottom > viewportHeight - padding;
+    
+    if (needsScroll) {
+      const targetScrollY = window.scrollY + rect.top - viewportHeight / 2 + rect.height / 2;
+      window.scrollTo({
+        top: Math.max(0, targetScrollY),
+        behavior: 'smooth'
+      });
+    }
+  }, []);
 
   const updateHighlightPosition = useCallback(() => {
     const currentMark = coachMarks[currentStep];
@@ -78,6 +99,21 @@ export function TutorialOverlay() {
     if (element) {
       const rect = element.getBoundingClientRect();
       const padding = isMobile ? 8 : 12;
+      const cardHeight = 180;
+      const gap = 16;
+      
+      // Determine actual card position based on available space
+      const spaceAbove = rect.top;
+      const spaceBelow = window.innerHeight - rect.bottom;
+      
+      let cardPos: 'above' | 'below';
+      if (currentMark.preferredCardPosition === 'above') {
+        cardPos = spaceAbove > cardHeight + gap ? 'above' : 'below';
+      } else {
+        cardPos = spaceBelow > cardHeight + gap ? 'below' : 'above';
+      }
+      setActualCardPosition(cardPos);
+      
       setHighlightRect({
         top: rect.top - padding,
         left: rect.left - padding,
@@ -87,10 +123,32 @@ export function TutorialOverlay() {
     }
   }, [currentStep, isMobile]);
 
+  // Auto-scroll when step changes
+  useEffect(() => {
+    if (isVisible) {
+      const currentMark = coachMarks[currentStep];
+      const selector = isMobile && currentMark.mobileSelector 
+        ? currentMark.mobileSelector 
+        : currentMark.selector;
+      const element = document.querySelector(selector);
+      
+      if (element) {
+        scrollToElement(element);
+        // Update position after scroll animation
+        const timer = setTimeout(updateHighlightPosition, 400);
+        return () => clearTimeout(timer);
+      }
+    }
+  }, [currentStep, isVisible, isMobile, scrollToElement, updateHighlightPosition]);
+
   useEffect(() => {
     const hasSeenTutorial = localStorage.getItem(TUTORIAL_STORAGE_KEY);
     if (!hasSeenTutorial) {
-      const timer = setTimeout(() => setIsVisible(true), 800);
+      const timer = setTimeout(() => {
+        setIsVisible(true);
+        // Scroll to top on tutorial start
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 800);
       return () => clearTimeout(timer);
     }
   }, []);
@@ -128,34 +186,35 @@ export function TutorialOverlay() {
 
   const currentMark = coachMarks[currentStep];
 
-  // Calculate card position based on highlight
+  // Calculate card position based on highlight and available space
   const getCardStyle = (): React.CSSProperties => {
     if (!highlightRect) return {};
     
     const cardWidth = isMobile ? 280 : 320;
     const gap = 16;
     
-    if (currentMark.cardPosition === 'above') {
+    const horizontalLeft = Math.max(16, Math.min(
+      highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
+      window.innerWidth - cardWidth - 16
+    ));
+    
+    if (actualCardPosition === 'above') {
       return {
         bottom: `calc(100vh - ${highlightRect.top}px + ${gap}px)`,
-        left: Math.max(16, Math.min(
-          highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
-          window.innerWidth - cardWidth - 16
-        )),
+        left: horizontalLeft,
         width: cardWidth,
       };
-    } else if (currentMark.cardPosition === 'below') {
+    } else {
       return {
         top: highlightRect.top + highlightRect.height + gap,
-        left: Math.max(16, Math.min(
-          highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
-          window.innerWidth - cardWidth - 16
-        )),
+        left: horizontalLeft,
         width: cardWidth,
       };
     }
-    return {};
   };
+
+  const showArrowUp = actualCardPosition === 'below';
+  const showArrowDown = actualCardPosition === 'above';
 
   return (
     <div className="fixed inset-0 z-50">
@@ -187,7 +246,7 @@ export function TutorialOverlay() {
 
       {/* Pulsing highlight ring */}
       <div
-        className="absolute pointer-events-none"
+        className="absolute pointer-events-none transition-all duration-300"
         style={{
           top: highlightRect.top,
           left: highlightRect.left,
@@ -209,18 +268,12 @@ export function TutorialOverlay() {
 
       {/* Coach mark card */}
       <div
-        className="absolute pointer-events-auto animate-scale-in"
+        className="absolute pointer-events-auto animate-scale-in transition-all duration-300"
         style={getCardStyle()}
+        key={currentStep}
       >
-        {/* Arrow indicator pointing up */}
-        {currentMark.arrowDirection === 'up' && currentMark.cardPosition === 'above' && (
-          <div className="flex justify-center mt-2 animate-bounce">
-            <ArrowDown className="h-6 w-6 text-primary" />
-          </div>
-        )}
-
-        {/* Arrow indicator pointing down */}
-        {currentMark.arrowDirection === 'down' && currentMark.cardPosition === 'below' && (
+        {/* Arrow indicator pointing up (card is below element) */}
+        {showArrowUp && (
           <div className="flex justify-center mb-2 animate-bounce">
             <ArrowDown className="h-6 w-6 text-primary rotate-180" />
           </div>
@@ -282,17 +335,10 @@ export function TutorialOverlay() {
           </div>
         </div>
 
-        {/* Arrow indicator pointing down (for above cards) */}
-        {currentMark.arrowDirection === 'down' && currentMark.cardPosition === 'above' && (
-          <div className="flex justify-center mb-2 animate-bounce">
-            <ArrowDown className="h-6 w-6 text-primary" />
-          </div>
-        )}
-
-        {/* Arrow indicator pointing up (for below cards) */}
-        {currentMark.arrowDirection === 'up' && currentMark.cardPosition === 'below' && (
+        {/* Arrow indicator pointing down (card is above element) */}
+        {showArrowDown && (
           <div className="flex justify-center mt-2 animate-bounce">
-            <ArrowDown className="h-6 w-6 text-primary rotate-180" />
+            <ArrowDown className="h-6 w-6 text-primary" />
           </div>
         )}
       </div>
