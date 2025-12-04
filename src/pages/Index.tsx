@@ -159,7 +159,7 @@ const Index = () => {
                 </div>
               </button>
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-3" data-tutorial="settings">
               <SettingsDialog 
                 language={language}
                 onLanguageChange={handleLanguageChange}
@@ -173,7 +173,7 @@ const Index = () => {
       <main className="container mx-auto px-4 sm:px-6 py-8 max-w-6xl">
         <div className="space-y-8">
           {/* Upload Section */}
-          <section>
+          <section data-tutorial="upload">
             <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} language={language} />
           </section>
 
@@ -208,7 +208,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-base font-medium">
                   {t("infoDescription")}
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" data-tutorial="bins">
                   <button 
                     onClick={() => setSelectedBinColor("Blue Bin")}
                     className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
@@ -250,7 +250,7 @@ const Index = () => {
         {/* Waste Management Info Section - Always visible at bottom */}
         {!uploadedImage && (
           <section className="mt-48 space-y-32">
-            <div className="text-center space-y-6 animate-fade-in pt-24">
+            <div className="text-center space-y-6 animate-fade-in pt-24" data-tutorial="info">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
