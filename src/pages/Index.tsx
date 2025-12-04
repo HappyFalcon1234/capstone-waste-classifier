@@ -4,6 +4,7 @@ import { WasteResults } from "@/components/WasteResults";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
 import { BinExamplesDialog } from "@/components/BinExamplesDialog";
+import { TutorialOverlay } from "@/components/TutorialOverlay";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
@@ -135,6 +136,7 @@ const Index = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <TutorialOverlay />
       {/* Header */}
       <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
         !isHeaderVisible ? '-translate-y-full' : 'translate-y-0'
