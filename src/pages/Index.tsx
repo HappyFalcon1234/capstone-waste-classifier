@@ -351,6 +351,65 @@ const Index = () => {
                 </div>
               </div>
             </div>
+
+            {/* Section 4: NGOs Fighting for a Cleaner India */}
+            <div className="space-y-6 animate-fade-in">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
+                <div className="p-8 md:p-12 text-center">
+                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
+                    <Leaf className="w-10 h-10 text-primary" />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
+                    Organizations Leading the Change
+                  </h3>
+                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+                    Dedicated NGOs and associations working tirelessly for a cleaner, greener India
+                  </p>
+                </div>
+              </div>
+              <div className="max-w-4xl mx-auto space-y-6 px-6">
+                <h3 className="text-3xl font-bold text-foreground">
+                  NGOs Fighting for a Cleaner India
+                </h3>
+                <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
+                  <p>
+                    <strong className="text-foreground">The Indian Pollution Control Association (IPCA)</strong> has been at the forefront of environmental advocacy since its establishment. Working closely with government bodies, industries, and communities, IPCA focuses on promoting pollution control measures, conducting environmental audits, and raising awareness about sustainable practices across India.
+                  </p>
+                  <p>
+                    IPCA organizes nationwide campaigns on waste management, air quality monitoring, and water conservation. Their efforts include training programs for industries on pollution control technologies, community workshops on waste segregation, and policy advocacy for stricter environmental regulations.
+                  </p>
+                  <p>
+                    <strong className="text-foreground">Other notable organizations making a difference:</strong>
+                  </p>
+                  <ul className="list-disc list-inside space-y-3 pl-4">
+                    <li>
+                      <strong className="text-foreground">Chintan Environmental Research and Action Group</strong> — Works with waste pickers and promotes zero-waste cities, recycling over 70,000 tonnes of waste annually
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Swechha</strong> — Youth-led environmental organization focusing on river cleanup, urban farming, and waste management education in Delhi
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Hasiru Dala</strong> — Bangalore-based NGO empowering waste pickers and promoting decentralized waste management solutions
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Toxics Link</strong> — Research and advocacy organization working on hazardous waste, e-waste, and chemical safety issues
+                    </li>
+                    <li>
+                      <strong className="text-foreground">Centre for Science and Environment (CSE)</strong> — Premier research organization advocating for sustainable development and environmental justice
+                    </li>
+                  </ul>
+                  <p className="pt-4">
+                    These organizations have collectively impacted millions of lives through their grassroots initiatives. From organizing beach cleanups to establishing waste collection networks, they demonstrate that <strong className="text-foreground">collective action can transform India's environmental landscape</strong>.
+                  </p>
+                  <p>
+                    The Swachh Bharat Mission has also partnered with numerous NGOs to achieve its sanitation and cleanliness goals. Community-led total sanitation programs, waste-to-wealth initiatives, and Extended Producer Responsibility (EPR) campaigns are showing promising results in cities across the nation.
+                  </p>
+                  <p className="text-xl font-semibold text-foreground pt-4">
+                    You can join this movement by volunteering with local environmental groups, participating in cleanup drives, and most importantly, practicing proper waste segregation in your daily life.
+                  </p>
+                </div>
+              </div>
+            </div>
           </section>
         )}
       </main>
