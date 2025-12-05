@@ -354,19 +354,6 @@ const Index = () => {
 
             {/* Section 4: NGOs Fighting for a Cleaner India */}
             <div className="space-y-6 animate-fade-in">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/20">
-                <div className="p-8 md:p-12 text-center">
-                  <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-6">
-                    <Leaf className="w-10 h-10 text-primary" />
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-                    Organizations Leading the Change
-                  </h3>
-                  <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-                    Dedicated NGOs and associations working tirelessly for a cleaner, greener India
-                  </p>
-                </div>
-              </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
                   NGOs Fighting for a Cleaner India
