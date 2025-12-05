@@ -8,7 +8,7 @@ import { TutorialOverlay } from "@/components/TutorialOverlay";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
-import { Share2 } from "lucide-react";
+import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
 import wasteGeneration from "@/assets/waste-generation.jpg";
@@ -151,7 +151,7 @@ const Index = () => {
                 aria-label="Reset app"
               >
                 <div className="p-2 bg-primary/10 rounded-lg">
-                  <Share2 className="h-6 w-6 text-primary" />
+                  <Leaf className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
                   <h1 className="text-foreground text-2xl font-bold">EcoSort</h1>
