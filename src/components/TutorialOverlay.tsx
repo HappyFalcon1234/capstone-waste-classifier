@@ -191,7 +191,8 @@ export function TutorialOverlay() {
     if (!highlightRect) return {};
     
     const cardWidth = isMobile ? 280 : 320;
-    const gap = 16;
+    const gap = isMobile ? 24 : 16;
+    const minTopOffset = isMobile ? 80 : 60; // Ensure card doesn't go behind browser UI
     
     const horizontalLeft = Math.max(16, Math.min(
       highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
@@ -199,18 +200,39 @@ export function TutorialOverlay() {
     ));
     
     if (actualCardPosition === 'above') {
+      // Calculate top position for the card (above the element)
+      const cardTop = Math.max(minTopOffset, highlightRect.top - 180 - gap);
       return {
-        bottom: `calc(100vh - ${highlightRect.top}px + ${gap}px)`,
+        top: cardTop,
         left: horizontalLeft,
         width: cardWidth,
       };
     } else {
       return {
-        top: highlightRect.top + highlightRect.height + gap,
+        top: Math.max(minTopOffset, highlightRect.top + highlightRect.height + gap),
         left: horizontalLeft,
         width: cardWidth,
       };
     }
+  };
+
+  // Calculate arrow position to point at the highlighted element
+  const getArrowStyle = (): React.CSSProperties => {
+    if (!highlightRect) return {};
+    
+    const cardWidth = isMobile ? 280 : 320;
+    const cardLeft = Math.max(16, Math.min(
+      highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
+      window.innerWidth - cardWidth - 16
+    ));
+    
+    // Calculate horizontal offset for arrow to point at center of highlighted element
+    const highlightCenterX = highlightRect.left + highlightRect.width / 2;
+    const arrowOffsetFromCardLeft = highlightCenterX - cardLeft;
+    
+    return {
+      marginLeft: Math.max(20, Math.min(arrowOffsetFromCardLeft - 12, cardWidth - 44)),
+    };
   };
 
   const showArrowUp = actualCardPosition === 'below';
@@ -274,7 +296,7 @@ export function TutorialOverlay() {
       >
         {/* Arrow indicator pointing up (card is below element) */}
         {showArrowUp && (
-          <div className="flex justify-center mb-2 animate-bounce">
+          <div className="flex mb-2 animate-bounce" style={getArrowStyle()}>
             <ArrowDown className="h-6 w-6 text-primary rotate-180" />
           </div>
         )}
@@ -337,7 +359,7 @@ export function TutorialOverlay() {
 
         {/* Arrow indicator pointing down (card is above element) */}
         {showArrowDown && (
-          <div className="flex justify-center mt-2 animate-bounce">
+          <div className="flex mt-2 animate-bounce" style={getArrowStyle()}>
             <ArrowDown className="h-6 w-6 text-primary" />
           </div>
         )}
