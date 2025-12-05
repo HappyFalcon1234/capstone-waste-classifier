@@ -1,20 +1,16 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import { ImageUpload } from "@/components/ImageUpload";
 import { WasteResults } from "@/components/WasteResults";
 import { SettingsDialog } from "@/components/SettingsDialog";
 import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
 import { BinExamplesDialog } from "@/components/BinExamplesDialog";
 import { TutorialOverlay } from "@/components/TutorialOverlay";
-import { NetworkStatusBanner } from "@/components/NetworkStatusBanner";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
-import { useNetworkStatus } from "@/hooks/useNetworkStatus";
-import { useOfflineClassifier } from "@/hooks/useOfflineClassifier";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
-import { compressImage } from "@/lib/imageCompression";
 import wasteGeneration from "@/assets/waste-generation.jpg";
 import environmentalImpact from "@/assets/environmental-impact.jpg";
 import wasteSegregationSolution from "@/assets/waste-segregation-solution.jpg";
@@ -34,40 +30,10 @@ const Index = () => {
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
-  const [isOfflineMode, setIsOfflineMode] = useState(false);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { setTheme } = useTheme();
-  const { isOnline, isSlowConnection } = useNetworkStatus();
-  const { classifyImage, loadModel, isModelLoading, modelLoadProgress, isModelReady } = useOfflineClassifier();
   const t = (key: string) => getTranslation(language, key as any);
-
-  // Auto-switch to offline mode when offline
-  useEffect(() => {
-    if (!isOnline) {
-      setIsOfflineMode(true);
-      // Preload the model when going offline
-      loadModel();
-    }
-  }, [isOnline, loadModel]);
-
-  // Load offline mode preference from localStorage
-  useEffect(() => {
-    const savedOfflineMode = localStorage.getItem("offlineMode");
-    if (savedOfflineMode === "true") {
-      setIsOfflineMode(true);
-      loadModel();
-    }
-  }, [loadModel]);
-
-  const toggleOfflineMode = useCallback(() => {
-    const newMode = !isOfflineMode;
-    setIsOfflineMode(newMode);
-    localStorage.setItem("offlineMode", String(newMode));
-    if (newMode) {
-      loadModel();
-    }
-  }, [isOfflineMode, loadModel]);
 
   // Load preferences from localStorage
   useEffect(() => {
@@ -133,49 +99,14 @@ const Index = () => {
     localStorage.setItem("preferredLanguage", newLanguage);
   };
 
-  const handleImageUpload = async (base64Image: string, file?: File) => {
+  const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
     setUploadedImage(base64Image);
     setPredictions([]);
-    
     try {
-      // Offline mode: use local model
-      if (isOfflineMode || !isOnline) {
-        const offlinePredictions = await classifyImage(base64Image);
-        const formattedPredictions = offlinePredictions.map(pred => ({
-          item: pred.item,
-          category: pred.bin_color === 'Green' ? 'Organic' : 
-                   pred.bin_color === 'Blue' ? 'Recyclable' :
-                   pred.bin_color === 'Red' ? 'Hazardous' :
-                   pred.bin_color === 'Yellow' ? 'E-Waste' : 'Non-Recyclable',
-          disposal: pred.disposal_instructions,
-          binColor: pred.bin_color,
-          confidence: pred.confidence,
-        }));
-        setPredictions(formattedPredictions);
-        if (formattedPredictions.length > 0) {
-          toast({
-            title: `${t("analysisComplete")} (${t("offlineClassification")})`,
-            description: `${t("foundItems")} ${formattedPredictions.length} ${t("items")}`
-          });
-        }
-        return;
-      }
-      
-      // Online mode: compress if slow connection
-      let imageToSend = base64Image;
-      if (isSlowConnection && file) {
-        const compressedFile = await compressImage(file);
-        const reader = new FileReader();
-        imageToSend = await new Promise((resolve) => {
-          reader.onloadend = () => resolve(reader.result as string);
-          reader.readAsDataURL(compressedFile);
-        });
-      }
-      
       const { data, error } = await supabase.functions.invoke("classify-waste", {
         body: {
-          imageBase64: imageToSend,
+          imageBase64: base64Image,
           language
         }
       });
@@ -241,15 +172,6 @@ const Index = () => {
       {/* Main Content */}
       <main className="container mx-auto px-4 sm:px-6 py-8 max-w-6xl">
         <div className="space-y-8">
-          {/* Network Status Banner */}
-          <NetworkStatusBanner
-            language={language}
-            isOfflineMode={isOfflineMode}
-            onToggleOfflineMode={toggleOfflineMode}
-            isModelLoading={isModelLoading}
-            modelLoadProgress={modelLoadProgress}
-          />
-          
           {/* Upload Section */}
           <section data-tutorial="upload">
             <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} language={language} />
