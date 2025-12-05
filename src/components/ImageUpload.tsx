@@ -5,7 +5,7 @@ import { useToast } from "@/hooks/use-toast";
 import { getTranslation, type Language } from "@/lib/translations";
 
 interface ImageUploadProps {
-  onImageUpload: (base64: string) => void;
+  onImageUpload: (base64: string, file?: File) => void;
   isAnalyzing: boolean;
   language: Language;
 }
@@ -40,7 +40,7 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, language }: ImageUploa
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64 = reader.result as string;
-      onImageUpload(base64);
+      onImageUpload(base64, file);
     };
     reader.readAsDataURL(file);
   }, [onImageUpload, toast]);
