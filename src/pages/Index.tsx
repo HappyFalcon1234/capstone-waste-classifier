@@ -208,7 +208,7 @@ const Index = () => {
                 <p className="text-muted-foreground text-base font-medium">
                   {t("infoDescription")}
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" data-tutorial="bins">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 mt-8" data-tutorial="bins">
                   <button 
                     onClick={() => setSelectedBinColor("Blue Bin")}
                     className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
@@ -240,6 +240,14 @@ const Index = () => {
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
+                  </button>
+                  <button 
+                    onClick={() => setSelectedBinColor("Black Bin")}
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
+                  >
+                    <div className="w-12 h-12 bg-black-bin rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
+                    <p className="text-sm font-semibold">{t("blackBin")}</p>
+                    <p className="text-xs text-muted-foreground">{t("nonRecyclable")}</p>
                   </button>
                 </div>
               </div>
