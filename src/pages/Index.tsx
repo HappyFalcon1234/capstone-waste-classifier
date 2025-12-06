@@ -243,7 +243,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Black Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg col-span-2 sm:col-span-1 w-1/2 sm:w-full justify-self-center sm:justify-self-auto"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg col-span-2 sm:col-span-1 max-w-[calc(50%-0.5rem)] sm:max-w-none mx-auto sm:mx-0"
                   >
                     <div className="w-12 h-12 bg-black-bin rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
                     <p className="text-sm font-semibold">{t("blackBin")}</p>

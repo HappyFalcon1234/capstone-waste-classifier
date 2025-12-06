@@ -103,19 +103,14 @@ export function TutorialOverlay() {
       const gap = 16;
       
       // Determine actual card position based on available space
-      // Prefer 'above' to avoid Lovable badge at bottom
       const spaceAbove = rect.top;
-      const bottomPadding = isMobile ? 120 : 80; // Extra padding for Lovable badge
-      const spaceBelow = window.innerHeight - rect.bottom - bottomPadding;
+      const spaceBelow = window.innerHeight - rect.bottom;
       
       let cardPos: 'above' | 'below';
-      // Always prefer above unless there's not enough space
-      if (spaceAbove > cardHeight + gap) {
-        cardPos = 'above';
-      } else if (spaceBelow > cardHeight + gap) {
-        cardPos = 'below';
+      if (currentMark.preferredCardPosition === 'above') {
+        cardPos = spaceAbove > cardHeight + gap ? 'above' : 'below';
       } else {
-        cardPos = 'above'; // Default to above even if tight
+        cardPos = spaceBelow > cardHeight + gap ? 'below' : 'above';
       }
       setActualCardPosition(cardPos);
       
@@ -196,9 +191,8 @@ export function TutorialOverlay() {
     if (!highlightRect) return {};
     
     const cardWidth = isMobile ? 280 : 320;
-    const cardHeight = 160; // Approximate card height
-    const gap = isMobile ? 8 : 16; // Reduced gap on mobile
-    const maxBottomOffset = isMobile ? 16 : 16; // Minimum distance from bottom
+    const gap = isMobile ? 24 : 16;
+    const minTopOffset = isMobile ? 80 : 60; // Ensure card doesn't go behind browser UI
     
     const horizontalLeft = Math.max(16, Math.min(
       highlightRect.left + highlightRect.width / 2 - cardWidth / 2,
@@ -206,21 +200,16 @@ export function TutorialOverlay() {
     ));
     
     if (actualCardPosition === 'above') {
-      // Position card just above the element with minimal gap
-      const idealTop = highlightRect.top - cardHeight - gap - 24; // 24 for arrow
-      const cardTop = Math.max(8, idealTop); // Allow card closer to top edge
+      // Calculate top position for the card (above the element)
+      const cardTop = Math.max(minTopOffset, highlightRect.top - 180 - gap);
       return {
         top: cardTop,
         left: horizontalLeft,
         width: cardWidth,
       };
     } else {
-      // Calculate top position for the card (below the element)
-      const idealTop = highlightRect.top + highlightRect.height + gap;
-      const maxTop = window.innerHeight - cardHeight - maxBottomOffset;
-      const cardTop = Math.min(idealTop, maxTop);
       return {
-        top: Math.max(8, cardTop),
+        top: Math.max(minTopOffset, highlightRect.top + highlightRect.height + gap),
         left: horizontalLeft,
         width: cardWidth,
       };
