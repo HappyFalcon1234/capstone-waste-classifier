@@ -103,14 +103,19 @@ export function TutorialOverlay() {
       const gap = 16;
       
       // Determine actual card position based on available space
+      // Prefer 'above' to avoid Lovable badge at bottom
       const spaceAbove = rect.top;
-      const spaceBelow = window.innerHeight - rect.bottom;
+      const bottomPadding = isMobile ? 120 : 80; // Extra padding for Lovable badge
+      const spaceBelow = window.innerHeight - rect.bottom - bottomPadding;
       
       let cardPos: 'above' | 'below';
-      if (currentMark.preferredCardPosition === 'above') {
-        cardPos = spaceAbove > cardHeight + gap ? 'above' : 'below';
+      // Always prefer above unless there's not enough space
+      if (spaceAbove > cardHeight + gap) {
+        cardPos = 'above';
+      } else if (spaceBelow > cardHeight + gap) {
+        cardPos = 'below';
       } else {
-        cardPos = spaceBelow > cardHeight + gap ? 'below' : 'above';
+        cardPos = 'above'; // Default to above even if tight
       }
       setActualCardPosition(cardPos);
       
