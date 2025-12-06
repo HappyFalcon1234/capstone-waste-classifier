@@ -197,8 +197,7 @@ export function TutorialOverlay() {
     
     const cardWidth = isMobile ? 280 : 320;
     const cardHeight = 160; // Approximate card height
-    const gap = isMobile ? 16 : 16;
-    const minTopOffset = isMobile ? 16 : 60; // Minimum distance from top
+    const gap = isMobile ? 8 : 16; // Reduced gap on mobile
     const maxBottomOffset = isMobile ? 16 : 16; // Minimum distance from bottom
     
     const horizontalLeft = Math.max(16, Math.min(
@@ -207,9 +206,9 @@ export function TutorialOverlay() {
     ));
     
     if (actualCardPosition === 'above') {
-      // Calculate top position for the card (above the element)
+      // Position card just above the element with minimal gap
       const idealTop = highlightRect.top - cardHeight - gap - 24; // 24 for arrow
-      const cardTop = Math.max(minTopOffset, idealTop);
+      const cardTop = Math.max(8, idealTop); // Allow card closer to top edge
       return {
         top: cardTop,
         left: horizontalLeft,
@@ -221,7 +220,7 @@ export function TutorialOverlay() {
       const maxTop = window.innerHeight - cardHeight - maxBottomOffset;
       const cardTop = Math.min(idealTop, maxTop);
       return {
-        top: Math.max(minTopOffset, cardTop),
+        top: Math.max(8, cardTop),
         left: horizontalLeft,
         width: cardWidth,
       };
