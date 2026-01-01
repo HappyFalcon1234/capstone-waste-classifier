@@ -174,7 +174,12 @@ serve(async (req) => {
             content: `You are an expert waste classification system for India. Analyze images and identify ALL waste items present. Use simple, everyday language that anyone can understand. For each item, provide:
 1. Item name (use simple, common words - e.g., "Plastic Bottle" not "Polyethylene Terephthalate Container")
 2. Waste category (Recyclable, Organic/Wet Waste, Hazardous, or E-Waste)
-3. Disposal instructions specific to India (in simple language)
+3. Detailed disposal instructions specific to India that include:
+   - Step-by-step preparation (e.g., "Rinse the bottle and remove the cap")
+   - Where to dispose (e.g., "Place in the blue recycling bin at your nearest collection point")
+   - What NOT to do (e.g., "Do not mix with food waste")
+   - Environmental tip (e.g., "Recycling one plastic bottle saves enough energy to power a light bulb for 3 hours")
+   - Local context when relevant (e.g., mention kabadiwala/scrap dealers for recyclables, composting for organic waste)
 4. Bin color according to Indian waste segregation (ONLY the color name - one of: Blue, Green, Red, Yellow, Black):
    - Blue: Recyclable waste (plastic, paper, metal, glass)
    - Green: Organic/wet waste (food scraps, garden waste)

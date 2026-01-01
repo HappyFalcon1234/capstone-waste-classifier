@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { ItemDetailDialog } from "./ItemDetailDialog";
 import { BinExamplesDialog } from "./BinExamplesDialog";
-import { FeedbackButtons } from "./FeedbackButtons";
 import { getTranslation, getBinColorTranslation, type Language } from "@/lib/translations";
 
 interface WasteItem {
@@ -66,7 +65,6 @@ export const WasteResults = ({
             {language === "Telugu" && "చిత్రంలో వ్యర్థ వస్తువులు ఏవీ గుర్తించబడలేదు. వ్యర్థ వస్తువులతో వేరే చిత్రాన్ని అప్‌లోడ్ చేయడానికి ప్రయత్నించండి."}
           </p>
         </div>
-        <FeedbackButtons />
       </div>
     );
   }
