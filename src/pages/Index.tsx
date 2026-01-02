@@ -264,27 +264,19 @@ const Index = () => {
               <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={wasteGeneration}
-                  alt="Massive waste landfills across India" 
+                  alt={t("section1Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
-                  India's Growing Waste Crisis
+                  {t("section1Title")}
                 </h3>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                  <p>
-                    India generates over <strong className="text-foreground">150,000 tonnes of municipal solid waste daily</strong>, with only 60% being collected and even less properly processed. Major cities like Delhi, Mumbai, and Bangalore are grappling with towering landfills that have become environmental hazards.
-                  </p>
-                  <p>
-                    The Ghazipur landfill in Delhi has grown to over 65 meters high—taller than a 17-story building—and continues to grow at an alarming rate. In 2017, a section of this waste mountain collapsed, killing two people and highlighting the deadly risks these dumps pose to nearby communities.
-                  </p>
-                  <p>
-                    Without proper waste segregation at source, these mountains of garbage pose serious health and environmental risks. The lack of proper waste management infrastructure and citizen participation means valuable recyclable materials are buried in landfills, while organic waste generates methane—a potent greenhouse gas that's 25 times more effective at trapping heat than carbon dioxide.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">By 2030, India's waste generation is projected to reach 165 million tonnes annually.</strong> Without immediate action on source segregation and proper disposal, our cities will be buried under their own waste.
-                  </p>
+                  <p>{t("section1Content1")}</p>
+                  <p>{t("section1Content2")}</p>
+                  <p>{t("section1Content3")}</p>
+                  <p className="font-semibold text-foreground">{t("section1Content4")}</p>
                 </div>
               </div>
             </div>
@@ -294,27 +286,19 @@ const Index = () => {
               <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={environmentalImpact}
-                  alt="Plastic pollution choking Indian rivers and oceans" 
+                  alt={t("section2Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
-                  The Plastic Pandemic
+                  {t("section2Title")}
                 </h3>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                  <p>
-                    Plastic waste has become one of India's most pressing environmental challenges, with <strong className="text-foreground">over 3.5 million tonnes of plastic waste generated annually</strong>. Rivers, oceans, and landscapes are increasingly choked with plastic debris that takes centuries to decompose.
-                  </p>
-                  <p>
-                    India's rivers—the lifelines of our civilization—are now carrying plastic waste to the oceans at an unprecedented rate. The Ganges alone carries an estimated 1.2 billion pieces of plastic into the Bay of Bengal each year. Marine life is severely affected, with over 100,000 marine animals dying annually from plastic entanglement or ingestion globally.
-                  </p>
-                  <p>
-                    Microplastics have entered our food chain with devastating consequences. Studies have found traces in seafood, drinking water, table salt, and even human blood samples. A recent study found that the average person consumes approximately 5 grams of plastic per week—equivalent to eating a credit card.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Improper waste disposal also leads to soil contamination, water pollution, and severe air quality degradation.</strong> Open burning of plastic waste releases toxic fumes including dioxins and furans, which cause respiratory diseases and cancer in nearby populations. Children living near waste burning sites have been found to have significantly higher rates of respiratory illnesses.
-                  </p>
+                  <p>{t("section2Content1")}</p>
+                  <p>{t("section2Content2")}</p>
+                  <p>{t("section2Content3")}</p>
+                  <p className="font-semibold text-foreground">{t("section2Content4")}</p>
                 </div>
               </div>
             </div>
@@ -324,30 +308,20 @@ const Index = () => {
               <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
                 <img 
                   src={wasteSegregationSolution}
-                  alt="Community-led waste segregation initiatives" 
+                  alt={t("section3Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
-                  The Power of Segregation at Source
+                  {t("section3Title")}
                 </h3>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                  <p>
-                    <strong className="text-foreground">Waste segregation at source is the most critical step in solving India's waste crisis.</strong> When waste is separated into wet (organic), dry (recyclable), hazardous, and e-waste categories right at home, it becomes exponentially easier to process, recycle, and dispose of responsibly.
-                  </p>
-                  <p>
-                    Proper segregation enables composting of organic waste, which can reduce landfill volume by 40-50% while producing valuable fertilizer for agriculture. This not only saves landfill space but also reduces methane emissions and creates nutrient-rich compost that improves soil health.
-                  </p>
-                  <p>
-                    Recyclable materials like paper, plastic, glass, and metal can be recovered and reprocessed when properly segregated, conserving natural resources and reducing the energy consumption required for manufacturing new products. Recycling one tonne of paper saves 17 trees, 7,000 gallons of water, and enough electricity to power an average home for six months.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Success stories prove segregation works:</strong> Alappuzha in Kerala achieved 100% waste management through community participation, transforming from one of India's dirtiest cities to a zero-waste model. Indore has been recognized as India's cleanest city for six consecutive years through systematic waste segregation and processing initiatives.
-                  </p>
-                  <p className="text-xl font-semibold text-foreground pt-4">
-                    Every citizen's participation matters. By segregating waste at home and using the correct colored bins, you contribute directly to reducing pollution, protecting wildlife, conserving resources, and building a sustainable future for India.
-                  </p>
+                  <p>{t("section3Content1")}</p>
+                  <p>{t("section3Content2")}</p>
+                  <p>{t("section3Content3")}</p>
+                  <p className="font-semibold text-foreground">{t("section3Content4")}</p>
+                  <p className="text-xl font-semibold text-foreground pt-4">{t("section3Content5")}</p>
                 </div>
               </div>
             </div>
@@ -356,44 +330,22 @@ const Index = () => {
             <div className="space-y-6 animate-fade-in">
               <div className="max-w-4xl mx-auto space-y-6 px-6">
                 <h3 className="text-3xl font-bold text-foreground">
-                  NGOs Fighting for a Cleaner India
+                  {t("section4Title")}
                 </h3>
                 <div className="space-y-4 text-lg text-muted-foreground leading-relaxed">
-                  <p>
-                    <strong className="text-foreground">The Indian Pollution Control Association (IPCA)</strong> has been at the forefront of environmental advocacy since its establishment. Working closely with government bodies, industries, and communities, IPCA focuses on promoting pollution control measures, conducting environmental audits, and raising awareness about sustainable practices across India.
-                  </p>
-                  <p>
-                    IPCA organizes nationwide campaigns on waste management, air quality monitoring, and water conservation. Their efforts include training programs for industries on pollution control technologies, community workshops on waste segregation, and policy advocacy for stricter environmental regulations.
-                  </p>
-                  <p>
-                    <strong className="text-foreground">Other notable organizations making a difference:</strong>
-                  </p>
+                  <p>{t("section4Content1")}</p>
+                  <p>{t("section4Content2")}</p>
+                  <p className="font-semibold text-foreground">{t("section4OtherOrgs")}</p>
                   <ul className="list-disc list-inside space-y-3 pl-4">
-                    <li>
-                      <strong className="text-foreground">Chintan Environmental Research and Action Group</strong> — Works with waste pickers and promotes zero-waste cities, recycling over 70,000 tonnes of waste annually
-                    </li>
-                    <li>
-                      <strong className="text-foreground">Swechha</strong> — Youth-led environmental organization focusing on river cleanup, urban farming, and waste management education in Delhi
-                    </li>
-                    <li>
-                      <strong className="text-foreground">Hasiru Dala</strong> — Bangalore-based NGO empowering waste pickers and promoting decentralized waste management solutions
-                    </li>
-                    <li>
-                      <strong className="text-foreground">Toxics Link</strong> — Research and advocacy organization working on hazardous waste, e-waste, and chemical safety issues
-                    </li>
-                    <li>
-                      <strong className="text-foreground">Centre for Science and Environment (CSE)</strong> — Premier research organization advocating for sustainable development and environmental justice
-                    </li>
+                    <li>{t("section4Ngo1")}</li>
+                    <li>{t("section4Ngo2")}</li>
+                    <li>{t("section4Ngo3")}</li>
+                    <li>{t("section4Ngo4")}</li>
+                    <li>{t("section4Ngo5")}</li>
                   </ul>
-                  <p className="pt-4">
-                    These organizations have collectively impacted millions of lives through their grassroots initiatives. From organizing beach cleanups to establishing waste collection networks, they demonstrate that <strong className="text-foreground">collective action can transform India's environmental landscape</strong>.
-                  </p>
-                  <p>
-                    The Swachh Bharat Mission has also partnered with numerous NGOs to achieve its sanitation and cleanliness goals. Community-led total sanitation programs, waste-to-wealth initiatives, and Extended Producer Responsibility (EPR) campaigns are showing promising results in cities across the nation.
-                  </p>
-                  <p className="text-xl font-semibold text-foreground pt-4">
-                    You can join this movement by volunteering with local environmental groups, participating in cleanup drives, and most importantly, practicing proper waste segregation in your daily life.
-                  </p>
+                  <p className="pt-4">{t("section4Content3")}</p>
+                  <p>{t("section4Content4")}</p>
+                  <p className="text-xl font-semibold text-foreground pt-4">{t("section4Content5")}</p>
                 </div>
               </div>
             </div>
