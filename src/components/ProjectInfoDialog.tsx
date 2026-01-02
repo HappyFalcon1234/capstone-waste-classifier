@@ -5,8 +5,15 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { Info } from "lucide-react";
+import { getTranslation, type Language } from "@/lib/translations";
 
-export const ProjectInfoDialog = () => {
+interface ProjectInfoDialogProps {
+  language: Language;
+}
+
+export const ProjectInfoDialog = ({ language }: ProjectInfoDialogProps) => {
+  const t = (key: string) => getTranslation(language, key as any);
+
   return (
     <Popover>
       <PopoverTrigger asChild>
@@ -27,10 +34,10 @@ export const ProjectInfoDialog = () => {
         <div className="space-y-2">
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-primary" />
-            <h4 className="font-semibold text-sm">About This Project</h4>
+            <h4 className="font-semibold text-sm">{t("aboutThisProject")}</h4>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            This is a Capstone Project by DVDT in the subject of AI for the Board Exam session 2025-2026.
+            {t("projectDescription")}
           </p>
         </div>
       </PopoverContent>

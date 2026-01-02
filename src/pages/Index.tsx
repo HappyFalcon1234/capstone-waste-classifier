@@ -144,7 +144,7 @@ const Index = () => {
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <ProjectInfoDialog />
+              <ProjectInfoDialog language={language} />
               <button 
                 onClick={handleReset}
                 className="flex items-center gap-3 hover:opacity-80 transition-opacity"

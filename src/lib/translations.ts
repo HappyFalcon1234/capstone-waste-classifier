@@ -2,6 +2,8 @@ export const translations = {
   Assamese: {
     title: "EcoSortAI",
     subtitle: "এআই-চালিত আৱৰ্জনা শ্ৰেণীবিভাজন",
+    aboutThisProject: "এই প্ৰকল্পৰ বিষয়ে",
+    projectDescription: "এইটো হৈছে ২০২৫-২০২৬ চনৰ বোৰ্ড পৰীক্ষাৰ বাবে এআই বিষয়ত DVDT-ৰ কেপষ্টন প্ৰকল্প।",
     noWasteDetected: "কোনো আৱৰ্জনা ধৰা পৰা নাই",
     uploadTitle: "আৱৰ্জনাৰ ছবি আপলোড কৰক",
     uploadDescription: "আপোনাৰ আৱৰ্জনা সামগ্ৰীৰ ফটো তুলক বা ছবি আপলোড কৰক",
@@ -64,6 +66,8 @@ export const translations = {
   Bengali: {
     title: "EcoSortAI",
     subtitle: "এআই-চালিত বর্জ্য শ্রেণীবিভাগ",
+    aboutThisProject: "এই প্রকল্প সম্পর্কে",
+    projectDescription: "এটি ২০২৫-২০২৬ সেশনের বোর্ড পরীক্ষার জন্য AI বিষয়ে DVDT-এর ক্যাপস্টোন প্রকল্প।",
     noWasteDetected: "কোনো বর্জ্য সনাক্ত হয়নি",
     uploadTitle: "বর্জ্যের ছবি আপলোড করুন",
     uploadDescription: "আপনার বর্জ্য আইটেমগুলির ফটো তুলুন বা ছবি আপলোড করুন",
@@ -126,6 +130,8 @@ export const translations = {
   Bodo: {
     title: "EcoSortAI",
     subtitle: "एआइ-सालायनाय गोरा बेसाद खालार",
+    aboutThisProject: "बे प्रजेक्टनि सोमोन्दै",
+    projectDescription: "बेयो हादों २०२५-२०२६ बोसोरनि बर्ड एग्जामनि थाखाय AI बिसयाव DVDT-नि केपस्टन प्रजेक्ट।",
     noWasteDetected: "गोरा मोनसे बेसाद मोनाखै",
     uploadTitle: "बेसादनि सावगारि अपलड खालाम",
     uploadDescription: "नोंथांनि बेसाद बेफोरनि फटो लानानै एबा सावगारि अपलड खालाम",
@@ -188,6 +194,8 @@ export const translations = {
   Dogri: {
     title: "EcoSortAI",
     subtitle: "एआई-चलाया कचरा वर्गीकरण",
+    aboutThisProject: "इस प्रोजेक्ट दे बारे च",
+    projectDescription: "एह २०२५-२०२६ सत्र दी बोर्ड परीक्षा आस्तै AI विषय च DVDT दा कैपस्टोन प्रोजेक्ट ऐ।",
     noWasteDetected: "कोई कचरा नेई लब्भा",
     uploadTitle: "कचरे दी तस्वीर अपलोड करो",
     uploadDescription: "अपने कचरे दी चीजें दी फोटो खिचो या तस्वीर अपलोड करो",
@@ -250,6 +258,8 @@ export const translations = {
   English: {
     title: "EcoSortAI",
     subtitle: "AI-Powered Waste Classification",
+    aboutThisProject: "About This Project",
+    projectDescription: "This is a Capstone Project by DVDT in the subject of AI for the Board Exam session 2025-2026.",
     noWasteDetected: "No Waste Detected",
     uploadTitle: "Upload Waste Image",
     uploadDescription: "Take a photo or upload an image of your waste items",
@@ -312,6 +322,8 @@ export const translations = {
   Gujarati: {
     title: "EcoSortAI",
     subtitle: "AI-સંચાલિત કચરો વર્ગીકરણ",
+    aboutThisProject: "આ પ્રોજેક્ટ વિશે",
+    projectDescription: "આ ૨૦૨૫-૨૦૨૬ સત્રની બોર્ડ પરીક્ષા માટે AI વિષયમાં DVDT નો કેપસ્ટોન પ્રોજેક્ટ છે.",
     noWasteDetected: "કોઈ કચરો મળ્યો નથી",
     uploadTitle: "કચરાનો ફોટો અપલોડ કરો",
     uploadDescription: "તમારી કચરા વસ્તુઓનો ફોટો લો અથવા છબી અપલોડ કરો",
@@ -374,6 +386,8 @@ export const translations = {
   Hindi: {
     title: "EcoSortAI",
     subtitle: "एआई-संचालित कचरा वर्गीकरण",
+    aboutThisProject: "इस प्रोजेक्ट के बारे में",
+    projectDescription: "यह 2025-2026 सत्र की बोर्ड परीक्षा के लिए AI विषय में DVDT का कैपस्टोन प्रोजेक्ट है।",
     noWasteDetected: "कोई कचरा नहीं मिला",
     uploadTitle: "कचरे की तस्वीर अपलोड करें",
     uploadDescription: "अपने कचरे की वस्तुओं की फोटो लें या तस्वीर अपलोड करें",
@@ -436,6 +450,8 @@ export const translations = {
   Kannada: {
     title: "EcoSortAI",
     subtitle: "AI-ಚಾಲಿತ ತ್ಯಾಜ್ಯ ವರ್ಗೀಕರಣ",
+    aboutThisProject: "ಈ ಯೋಜನೆಯ ಬಗ್ಗೆ",
+    projectDescription: "ಇದು ೨೦೨೫-೨೦೨೬ ಸೆಷನ್‌ನ ಬೋರ್ಡ್ ಪರೀಕ್ಷೆಗಾಗಿ AI ವಿಷಯದಲ್ಲಿ DVDT ಯ ಕ್ಯಾಪ್‌ಸ್ಟೋನ್ ಪ್ರಾಜೆಕ್ಟ್.",
     noWasteDetected: "ಯಾವುದೇ ತ್ಯಾಜ್ಯ ಪತ್ತೆಯಾಗಿಲ್ಲ",
     uploadTitle: "ತ್ಯಾಜ್ಯ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
     uploadDescription: "ನಿಮ್ಮ ತ್ಯಾಜ್ಯ ವಸ್ತುಗಳ ಫೋಟೋ ತೆಗೆಯಿರಿ ಅಥವಾ ಚಿತ್ರವನ್ನು ಅಪ್‌ಲೋಡ್ ಮಾಡಿ",
@@ -498,6 +514,8 @@ export const translations = {
   Kashmiri: {
     title: "EcoSortAI",
     subtitle: "اے آئی چلان کُڑ درجہ بندی",
+    aboutThisProject: "یتہٕ منصوبس بارس منز",
+    projectDescription: "یہ ۲۰۲۵-۲۰۲۶ سیشنُک بورڈ امتحانس AI مضمونس منز DVDT ہُند کیپسٹون پروجیکٹ چھُ۔",
     noWasteDetected: "کانہہ کُڑ نہ مِلِتھ",
     uploadTitle: "کُڑُک تصویر اپلوڈ کرِو",
     uploadDescription: "پننہٕ کُڑُک شییٹھ فوٹو ہیتھ یا تصویر اپلوڈ کرِو",
@@ -560,6 +578,8 @@ export const translations = {
   Konkani: {
     title: "EcoSortAI",
     subtitle: "एआय-चलीत कोयर वर्गीकरण",
+    aboutThisProject: "ह्या प्रकल्पा विशीं",
+    projectDescription: "हो २०२५-२०२६ सत्राच्या बोर्ड परिक्षेक AI विशयांत DVDT चो कॅपस्टोन प्रकल्प.",
     noWasteDetected: "कोयर मेळूंक ना",
     uploadTitle: "कोयराची तस्वीर अपलोड करात",
     uploadDescription: "तुमच्या कोयर वस्तूंची फोटो काडात वा तस्वीर अपलोड करात",
@@ -622,6 +642,8 @@ export const translations = {
   Maithili: {
     title: "EcoSortAI",
     subtitle: "एआई-संचालित कचरा वर्गीकरण",
+    aboutThisProject: "एहि प्रोजेक्टक बारे मे",
+    projectDescription: "ई २०२५-२०२६ सत्रक बोर्ड परीक्षाक लेल AI विषय मे DVDT क कैपस्टोन प्रोजेक्ट अछि।",
     noWasteDetected: "कोनो कचरा नहि भेटल",
     uploadTitle: "कचराक तस्वीर अपलोड करू",
     uploadDescription: "अपन कचराक चीजक फोटो लिअ या तस्वीर अपलोड करू",
@@ -684,6 +706,8 @@ export const translations = {
   Malayalam: {
     title: "EcoSortAI",
     subtitle: "AI-പ്രവർത്തിത മാലിന്യ വർഗ്ഗീകരണം",
+    aboutThisProject: "ഈ പ്രോജക്ടിനെ കുറിച്ച്",
+    projectDescription: "ഇത് 2025-2026 സെഷനിലെ ബോർഡ് പരീക്ഷയ്ക്കായി AI വിഷയത്തിൽ DVDT യുടെ ക്യാപ്‌സ്റ്റോൺ പ്രോജക്റ്റാണ്.",
     noWasteDetected: "മാലിന്യം കണ്ടെത്തിയില്ല",
     uploadTitle: "മാലിന്യ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
     uploadDescription: "നിങ്ങളുടെ മാലിന്യ വസ്തുക്കളുടെ ഫോട്ടോ എടുക്കുക അല്ലെങ്കിൽ ചിത്രം അപ്‌ലോഡ് ചെയ്യുക",
@@ -746,6 +770,8 @@ export const translations = {
   Manipuri: {
     title: "EcoSortAI",
     subtitle: "এআই-চালিত নাথাকশিং শেমদোক",
+    aboutThisProject: "মসি প্রোজেক্টকী মতাংদা",
+    projectDescription: "মসি ২০২৫-২০২৬ সেসনগী বোর্ড এক্সামগীদমক AI সবজেক্টতা DVDT গী কেপস্টোন প্রোজেক্ট ওইরি।",
     noWasteDetected: "নাথাক ফংলে",
     uploadTitle: "নাথাকশিংগী মীওই থাজিল্লু",
     uploadDescription: "নখোয়গী নাথাক পোৎশিংগী ফোটো লৌ নত্ৰগা মীওই থাজিল্লু",
@@ -808,6 +834,8 @@ export const translations = {
   Marathi: {
     title: "EcoSortAI",
     subtitle: "AI-चालित कचरा वर्गीकरण",
+    aboutThisProject: "या प्रकल्पाबद्दल",
+    projectDescription: "हा २०२५-२०२६ सत्राच्या बोर्ड परीक्षेसाठी AI विषयातील DVDT चा कॅपस्टोन प्रकल्प आहे.",
     noWasteDetected: "कचरा आढळला नाही",
     uploadTitle: "कचऱ्याची प्रतिमा अपलोड करा",
     uploadDescription: "तुमच्या कचऱ्याच्या वस्तूंचा फोटो घ्या किंवा प्रतिमा अपलोड करा",
@@ -870,6 +898,8 @@ export const translations = {
   Nepali: {
     title: "EcoSortAI",
     subtitle: "AI-संचालित फोहोर वर्गीकरण",
+    aboutThisProject: "यस परियोजनाको बारेमा",
+    projectDescription: "यो २०२५-२०२६ सत्रको बोर्ड परीक्षाको लागि AI विषयमा DVDT को क्यापस्टोन परियोजना हो।",
     noWasteDetected: "कुनै फोहोर भेटिएन",
     uploadTitle: "फोहोरको तस्वीर अपलोड गर्नुहोस्",
     uploadDescription: "तपाईंको फोहोर वस्तुहरूको फोटो खिच्नुहोस् वा तस्वीर अपलोड गर्नुहोस्",
@@ -932,6 +962,8 @@ export const translations = {
   Odia: {
     title: "EcoSortAI",
     subtitle: "AI-ଚାଳିତ ଆବର୍ଜନା ବର୍ଗୀକରଣ",
+    aboutThisProject: "ଏହି ପ୍ରକଳ୍ପ ବିଷୟରେ",
+    projectDescription: "ଏହା ୨୦୨୫-୨୦୨୬ ସତ୍ରର ବୋର୍ଡ ପରୀକ୍ଷା ପାଇଁ AI ବିଷୟରେ DVDT ର କ୍ୟାପଷ୍ଟୋନ ପ୍ରକଳ୍ପ।",
     noWasteDetected: "କିଛି ଆବର୍ଜନା ମିଳିଲା ନାହିଁ",
     uploadTitle: "ଆବର୍ଜନା ଛବି ଅପଲୋଡ କରନ୍ତୁ",
     uploadDescription: "ଆପଣଙ୍କ ଆବର୍ଜନା ଜିନିଷର ଫଟୋ ନିଅନ୍ତୁ କିମ୍ବା ଛବି ଅପଲୋଡ କରନ୍ତୁ",
@@ -994,6 +1026,8 @@ export const translations = {
   Punjabi: {
     title: "EcoSortAI",
     subtitle: "AI-ਚਾਲਿਤ ਕੂੜਾ ਵਰਗੀਕਰਨ",
+    aboutThisProject: "ਇਸ ਪ੍ਰੋਜੈਕਟ ਬਾਰੇ",
+    projectDescription: "ਇਹ 2025-2026 ਸੈਸ਼ਨ ਦੀ ਬੋਰਡ ਪ੍ਰੀਖਿਆ ਲਈ AI ਵਿਸ਼ੇ ਵਿੱਚ DVDT ਦਾ ਕੈਪਸਟੋਨ ਪ੍ਰੋਜੈਕਟ ਹੈ।",
     noWasteDetected: "ਕੋਈ ਕੂੜਾ ਨਹੀਂ ਮਿਲਿਆ",
     uploadTitle: "ਕੂੜੇ ਦੀ ਤਸਵੀਰ ਅਪਲੋਡ ਕਰੋ",
     uploadDescription: "ਆਪਣੇ ਕੂੜੇ ਦੀਆਂ ਚੀਜ਼ਾਂ ਦੀ ਫੋਟੋ ਖਿੱਚੋ ਜਾਂ ਤਸਵੀਰ ਅਪਲੋਡ ਕਰੋ",
@@ -1056,6 +1090,8 @@ export const translations = {
   Sanskrit: {
     title: "EcoSortAI",
     subtitle: "कृत्रिमबुद्धि-चालितं कचरा-वर्गीकरणम्",
+    aboutThisProject: "अस्य प्रकल्पस्य विषये",
+    projectDescription: "एषः २०२५-२०२६ सत्रस्य बोर्ड-परीक्षायै AI-विषये DVDT-संस्थायाः कैपस्टोन-प्रकल्पः अस्ति।",
     noWasteDetected: "कचरा न प्राप्तः",
     uploadTitle: "कचरा-चित्रम् अपलोड कुरुत",
     uploadDescription: "भवतां कचरा-वस्तूनां छायाचित्रं गृह्णातु अथवा चित्रम् अपलोड कुरुत",
@@ -1118,6 +1154,8 @@ export const translations = {
   Santali: {
     title: "EcoSortAI",
     subtitle: "ᱮᱭᱤ-ᱪᱟᱞᱟᱜ ᱞᱮᱜᱮᱫ ᱦᱚᱲ ᱡᱷᱟᱨ",
+    aboutThisProject: "ᱱᱚᱣᱟ ᱯᱨᱚᱡᱮᱠᱴ ᱵᱟᱵᱚᱫ ᱨᱮ",
+    projectDescription: "ᱱᱚᱣᱟ ᱫᱚ ᱒᱐᱒᱕-᱒᱐᱒᱖ ᱥᱮᱥᱚᱱ ᱵᱚᱨᱰ ᱮᱜᱡᱟᱢ ᱞᱟᱹᱜᱤᱫ AI ᱵᱤᱥᱚᱭ ᱨᱮ DVDT ᱨᱮᱭᱟᱜ ᱠᱮᱯᱥᱴᱚᱱ ᱯᱨᱚᱡᱮᱠᱴ ᱠᱟᱱᱟ।",
     noWasteDetected: "ᱵᱟᱝ ᱞᱮᱜᱮᱫ ᱧᱟᱢᱮᱱᱟ",
     uploadTitle: "ᱞᱮᱜᱮᱫ ᱪᱤᱛᱟᱹᱨ ᱟᱯᱞᱳᱰ ᱢᱮ",
     uploadDescription: "ᱟᱢᱟᱜ ᱞᱮᱜᱮᱫ ᱵᱚᱛᱚᱨ ᱥᱟᱱᱟᱢ ᱦᱤᱡᱩᱜ ᱢᱮ ᱵᱟᱝᱠᱷᱟᱱ ᱪᱤᱛᱟᱹᱨ ᱟᱯᱞᱳᱰ ᱢᱮ",
@@ -1180,6 +1218,8 @@ export const translations = {
   Sindhi: {
     title: "EcoSortAI",
     subtitle: "اي آئي-هلائيندڙ ڪچري جي درجه بندي",
+    aboutThisProject: "هن پراجيڪٽ بابت",
+    projectDescription: "هي 2025-2026 سيشن جي بورڊ امتحان لاءِ AI مضمون ۾ DVDT جو ڪيپاسٽون پراجيڪٽ آهي.",
     noWasteDetected: "ڪو به ڪچرو نه مليو",
     uploadTitle: "ڪچري جي تصوير اپلوڊ ڪريو",
     uploadDescription: "پنهنجي ڪچري جي شين جو فوٽو وٺو يا تصوير اپلوڊ ڪريو",
@@ -1242,6 +1282,8 @@ export const translations = {
   Tamil: {
     title: "EcoSortAI",
     subtitle: "AI-இயங்கும் கழிவு வகைப்பாடு",
+    aboutThisProject: "இந்த திட்டத்தைப் பற்றி",
+    projectDescription: "இது 2025-2026 அமர்வின் போர்டு தேர்வுக்கான AI பாடத்தில் DVDT இன் கேப்ஸ்டோன் திட்டமாகும்.",
     noWasteDetected: "கழிவு கண்டறியப்படவில்லை",
     uploadTitle: "கழிவு படத்தை பதிவேற்றவும்",
     uploadDescription: "உங்கள் கழிவு பொருட்களின் புகைப்படம் எடுக்கவும் அல்லது பதிவேற்றவும்",
@@ -1304,6 +1346,8 @@ export const translations = {
   Telugu: {
     title: "EcoSortAI",
     subtitle: "AI-ఆధారిత వ్యర్థాల వర్గీకరణ",
+    aboutThisProject: "ఈ ప్రాజెక్ట్ గురించి",
+    projectDescription: "ఇది 2025-2026 సెషన్ బోర్డు పరీక్షకు AI సబ్జెక్ట్‌లో DVDT యొక్క క్యాప్‌స్టోన్ ప్రాజెక్ట్.",
     noWasteDetected: "వ్యర్థాలు గుర్తించబడలేదు",
     uploadTitle: "వ్యర్థాల చిత్రాన్ని అప్‌లోడ్ చేయండి",
     uploadDescription: "మీ వ్యర్థ వస్తువుల ఫోటో తీయండి లేదా చిత్రాన్ని అప్‌లోడ్ చేయండి",
@@ -1366,6 +1410,8 @@ export const translations = {
   Urdu: {
     title: "EcoSortAI",
     subtitle: "اے آئی سے چلنے والی کچرے کی درجہ بندی",
+    aboutThisProject: "اس پراجیکٹ کے بارے میں",
+    projectDescription: "یہ 2025-2026 سیشن کے بورڈ امتحان کے لیے AI مضمون میں DVDT کا کیپسٹون پراجیکٹ ہے۔",
     noWasteDetected: "کوئی کچرا نہیں ملا",
     uploadTitle: "کچرے کی تصویر اپلوڈ کریں",
     uploadDescription: "اپنے کچرے کی چیزوں کی فوٹو لیں یا تصویر اپلوڈ کریں",
