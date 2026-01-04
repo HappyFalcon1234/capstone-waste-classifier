@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
-import { type Language } from "@/lib/translations";
+import { getTranslation, type Language } from "@/lib/translations";
 import { Separator } from "@/components/ui/separator";
 
 interface SettingsDialogProps {
@@ -23,6 +23,7 @@ const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-seen';
 
 export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogProps) => {
   const [open, setOpen] = useState(false);
+  const t = (key: string) => getTranslation(language, key as any);
 
   const handleReplayTutorial = () => {
     localStorage.removeItem(TUTORIAL_STORAGE_KEY);
@@ -35,20 +36,20 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
       <DialogTrigger asChild>
         <Button variant="outline" size="icon">
           <Settings className="h-5 w-5" />
-          <span className="sr-only">Settings</span>
+          <span className="sr-only">{t("settings")}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
-          <DialogTitle>Settings</DialogTitle>
+          <DialogTitle>{t("settings")}</DialogTitle>
           <DialogDescription>
-            Customize your EcoSort experience
+            {t("settingsDescription")}
           </DialogDescription>
         </DialogHeader>
         
         <div className="space-y-6 py-4">
           <div className="space-y-2">
-            <h3 className="text-sm font-medium">Language</h3>
+            <h3 className="text-sm font-medium">{t("language")}</h3>
             <LanguageSelector 
               language={language} 
               onLanguageChange={onLanguageChange} 
@@ -58,17 +59,17 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
           <Separator />
           
           <div className="space-y-2">
-            <h3 className="text-sm font-medium">Theme</h3>
+            <h3 className="text-sm font-medium">{t("theme")}</h3>
             <div className="flex items-center gap-2">
               <ThemeToggle />
-              <span className="text-sm text-muted-foreground">Toggle dark/light mode</span>
+              <span className="text-sm text-muted-foreground">{t("themeToggle")}</span>
             </div>
           </div>
 
           <Separator />
 
           <div className="space-y-2">
-            <h3 className="text-sm font-medium">Help</h3>
+            <h3 className="text-sm font-medium">{t("help")}</h3>
             <Button 
               variant="outline" 
               size="sm" 
@@ -76,7 +77,7 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
               className="gap-2"
             >
               <RotateCcw className="h-4 w-4" />
-              Replay Tutorial
+              {t("replayTutorial")}
             </Button>
           </div>
         </div>

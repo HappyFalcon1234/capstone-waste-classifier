@@ -37,7 +37,15 @@ export const ProjectInfoDialog = ({ language }: ProjectInfoDialogProps) => {
             <h4 className="font-semibold text-sm">{t("aboutThisProject")}</h4>
           </div>
           <p className="text-sm text-muted-foreground leading-relaxed">
-            {t("projectDescription")}
+            {t("projectDescription")}{" "}
+            <a 
+              href="https://ipcaworld.co.in" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-primary hover:underline font-medium"
+            >
+              {t("visitIpca")}
+            </a>
           </p>
         </div>
       </PopoverContent>
