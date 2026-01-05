@@ -1,8 +1,9 @@
 import { useCallback, useState } from "react";
-import { Upload, Loader2 } from "lucide-react";
+import { Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { getTranslation, type Language } from "@/lib/translations";
+import { AnalyzingProgress } from "./AnalyzingProgress";
 
 interface ImageUploadProps {
   onImageUpload: (base64: string) => void;
@@ -98,11 +99,7 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, language }: ImageUploa
         className="flex flex-col items-center justify-center cursor-pointer"
       >
         {isAnalyzing ? (
-          <>
-            <Loader2 className="h-16 w-16 text-primary animate-spin mb-4" />
-            <p className="text-lg font-medium text-foreground">{t("analyzing")}</p>
-            <p className="text-sm text-muted-foreground mt-2">This may take a moment</p>
-          </>
+          <AnalyzingProgress />
         ) : (
           <>
             <Upload className="h-16 w-16 text-primary mb-4" />
