@@ -8,10 +8,11 @@ import { AnalyzingProgress } from "./AnalyzingProgress";
 interface ImageUploadProps {
   onImageUpload: (base64: string) => void;
   isAnalyzing: boolean;
+  analysisComplete?: boolean;
   language: Language;
 }
 
-export const ImageUpload = ({ onImageUpload, isAnalyzing, language }: ImageUploadProps) => {
+export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, language }: ImageUploadProps) => {
   const [dragActive, setDragActive] = useState(false);
   const { toast } = useToast();
   
@@ -99,7 +100,7 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, language }: ImageUploa
         className="flex flex-col items-center justify-center cursor-pointer"
       >
         {isAnalyzing ? (
-          <AnalyzingProgress />
+          <AnalyzingProgress language={language} analysisComplete={analysisComplete} />
         ) : (
           <>
             <Upload className="h-16 w-16 text-primary mb-4" />
