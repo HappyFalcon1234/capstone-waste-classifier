@@ -25,6 +25,7 @@ interface WasteItem {
 
 const Index = () => {
   const [isAnalyzing, setIsAnalyzing] = useState(false);
+  const [analysisComplete, setAnalysisComplete] = useState(false);
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("English");
@@ -101,6 +102,7 @@ const Index = () => {
 
   const handleImageUpload = async (base64Image: string) => {
     setIsAnalyzing(true);
+    setAnalysisComplete(false);
     setUploadedImage(base64Image);
     setPredictions([]);
     try {
@@ -112,6 +114,12 @@ const Index = () => {
       });
       if (error) throw error;
       if (data?.predictions && Array.isArray(data.predictions)) {
+        // Signal completion to show 100%
+        setAnalysisComplete(true);
+        
+        // Wait 500ms to show 100% before revealing results
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
         setPredictions(data.predictions);
         if (data.predictions.length > 0) {
           toast({
@@ -131,6 +139,7 @@ const Index = () => {
       });
     } finally {
       setIsAnalyzing(false);
+      setAnalysisComplete(false);
     }
   };
 
@@ -174,7 +183,7 @@ const Index = () => {
         <div className="space-y-8">
           {/* Upload Section */}
           <section data-tutorial="upload">
-            <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} language={language} />
+            <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} analysisComplete={analysisComplete} language={language} />
           </section>
 
           {/* Uploaded Image Preview */}
