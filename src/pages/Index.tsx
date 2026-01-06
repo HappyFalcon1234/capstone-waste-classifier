@@ -53,11 +53,10 @@ const Index = () => {
     }
   }, [setTheme]);
 
-  // Save language preference and set RTL direction
+  // Save language preference
   useEffect(() => {
     localStorage.setItem("preferredLanguage", language);
-    document.documentElement.dir = isRTL ? "rtl" : "ltr";
-  }, [language, isRTL]);
+  }, [language]);
 
   // Hide header on scroll down (mobile only)
   useEffect(() => {
@@ -149,7 +148,7 @@ const Index = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className={`min-h-screen bg-background ${isRTL ? 'rtl-text' : ''}`}>
       <TutorialOverlay />
       {/* Header */}
       <header className={`border-b border-border/50 bg-card/50 backdrop-blur-sm sticky top-0 z-10 transition-transform duration-300 ${
