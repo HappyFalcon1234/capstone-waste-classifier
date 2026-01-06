@@ -36,6 +36,10 @@ const Index = () => {
   const { setTheme } = useTheme();
   const t = (key: string) => getTranslation(language, key as any);
 
+  // RTL languages
+  const RTL_LANGUAGES = ["Urdu", "Kashmiri", "Sindhi"];
+  const isRTL = RTL_LANGUAGES.includes(language);
+
   // Load preferences from localStorage
   useEffect(() => {
     const savedLanguage = localStorage.getItem("preferredLanguage");
@@ -49,10 +53,11 @@ const Index = () => {
     }
   }, [setTheme]);
 
-  // Save language preference
+  // Save language preference and set RTL direction
   useEffect(() => {
     localStorage.setItem("preferredLanguage", language);
-  }, [language]);
+    document.documentElement.dir = isRTL ? "rtl" : "ltr";
+  }, [language, isRTL]);
 
   // Hide header on scroll down (mobile only)
   useEffect(() => {
