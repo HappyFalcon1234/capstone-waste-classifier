@@ -6,8 +6,13 @@ const corsHeaders = {
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
-// Allowed languages
-const ALLOWED_LANGUAGES = ["English", "Hindi", "Tamil", "Telugu"] as const;
+// Allowed languages - all 22 official Indian languages plus English
+const ALLOWED_LANGUAGES = [
+  "English", "Hindi", "Tamil", "Telugu", "Kannada", "Malayalam", 
+  "Marathi", "Bengali", "Gujarati", "Punjabi", "Odia", "Assamese",
+  "Urdu", "Sanskrit", "Konkani", "Manipuri", "Nepali", "Bodo",
+  "Dogri", "Kashmiri", "Maithili", "Santali", "Sindhi"
+] as const;
 type Language = typeof ALLOWED_LANGUAGES[number];
 
 // Validation functions
