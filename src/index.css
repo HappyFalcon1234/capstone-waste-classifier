@@ -99,3 +99,9 @@ All colors MUST be HSL.
     display: none !important;
   }
 }
+
+/* RTL text direction for specific languages */
+.rtl-text {
+  direction: rtl;
+  text-align: right;
+}
