@@ -106,7 +106,7 @@ serve(async (req) => {
                      req.headers.get('x-real-ip') || 
                      'unknown';
 
-    // Check rate limit (10 requests per minute per IP)
+    // Check rate limit (5 requests per minute per IP - tightened for abuse prevention)
     const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
     const { data: recentRequests, error: rateLimitError } = await supabase
       .from('rate_limits')
@@ -121,9 +121,9 @@ serve(async (req) => {
 
     const requestCount = recentRequests?.reduce((sum, r) => sum + r.request_count, 0) || 0;
 
-    if (requestCount >= 10) {
+    if (requestCount >= 5) {
       return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded. Maximum 10 requests per minute. Please try again later.' }),
+        JSON.stringify({ error: 'Rate limit exceeded. Maximum 5 requests per minute. Please try again later.' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
