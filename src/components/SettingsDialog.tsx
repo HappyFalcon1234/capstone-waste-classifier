@@ -21,9 +21,12 @@ interface SettingsDialogProps {
 
 const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-seen';
 
+const RTL_LANGUAGES: Language[] = ['Urdu', 'Kashmiri', 'Sindhi'];
+
 export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogProps) => {
   const [open, setOpen] = useState(false);
   const t = (key: string) => getTranslation(language, key as any);
+  const isRTL = RTL_LANGUAGES.includes(language);
 
   const handleReplayTutorial = () => {
     localStorage.removeItem(TUTORIAL_STORAGE_KEY);
@@ -39,8 +42,8 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
           <span className="sr-only">{t("settings")}</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-md">
-        <DialogHeader>
+      <DialogContent className={`sm:max-w-md ${isRTL ? 'rtl-text' : ''}`}>
+        <DialogHeader className={isRTL ? 'text-right' : ''}>
           <DialogTitle>{t("settings")}</DialogTitle>
           <DialogDescription>
             {t("settingsDescription")}
@@ -60,7 +63,7 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
           
           <div className="space-y-2">
             <h3 className="text-sm font-medium">{t("theme")}</h3>
-            <div className="flex items-center gap-2">
+            <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
               <ThemeToggle />
               <span className="text-sm text-muted-foreground">{t("themeToggle")}</span>
             </div>
@@ -74,7 +77,7 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
               variant="outline" 
               size="sm" 
               onClick={handleReplayTutorial}
-              className="gap-2"
+              className={`gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
             >
               <RotateCcw className="h-4 w-4" />
               {t("replayTutorial")}
