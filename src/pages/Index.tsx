@@ -11,9 +11,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
-import wasteGeneration from "@/assets/waste-generation.jpg";
-import environmentalImpact from "@/assets/environmental-impact.jpg";
-import wasteSegregationSolution from "@/assets/waste-segregation-solution.jpg";
+import wasteGeneration from "@/assets/waste-generation.webp";
+import environmentalImpact from "@/assets/environmental-impact.webp";
+import wasteSegregationSolution from "@/assets/waste-segregation-solution.webp";
 
 interface WasteItem {
   item: string;
@@ -279,6 +279,7 @@ const Index = () => {
                   src={wasteGeneration}
                   alt={t("section1Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
@@ -301,6 +302,7 @@ const Index = () => {
                   src={environmentalImpact}
                   alt={t("section2Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
@@ -323,6 +325,7 @@ const Index = () => {
                   src={wasteSegregationSolution}
                   alt={t("section3Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover"
+                  loading="lazy"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6">
