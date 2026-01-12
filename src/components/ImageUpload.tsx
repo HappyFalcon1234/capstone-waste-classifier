@@ -18,7 +18,29 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
   
   const t = (key: string) => getTranslation(language, key as any);
 
-  const handleFile = useCallback((file: File) => {
+  // Convert image to WebP format for optimization
+  const convertToWebP = useCallback((file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      
+      img.onload = () => {
+        canvas.width = img.width;
+        canvas.height = img.height;
+        ctx?.drawImage(img, 0, 0);
+        
+        // Convert to WebP with 0.85 quality
+        const webpBase64 = canvas.toDataURL('image/webp', 0.85);
+        resolve(webpBase64);
+      };
+      
+      img.onerror = () => reject(new Error('Failed to load image'));
+      img.src = URL.createObjectURL(file);
+    });
+  }, []);
+
+  const handleFile = useCallback(async (file: File) => {
     if (!file.type.startsWith("image/")) {
       toast({
         title: "Invalid file type",
@@ -39,13 +61,32 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64 = reader.result as string;
-      onImageUpload(base64);
-    };
-    reader.readAsDataURL(file);
-  }, [onImageUpload, toast]);
+    // Smart conversion: only convert if file is >2MB or is PNG (not already WebP)
+    const shouldConvert = (file.size > 2 * 1024 * 1024 || file.type === 'image/png') 
+                          && file.type !== 'image/webp';
+
+    if (shouldConvert) {
+      try {
+        const webpBase64 = await convertToWebP(file);
+        onImageUpload(webpBase64);
+      } catch {
+        // Fallback to original if conversion fails
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          const base64 = reader.result as string;
+          onImageUpload(base64);
+        };
+        reader.readAsDataURL(file);
+      }
+    } else {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const base64 = reader.result as string;
+        onImageUpload(base64);
+      };
+      reader.readAsDataURL(file);
+    }
+  }, [onImageUpload, toast, convertToWebP]);
 
   const handleDrag = useCallback((e: React.DragEvent) => {
     e.preventDefault();
