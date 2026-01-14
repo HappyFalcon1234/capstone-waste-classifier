@@ -156,14 +156,14 @@ const Index = () => {
       }`}>
         <div className="container mx-auto px-4 sm:px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 animate-fade-in">
               <ProjectInfoDialog language={language} />
               <button 
                 onClick={handleReset}
-                className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+                className="flex items-center gap-3 hover:opacity-80 transition-opacity group"
                 aria-label="Reset app"
               >
-                <div className="p-2 bg-primary/10 rounded-lg">
+                <div className="p-2 bg-primary/10 rounded-lg group-hover:animate-wiggle transition-all">
                   <Leaf className="h-6 w-6 text-primary" />
                 </div>
                 <div className="text-left">
@@ -172,7 +172,7 @@ const Index = () => {
                 </div>
               </button>
             </div>
-            <div className="flex items-center gap-3" data-tutorial="settings">
+            <div className="flex items-center gap-3 animate-fade-in delay-100" data-tutorial="settings">
               <SettingsDialog 
                 language={language}
                 onLanguageChange={handleLanguageChange}
@@ -186,22 +186,22 @@ const Index = () => {
       <main className="container mx-auto px-4 sm:px-6 py-8 max-w-6xl">
         <div className="space-y-8">
           {/* Upload Section */}
-          <section data-tutorial="upload">
+          <section data-tutorial="upload" className="animate-fade-in-up">
             <ImageUpload onImageUpload={handleImageUpload} isAnalyzing={isAnalyzing} analysisComplete={analysisComplete} language={language} />
           </section>
 
           {/* Uploaded Image Preview */}
           {uploadedImage && (
-            <section className="flex justify-center animate-fade-in">
+            <section className="flex justify-center animate-scale-in">
               <div className="max-w-md w-full">
-                <img src={uploadedImage} alt="Uploaded waste" className="rounded-lg border border-border shadow-lg transition-transform hover:scale-[1.02] duration-300" />
+                <img src={uploadedImage} alt="Uploaded waste" className="rounded-lg border border-border shadow-lg transition-all duration-500 hover:scale-[1.02] hover:shadow-xl" />
               </div>
             </section>
           )}
 
           {/* Results Section */}
           {uploadedImage && (
-            <section className="space-y-6">
+            <section className="space-y-6 animate-fade-in-up delay-200">
               <WasteResults 
                 predictions={predictions} 
                 uploadedImage={uploadedImage} 
@@ -213,7 +213,7 @@ const Index = () => {
 
           {/* Info Section - Only show when no image uploaded */}
           {!uploadedImage && !isAnalyzing && (
-            <section className="text-center py-12 animate-fade-in">
+            <section className="text-center py-12 animate-fade-in-up delay-200">
               <div className="max-w-2xl mx-auto space-y-4">
                 <h2 className="text-3xl font-bold text-foreground">
                   {t("smartSegregation")}
@@ -221,36 +221,36 @@ const Index = () => {
                 <p className="text-muted-foreground text-base font-medium">
                   {t("infoDescription")}
                 </p>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8" data-tutorial="bins">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 stagger-children" data-tutorial="bins">
                   <button 
                     onClick={() => setSelectedBinColor("Blue Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
                   >
-                    <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
+                    <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("recyclable")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Green Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
                   >
-                    <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
+                    <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("organic")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Red Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
                   >
-                    <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
+                    <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("hazardous")}</p>
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Yellow Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover:scale-105 hover:shadow-lg"
+                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
                   >
-                    <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110"></div>
+                    <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("eWaste")}</p>
                   </button>
@@ -263,7 +263,7 @@ const Index = () => {
         {/* Waste Management Info Section - Always visible at bottom */}
         {!uploadedImage && (
           <section className="mt-48 space-y-32">
-            <div className="text-center space-y-6 animate-fade-in pt-24" data-tutorial="info">
+            <div className="text-center space-y-6 pt-24 animate-fade-in-up" data-tutorial="info">
               <h2 className="text-4xl md:text-5xl font-bold text-foreground">
                 {t("wasteInfoTitle")}
               </h2>
@@ -273,16 +273,16 @@ const Index = () => {
             </div>
 
             {/* Section 1: Massive Waste Generation */}
-            <div className="space-y-6 animate-fade-in">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+            <div className="space-y-6 animate-fade-in-up">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover-glow">
                 <img 
                   src={wasteGeneration}
                   alt={t("section1Title")} 
-                  className="w-full h-[400px] md:h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
                 />
               </div>
-              <div className="max-w-4xl mx-auto space-y-6 px-6">
+              <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-left">
                 <h3 className="text-3xl font-bold text-foreground">
                   {t("section1Title")}
                 </h3>
@@ -296,16 +296,16 @@ const Index = () => {
             </div>
 
             {/* Section 2: Plastic Pollution */}
-            <div className="space-y-6 animate-fade-in">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+            <div className="space-y-6 animate-fade-in-up">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover-glow">
                 <img 
                   src={environmentalImpact}
                   alt={t("section2Title")} 
-                  className="w-full h-[400px] md:h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
                 />
               </div>
-              <div className="max-w-4xl mx-auto space-y-6 px-6">
+              <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-right">
                 <h3 className="text-3xl font-bold text-foreground">
                   {t("section2Title")}
                 </h3>
@@ -319,16 +319,16 @@ const Index = () => {
             </div>
 
             {/* Section 3: The Solution - Waste Segregation */}
-            <div className="space-y-6 animate-fade-in">
-              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-transform hover:scale-[1.02] duration-500">
+            <div className="space-y-6 animate-fade-in-up">
+              <div className="w-full rounded-xl overflow-hidden shadow-2xl transition-all duration-500 hover:scale-[1.02] hover:shadow-[0_25px_50px_-12px_rgba(0,0,0,0.25)] hover-glow">
                 <img 
                   src={wasteSegregationSolution}
                   alt={t("section3Title")} 
-                  className="w-full h-[400px] md:h-[600px] object-cover"
+                  className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
                 />
               </div>
-              <div className="max-w-4xl mx-auto space-y-6 px-6">
+              <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-left">
                 <h3 className="text-3xl font-bold text-foreground">
                   {t("section3Title")}
                 </h3>
@@ -343,8 +343,8 @@ const Index = () => {
             </div>
 
             {/* Section 4: NGOs Fighting for a Cleaner India */}
-            <div className="space-y-6 animate-fade-in">
-              <div className="max-w-4xl mx-auto space-y-6 px-6">
+            <div className="space-y-6 animate-fade-in-up">
+              <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-right">
                 <h3 className="text-3xl font-bold text-foreground">
                   {t("section4Title")}
                 </h3>
@@ -353,11 +353,11 @@ const Index = () => {
                   <p>{t("section4Content2")}</p>
                   <p className="font-semibold text-foreground">{t("section4OtherOrgs")}</p>
                   <ul className="list-disc list-inside space-y-3 pl-4">
-                    <li>{t("section4Ngo1")}</li>
-                    <li>{t("section4Ngo2")}</li>
-                    <li>{t("section4Ngo3")}</li>
-                    <li>{t("section4Ngo4")}</li>
-                    <li>{t("section4Ngo5")}</li>
+                    <li className="transition-transform hover:translate-x-2 duration-300">{t("section4Ngo1")}</li>
+                    <li className="transition-transform hover:translate-x-2 duration-300">{t("section4Ngo2")}</li>
+                    <li className="transition-transform hover:translate-x-2 duration-300">{t("section4Ngo3")}</li>
+                    <li className="transition-transform hover:translate-x-2 duration-300">{t("section4Ngo4")}</li>
+                    <li className="transition-transform hover:translate-x-2 duration-300">{t("section4Ngo5")}</li>
                   </ul>
                   <p className="pt-4">{t("section4Content3")}</p>
                   <p>{t("section4Content4")}</p>
