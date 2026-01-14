@@ -124,7 +124,7 @@ export default {
         "scale-in": "scale-in 0.4s ease-out forwards",
         "slide-in-left": "slide-in-left 0.5s ease-out forwards",
         "slide-in-right": "slide-in-right 0.5s ease-out forwards",
-        "float": "float 15s ease-in-out infinite",
+        "float": "float 1s ease-in-out infinite",
         "pulse-soft": "pulse-soft 2s ease-in-out infinite",
         "shimmer": "shimmer 3s linear infinite",
         "bounce-soft": "bounce-soft 2s ease-in-out infinite",
