@@ -117,10 +117,10 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
 
   return (
     <div
-      className={`relative border-2 border-dashed rounded-lg p-12 transition-all duration-300 ${
+      className={`relative border-2 border-dashed rounded-lg p-12 transition-all duration-500 group ${
         dragActive
-          ? "border-primary bg-primary/10"
-          : "border-border hover:border-primary/50"
+          ? "border-primary bg-primary/10 scale-[1.02] shadow-lg"
+          : "border-border hover:border-primary/50 hover:bg-primary/5 hover:shadow-md"
       } ${isAnalyzing ? "opacity-50 pointer-events-none" : ""}`}
       onDragEnter={handleDrag}
       onDragLeave={handleDrag}
@@ -143,9 +143,9 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
         {isAnalyzing ? (
           <AnalyzingProgress language={language} analysisComplete={analysisComplete} />
         ) : (
-          <>
-            <Upload className="h-16 w-16 text-primary mb-4" />
-            <p className="text-lg font-medium text-foreground mb-2">
+          <div className="animate-fade-in">
+            <Upload className="h-16 w-16 text-primary mb-4 mx-auto transition-all duration-300 group-hover:scale-110 animate-float" />
+            <p className="text-lg font-medium text-foreground mb-2 transition-colors">
               {t("uploadTitle")}
             </p>
             <p className="text-sm text-muted-foreground text-center">
@@ -154,7 +154,7 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
             <p className="text-xs text-muted-foreground mt-2">
               {t("maxFileSize")}
             </p>
-          </>
+          </div>
         )}
       </label>
     </div>

@@ -75,8 +75,8 @@ export const WasteResults = ({
   }
 
   return (
-    <div className="space-y-4 animate-fade-in">
-      <h2 className="text-2xl font-bold text-foreground mb-4">
+    <div className="space-y-4 animate-fade-in-up">
+      <h2 className="text-2xl font-bold text-foreground mb-4 animate-slide-in-left">
         {t("detectedItems")} ({predictions.length})
       </h2>
       
@@ -84,19 +84,21 @@ export const WasteResults = ({
         {predictions.map((item, index) => (
           <Card
             key={index}
-            className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group hover:shadow-lg hover:scale-[1.02] animate-fade-in"
-            style={{ animationDelay: `${index * 100}ms` }}
+            className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group hover-lift animate-scale-in opacity-0"
+            style={{ animationDelay: `${index * 150}ms`, animationFillMode: 'forwards' }}
             onClick={() => setSelectedItem(item)}
           >
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
-                <CardTitle className="text-lg flex items-center gap-2 font-bold transition-colors group-hover:text-primary">
-                  {getCategoryIcon(item.category)}
+                <CardTitle className="text-lg flex items-center gap-2 font-bold transition-all duration-300 group-hover:text-primary group-hover:translate-x-1">
+                  <span className="transition-transform duration-300 group-hover:scale-110">
+                    {getCategoryIcon(item.category)}
+                  </span>
                   {item.item}
                 </CardTitle>
                 <div className="flex flex-col items-end gap-1">
                   <Badge
-                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80 transition-all hover:scale-105 flex items-center gap-1`}
+                    className={`${getBinColorClass(item.binColor)} text-white cursor-pointer hover:opacity-80 transition-all hover:scale-110 hover:rotate-1 flex items-center gap-1`}
                     variant="secondary"
                     onClick={(e) => {
                       e.stopPropagation();
@@ -106,7 +108,7 @@ export const WasteResults = ({
                     {getBinColorTranslation(language, item.binColor)}
                     <HelpCircle className="h-3 w-3" />
                   </Badge>
-                  <Badge variant="outline" className="text-xs transition-colors group-hover:border-primary/50">
+                  <Badge variant="outline" className="text-xs transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
                     {item.confidence}% {t("confident")}
                   </Badge>
                 </div>
