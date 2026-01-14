@@ -143,15 +143,15 @@ export const ImageUpload = ({ onImageUpload, isAnalyzing, analysisComplete, lang
         {isAnalyzing ? (
           <AnalyzingProgress language={language} analysisComplete={analysisComplete} />
         ) : (
-          <div className="animate-fade-in">
+          <div className="animate-fade-in text-center">
             <Upload className="h-16 w-16 text-primary mb-4 mx-auto transition-all duration-300 group-hover:scale-110 animate-float" />
-            <p className="text-lg font-medium text-foreground mb-2 transition-colors">
+            <p className="text-lg font-medium text-foreground mb-2 transition-colors text-center">
               {t("uploadTitle")}
             </p>
             <p className="text-sm text-muted-foreground text-center">
               {t("uploadDescription")}
             </p>
-            <p className="text-xs text-muted-foreground mt-2">
+            <p className="text-xs text-muted-foreground mt-2 text-center">
               {t("maxFileSize")}
             </p>
           </div>
