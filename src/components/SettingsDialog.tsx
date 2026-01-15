@@ -9,7 +9,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { HighContrastToggle } from "@/components/HighContrastToggle";
+import { ThemeToggle } from "@/components/ThemeToggle";
 import { LanguageSelector } from "@/components/LanguageSelector";
 import { getTranslation, type Language } from "@/lib/translations";
 import { Separator } from "@/components/ui/separator";
@@ -62,10 +62,10 @@ export const SettingsDialog = ({ language, onLanguageChange }: SettingsDialogPro
           <Separator />
           
           <div className="space-y-2">
-            <h3 className="text-sm font-medium">{t("highContrast")}</h3>
+            <h3 className="text-sm font-medium">{t("theme")}</h3>
             <div className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse justify-end' : ''}`}>
-              <HighContrastToggle />
-              <span className="text-sm text-muted-foreground">{t("highContrastToggle")}</span>
+              <ThemeToggle />
+              <span className="text-sm text-muted-foreground">{t("themeToggle")}</span>
             </div>
           </div>
 

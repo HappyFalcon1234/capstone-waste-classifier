@@ -9,6 +9,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
+import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
 import wasteGeneration from "@/assets/waste-generation.webp";
 import environmentalImpact from "@/assets/environmental-impact.webp";
@@ -32,6 +33,7 @@ const Index = () => {
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { toast } = useToast();
+  const { setTheme } = useTheme();
   const t = (key: string) => getTranslation(language, key as any);
 
   // RTL languages
@@ -41,11 +43,15 @@ const Index = () => {
   // Load preferences from localStorage
   useEffect(() => {
     const savedLanguage = localStorage.getItem("preferredLanguage");
+    const savedTheme = localStorage.getItem("theme");
 
     if (savedLanguage) {
       setLanguage(savedLanguage as Language);
     }
-  }, []);
+    if (savedTheme) {
+      setTheme(savedTheme);
+    }
+  }, [setTheme]);
 
   // Save language preference
   useEffect(() => {

@@ -84,45 +84,6 @@ All colors MUST be HSL.
     --gradient-eco: linear-gradient(135deg, hsl(142 76% 45% / 0.2), hsl(145 15% 12%));
     --shadow-glow: 0 0 30px hsl(142 76% 45% / 0.2);
   }
-
-  /* High Contrast Mode */
-  .high-contrast {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 100%;
-
-    --card: 0 0% 5%;
-    --card-foreground: 0 0% 100%;
-
-    --popover: 0 0% 5%;
-    --popover-foreground: 0 0% 100%;
-
-    --primary: 142 100% 50%;
-    --primary-foreground: 0 0% 0%;
-
-    --secondary: 0 0% 15%;
-    --secondary-foreground: 0 0% 100%;
-
-    --muted: 0 0% 15%;
-    --muted-foreground: 0 0% 75%;
-
-    --accent: 142 100% 50%;
-    --accent-foreground: 0 0% 0%;
-
-    --destructive: 0 100% 50%;
-    --destructive-foreground: 0 0% 100%;
-
-    --border: 0 0% 30%;
-    --input: 0 0% 20%;
-    --ring: 142 100% 50%;
-    
-    --recyclable: 210 100% 60%;
-    --organic: 142 100% 50%;
-    --hazardous: 0 100% 50%;
-    --black-bin: 0 0% 60%;
-    
-    --gradient-eco: linear-gradient(135deg, hsl(142 100% 50% / 0.3), hsl(0 0% 5%));
-    --shadow-glow: 0 0 30px hsl(142 100% 50% / 0.3);
-  }
 }
 
 @layer base {
