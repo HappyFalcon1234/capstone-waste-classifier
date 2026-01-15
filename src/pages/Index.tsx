@@ -224,7 +224,7 @@ const Index = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 stagger-children" data-tutorial="bins">
                   <button 
                     onClick={() => setSelectedBinColor("Blue Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
+                    className="p-4 bg-card rounded-lg hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
                   >
                     <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
@@ -232,7 +232,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Green Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
+                    className="p-4 bg-card rounded-lg hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
                   >
                     <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
@@ -240,7 +240,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Red Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
+                    className="p-4 bg-card rounded-lg hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
                   >
                     <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
@@ -248,7 +248,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => setSelectedBinColor("Yellow Bin")}
-                    className="p-4 bg-card border border-border rounded-lg hover:border-primary/50 transition-all cursor-pointer hover-lift group"
+                    className="p-4 bg-card rounded-lg hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
                   >
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
