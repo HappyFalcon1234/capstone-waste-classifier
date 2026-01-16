@@ -14,6 +14,121 @@ export type Database = {
   }
   public: {
     Tables: {
+      feedback_submissions: {
+        Row: {
+          admin_notes: string | null
+          created_at: string
+          description: string | null
+          feedback_type: string
+          id: string
+          item_name: string
+          original_prediction: Json
+          reviewed_at: string | null
+          status: string
+          upload_history_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          feedback_type: string
+          id?: string
+          item_name: string
+          original_prediction: Json
+          reviewed_at?: string | null
+          status?: string
+          upload_history_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          admin_notes?: string | null
+          created_at?: string
+          description?: string | null
+          feedback_type?: string
+          id?: string
+          item_name?: string
+          original_prediction?: Json
+          reviewed_at?: string | null
+          status?: string
+          upload_history_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "feedback_submissions_upload_history_id_fkey"
+            columns: ["upload_history_id"]
+            isOneToOne: false
+            referencedRelation: "upload_history"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      learned_corrections: {
+        Row: {
+          corrected_category: string | null
+          correction_details: string | null
+          created_at: string
+          feedback_id: string
+          id: string
+          item_name: string
+          original_category: string
+        }
+        Insert: {
+          corrected_category?: string | null
+          correction_details?: string | null
+          created_at?: string
+          feedback_id: string
+          id?: string
+          item_name: string
+          original_category: string
+        }
+        Update: {
+          corrected_category?: string | null
+          correction_details?: string | null
+          created_at?: string
+          feedback_id?: string
+          id?: string
+          item_name?: string
+          original_category?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "learned_corrections_feedback_id_fkey"
+            columns: ["feedback_id"]
+            isOneToOne: true
+            referencedRelation: "feedback_submissions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          display_name: string | null
+          email: string | null
+          id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          display_name?: string | null
+          email?: string | null
+          id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       rate_limits: {
         Row: {
           created_at: string
@@ -38,15 +153,67 @@ export type Database = {
         }
         Relationships: []
       }
+      upload_history: {
+        Row: {
+          created_at: string
+          id: string
+          image_url: string
+          predictions: Json
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          image_url: string
+          predictions?: Json
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          image_url?: string
+          predictions?: Json
+          user_id?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
       cleanup_old_rate_limits: { Args: never; Returns: undefined }
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -173,6 +340,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const
