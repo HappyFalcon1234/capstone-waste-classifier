@@ -19,6 +19,7 @@ interface WasteResultsProps {
   uploadedImage?: string;
   language: Language;
   hasAnalyzed?: boolean;
+  uploadHistoryId?: string;
 }
 
 const getBinColorClass = (binColor: string) => {
@@ -44,7 +45,8 @@ export const WasteResults = ({
   predictions,
   uploadedImage,
   language,
-  hasAnalyzed = false
+  hasAnalyzed = false,
+  uploadHistoryId
 }: WasteResultsProps) => {
   const [selectedItem, setSelectedItem] = useState<WasteItem | null>(null);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
@@ -140,6 +142,7 @@ export const WasteResults = ({
         onOpenChange={(open) => !open && setSelectedItem(null)}
         uploadedImage={uploadedImage}
         language={language}
+        uploadHistoryId={uploadHistoryId}
       />
 
       <BinExamplesDialog
