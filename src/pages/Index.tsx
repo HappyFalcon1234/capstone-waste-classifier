@@ -5,8 +5,10 @@ import { SettingsDialog } from "@/components/SettingsDialog";
 import { ProjectInfoDialog } from "@/components/ProjectInfoDialog";
 import { BinExamplesDialog } from "@/components/BinExamplesDialog";
 import { TutorialOverlay } from "@/components/TutorialOverlay";
+import { UserMenu } from "@/components/UserMenu";
 import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
+import { useUploadHistory } from "@/hooks/useUploadHistory";
 import { supabase } from "@/integrations/supabase/client";
 import { Leaf } from "lucide-react";
 import { useTheme } from "next-themes";
@@ -28,12 +30,14 @@ const Index = () => {
   const [analysisComplete, setAnalysisComplete] = useState(false);
   const [predictions, setPredictions] = useState<WasteItem[]>([]);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [uploadHistoryId, setUploadHistoryId] = useState<string | null>(null);
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { setTheme } = useTheme();
+  const { saveToHistory } = useUploadHistory();
   const t = (key: string) => getTranslation(language, key as any);
 
   // RTL languages
@@ -96,6 +100,7 @@ const Index = () => {
   const handleReset = () => {
     setPredictions([]);
     setUploadedImage(null);
+    setUploadHistoryId(null);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
@@ -125,6 +130,13 @@ const Index = () => {
         await new Promise(resolve => setTimeout(resolve, 500));
         
         setPredictions(data.predictions);
+        
+        // Save to history for signed-in users
+        const historyEntry = await saveToHistory(base64Image, data.predictions);
+        if (historyEntry) {
+          setUploadHistoryId(historyEntry.id);
+        }
+        
         if (data.predictions.length > 0) {
           toast({
             title: t("analysisComplete"),
@@ -173,6 +185,7 @@ const Index = () => {
               </button>
             </div>
             <div className="flex items-center gap-3 animate-fade-in delay-100" data-tutorial="settings">
+              <UserMenu />
               <SettingsDialog 
                 language={language}
                 onLanguageChange={handleLanguageChange}
@@ -207,6 +220,7 @@ const Index = () => {
                 uploadedImage={uploadedImage} 
                 language={language}
                 hasAnalyzed={!isAnalyzing}
+                uploadHistoryId={uploadHistoryId || undefined}
               />
             </section>
           )}

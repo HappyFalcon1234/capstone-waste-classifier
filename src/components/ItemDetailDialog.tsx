@@ -8,10 +8,11 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { ThumbsUp, ThumbsDown, HelpCircle } from "lucide-react";
+import { ThumbsUp, ThumbsDown, HelpCircle, AlertCircle, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { useState } from "react";
 import { getTranslation, getBinColorTranslation, type Language } from "@/lib/translations";
+import { useFeedback } from "@/hooks/useFeedback";
 
 interface WasteItem {
   item: string;
@@ -27,6 +28,7 @@ interface ItemDetailDialogProps {
   onOpenChange: (open: boolean) => void;
   uploadedImage?: string;
   language: Language;
+  uploadHistoryId?: string;
 }
 
 const getBinColorClass = (binColor: string) => {
@@ -44,30 +46,78 @@ export const ItemDetailDialog = ({
   onOpenChange,
   uploadedImage,
   language,
+  uploadHistoryId,
 }: ItemDetailDialogProps) => {
   const { toast } = useToast();
+  const { submitFeedback } = useFeedback();
   const [feedback, setFeedback] = useState("");
   const [selectedFeedback, setSelectedFeedback] = useState<string | null>(null);
+  const [showDescriptionRequired, setShowDescriptionRequired] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   
   const t = (key: string) => getTranslation(language, key as any);
 
   if (!item) return null;
 
-  const handleFeedback = (feedbackType: string) => {
+  const handleFeedback = async (feedbackType: string) => {
     setSelectedFeedback(feedbackType);
-    toast({
-      title: t("feedbackReceived"),
-      description: t("feedbackThanks"),
-    });
+    
+    // If "No" is selected, require description before submitting
+    if (feedbackType === "No") {
+      setShowDescriptionRequired(true);
+      return;
+    }
+    
+    // For "Yes" or "I Don't Know", submit immediately
+    setIsSubmitting(true);
+    const success = await submitFeedback(
+      item,
+      feedbackType === "Yes" ? "yes" : "not_sure",
+      undefined,
+      uploadHistoryId
+    );
+    setIsSubmitting(false);
+    
+    if (success) {
+      toast({
+        title: t("feedbackReceived"),
+        description: t("feedbackThanks"),
+      });
+    }
   };
 
-  const handleSubmitFeedback = () => {
-    if (feedback.trim()) {
+  const handleSubmitFeedback = async () => {
+    if (selectedFeedback === "No" && !feedback.trim()) {
+      toast({
+        title: "Description Required",
+        description: "Please describe what was incorrect about the prediction.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsSubmitting(true);
+    const success = await submitFeedback(
+      item,
+      selectedFeedback === "No" ? "no" : selectedFeedback === "Yes" ? "yes" : "not_sure",
+      feedback.trim() || undefined,
+      uploadHistoryId
+    );
+    setIsSubmitting(false);
+    
+    if (success) {
       toast({
         title: t("feedbackReceived"),
         description: t("detailedFeedbackThanks"),
       });
       setFeedback("");
+      setShowDescriptionRequired(false);
+    } else {
+      toast({
+        title: "Error",
+        description: "Failed to submit feedback. Please try again.",
+        variant: "destructive",
+      });
     }
   };
 
@@ -140,6 +190,7 @@ export const ItemDetailDialog = ({
                   variant={selectedFeedback === "Yes" ? "default" : "outline"}
                   onClick={() => handleFeedback("Yes")}
                   className="flex-1"
+                  disabled={isSubmitting}
                 >
                   <ThumbsUp className="h-4 w-4 mr-2" />
                   {t("yes")}
@@ -148,6 +199,7 @@ export const ItemDetailDialog = ({
                   variant={selectedFeedback === "No" ? "default" : "outline"}
                   onClick={() => handleFeedback("No")}
                   className="flex-1"
+                  disabled={isSubmitting}
                 >
                   <ThumbsDown className="h-4 w-4 mr-2" />
                   {t("no")}
@@ -156,6 +208,7 @@ export const ItemDetailDialog = ({
                   variant={selectedFeedback === "I Don't Know" ? "default" : "outline"}
                   onClick={() => handleFeedback("I Don't Know")}
                   className="flex-1"
+                  disabled={isSubmitting}
                 >
                   <HelpCircle className="h-4 w-4 mr-2" />
                   {t("notSure")}
@@ -163,26 +216,62 @@ export const ItemDetailDialog = ({
               </div>
             </div>
 
-            <div>
-              <p className="text-sm font-medium text-muted-foreground mb-2">
-                {t("additionalFeedback")}
-              </p>
-              <Textarea
-                placeholder={t("feedbackPlaceholder")}
-                value={feedback}
-                onChange={(e) => setFeedback(e.target.value)}
-                className="min-h-[80px]"
-              />
-              {feedback.trim() && (
+            {/* Description required for "No" feedback */}
+            {showDescriptionRequired && selectedFeedback === "No" && (
+              <div className="space-y-2 animate-fade-in">
+                <div className="flex items-center gap-2 text-amber-500">
+                  <AlertCircle className="h-4 w-4" />
+                  <p className="text-sm font-medium">
+                    Please describe what was incorrect
+                  </p>
+                </div>
+                <Textarea
+                  placeholder="What was wrong with the prediction? What should it be instead?"
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="min-h-[100px]"
+                  required
+                />
                 <Button
                   onClick={handleSubmitFeedback}
-                  className="mt-2 w-full"
-                  variant="secondary"
+                  className="w-full"
+                  disabled={!feedback.trim() || isSubmitting}
                 >
+                  {isSubmitting ? (
+                    <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                  ) : null}
                   {t("submitFeedback")}
                 </Button>
-              )}
-            </div>
+              </div>
+            )}
+
+            {/* Optional additional feedback for other responses */}
+            {selectedFeedback && selectedFeedback !== "No" && (
+              <div>
+                <p className="text-sm font-medium text-muted-foreground mb-2">
+                  {t("additionalFeedback")}
+                </p>
+                <Textarea
+                  placeholder={t("feedbackPlaceholder")}
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  className="min-h-[80px]"
+                />
+                {feedback.trim() && (
+                  <Button
+                    onClick={handleSubmitFeedback}
+                    className="mt-2 w-full"
+                    variant="secondary"
+                    disabled={isSubmitting}
+                  >
+                    {isSubmitting ? (
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" />
+                    ) : null}
+                    {t("submitFeedback")}
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
         </div>
       </DialogContent>
