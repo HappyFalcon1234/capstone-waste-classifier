@@ -183,7 +183,12 @@ const Admin = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-3xl font-bold">Admin Panel</h1>
+          <div>
+            <h1 className="text-3xl font-bold">Admin Panel</h1>
+            <p className="text-sm text-muted-foreground mt-1">
+              <span className="font-medium text-primary">{corrections.length}</span> learned corrections improving classification accuracy
+            </p>
+          </div>
         </div>
 
         <Tabs defaultValue="pending" className="space-y-4">
@@ -195,7 +200,10 @@ const Admin = () => {
               )}
             </TabsTrigger>
             <TabsTrigger value="reviewed">Reviewed</TabsTrigger>
-            <TabsTrigger value="corrections">Learned Corrections</TabsTrigger>
+            <TabsTrigger value="corrections">
+              Learned Corrections
+              <Badge variant="secondary" className="ml-2">{corrections.length}</Badge>
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="pending" className="space-y-4">

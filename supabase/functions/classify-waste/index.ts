@@ -71,6 +71,13 @@ interface PredictionItem {
   confidence: number;
 }
 
+interface LearnedCorrection {
+  item_name: string;
+  original_category: string;
+  corrected_category: string | null;
+  correction_details: string | null;
+}
+
 function validatePredictions(data: unknown): data is PredictionItem[] {
   if (!Array.isArray(data)) return false;
   
@@ -89,13 +96,33 @@ function validatePredictions(data: unknown): data is PredictionItem[] {
   });
 }
 
+// Format learned corrections for the AI prompt
+function formatCorrectionsForPrompt(corrections: LearnedCorrection[]): string {
+  if (corrections.length === 0) return "";
+  
+  const correctionsList = corrections.map(c => {
+    if (c.corrected_category) {
+      return `- "${c.item_name}" should be classified as "${c.corrected_category}" (NOT "${c.original_category}")${c.correction_details ? `. Note: ${c.correction_details}` : ""}`;
+    }
+    return `- "${c.item_name}" was incorrectly classified as "${c.original_category}"${c.correction_details ? `. Issue: ${c.correction_details}` : ""}`;
+  }).join("\n");
+  
+  return `
+
+IMPORTANT - LEARNED CORRECTIONS FROM USER FEEDBACK:
+The following items have been reviewed and corrected. Apply these corrections when classifying similar items:
+${correctionsList}
+
+Use these corrections to improve your classification accuracy.`;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
   }
 
   try {
-    // Initialize Supabase client with service role for rate limiting
+    // Initialize Supabase client with service role for rate limiting and fetching corrections
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
@@ -163,7 +190,20 @@ serve(async (req) => {
       );
     }
 
-    console.log("Processing image analysis request");
+    // Fetch learned corrections to improve classification
+    const { data: corrections, error: correctionsError } = await supabase
+      .from('learned_corrections')
+      .select('item_name, original_category, corrected_category, correction_details')
+      .order('created_at', { ascending: false })
+      .limit(50); // Limit to most recent 50 corrections to keep prompt size manageable
+
+    if (correctionsError) {
+      console.error('Failed to fetch corrections:', correctionsError.message);
+    }
+
+    const correctionsPrompt = formatCorrectionsForPrompt(corrections || []);
+    
+    console.log(`Processing image analysis request with ${corrections?.length || 0} learned corrections`);
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -193,7 +233,7 @@ serve(async (req) => {
    - Black: Non-recyclable waste
 5. Confidence level (0-100) indicating how certain you are about the classification
 
-Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.`,
+Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.${correctionsPrompt}`,
           },
           {
             role: "user",
