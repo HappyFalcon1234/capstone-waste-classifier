@@ -75,6 +75,7 @@ interface LearnedCorrection {
   item_name: string;
   original_category: string;
   corrected_category: string | null;
+  corrected_bin_color: string | null;
   correction_details: string | null;
 }
 
@@ -101,8 +102,12 @@ function formatCorrectionsForPrompt(corrections: LearnedCorrection[]): string {
   if (corrections.length === 0) return "";
   
   const correctionsList = corrections.map(c => {
-    if (c.corrected_category) {
-      return `- "${c.item_name}" should be classified as "${c.corrected_category}" (NOT "${c.original_category}")${c.correction_details ? `. Note: ${c.correction_details}` : ""}`;
+    const categoryCorrection = c.corrected_category ? `category: "${c.corrected_category}"` : "";
+    const binCorrection = c.corrected_bin_color ? `bin: "${c.corrected_bin_color}"` : "";
+    const corrections = [categoryCorrection, binCorrection].filter(Boolean).join(", ");
+    
+    if (corrections) {
+      return `- "${c.item_name}" should be classified with ${corrections} (NOT "${c.original_category}")${c.correction_details ? `. Note: ${c.correction_details}` : ""}`;
     }
     return `- "${c.item_name}" was incorrectly classified as "${c.original_category}"${c.correction_details ? `. Issue: ${c.correction_details}` : ""}`;
   }).join("\n");
@@ -193,7 +198,7 @@ serve(async (req) => {
     // Fetch learned corrections to improve classification
     const { data: corrections, error: correctionsError } = await supabase
       .from('learned_corrections')
-      .select('item_name, original_category, corrected_category, correction_details')
+      .select('item_name, original_category, corrected_category, corrected_bin_color, correction_details')
       .order('created_at', { ascending: false })
       .limit(50); // Limit to most recent 50 corrections to keep prompt size manageable
 
