@@ -66,6 +66,7 @@ export type Database = {
       }
       learned_corrections: {
         Row: {
+          corrected_bin_color: string | null
           corrected_category: string | null
           correction_details: string | null
           created_at: string
@@ -75,6 +76,7 @@ export type Database = {
           original_category: string
         }
         Insert: {
+          corrected_bin_color?: string | null
           corrected_category?: string | null
           correction_details?: string | null
           created_at?: string
@@ -84,6 +86,7 @@ export type Database = {
           original_category: string
         }
         Update: {
+          corrected_bin_color?: string | null
           corrected_category?: string | null
           correction_details?: string | null
           created_at?: string

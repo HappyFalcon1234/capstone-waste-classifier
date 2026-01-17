@@ -102,7 +102,7 @@ const Admin = () => {
       if (correctionsRes.error) throw correctionsRes.error;
 
       setFeedbacks(feedbackRes.data as unknown as FeedbackSubmission[] || []);
-      setCorrections(correctionsRes.data || []);
+      setCorrections(correctionsRes.data as unknown as LearnedCorrection[] || []);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -129,14 +129,16 @@ const Admin = () => {
 
       if (updateError) throw updateError;
 
-      // Create learned correction
+      // Create learned correction with admin's corrections
+      const correction = correctionData[feedback.id];
       const { error: insertError } = await supabase
         .from("learned_corrections")
         .insert({
           feedback_id: feedback.id,
           item_name: feedback.item_name,
           original_category: feedback.original_prediction.category,
-          corrected_category: correctedCategory[feedback.id] || null,
+          corrected_category: correction?.category || null,
+          corrected_bin_color: correction?.binColor || null,
           correction_details: feedback.description
         });
 
@@ -268,18 +270,45 @@ const Admin = () => {
                       </div>
                     </div>
 
-                    <div className="space-y-2">
-                      <label className="text-sm font-medium">Corrected Category (optional)</label>
-                      <input
-                        type="text"
-                        className="w-full px-3 py-2 border rounded-md bg-background"
-                        placeholder="Enter correct category..."
-                        value={correctedCategory[feedback.id] || ""}
-                        onChange={(e) => setCorrectedCategory(prev => ({
-                          ...prev,
-                          [feedback.id]: e.target.value
-                        }))}
-                      />
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label>Correct Category</Label>
+                        <Select
+                          value={correctionData[feedback.id]?.category || ""}
+                          onValueChange={(value) => setCorrectionData(prev => ({
+                            ...prev,
+                            [feedback.id]: { ...prev[feedback.id], category: value }
+                          }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select category..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {WASTE_CATEGORIES.map((cat) => (
+                              <SelectItem key={cat} value={cat}>{cat}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
+                      <div className="space-y-2">
+                        <Label>Correct Bin Color</Label>
+                        <Select
+                          value={correctionData[feedback.id]?.binColor || ""}
+                          onValueChange={(value) => setCorrectionData(prev => ({
+                            ...prev,
+                            [feedback.id]: { ...prev[feedback.id], binColor: value }
+                          }))}
+                        >
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select bin color..." />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {BIN_COLORS.map((bin) => (
+                              <SelectItem key={bin.value} value={bin.value}>{bin.label}</SelectItem>
+                            ))}
+                          </SelectContent>
+                        </Select>
+                      </div>
                     </div>
 
                     <div className="space-y-2">
