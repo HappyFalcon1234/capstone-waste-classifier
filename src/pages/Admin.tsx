@@ -9,6 +9,25 @@ import { Textarea } from "@/components/ui/textarea";
 import { ArrowLeft, Check, X, Loader2, AlertCircle } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
+
+// Waste categories and bin colors for correction
+const WASTE_CATEGORIES = [
+  "Recyclable",
+  "Organic/Wet Waste", 
+  "Hazardous",
+  "E-Waste",
+  "Non-Recyclable"
+] as const;
+
+const BIN_COLORS = [
+  { value: "Blue", label: "Blue (Recyclable)" },
+  { value: "Green", label: "Green (Organic/Wet)" },
+  { value: "Red", label: "Red (Hazardous)" },
+  { value: "Yellow", label: "Yellow (E-Waste)" },
+  { value: "Black", label: "Black (Non-Recyclable)" },
+] as const;
 
 interface FeedbackSubmission {
   id: string;
@@ -32,8 +51,14 @@ interface LearnedCorrection {
   item_name: string;
   original_category: string;
   corrected_category: string | null;
+  corrected_bin_color: string | null;
   correction_details: string | null;
   created_at: string;
+}
+
+interface CorrectionData {
+  category: string;
+  binColor: string;
 }
 
 const Admin = () => {
@@ -42,7 +67,7 @@ const Admin = () => {
   const [corrections, setCorrections] = useState<LearnedCorrection[]>([]);
   const [loading, setLoading] = useState(true);
   const [adminNotes, setAdminNotes] = useState<Record<string, string>>({});
-  const [correctedCategory, setCorrectedCategory] = useState<Record<string, string>>({});
+  const [correctionData, setCorrectionData] = useState<Record<string, CorrectionData>>({});
   const [processingId, setProcessingId] = useState<string | null>(null);
   const navigate = useNavigate();
   const { toast } = useToast();
