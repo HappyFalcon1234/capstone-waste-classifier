@@ -19,6 +19,7 @@ interface WasteItem {
 interface UploadHistory {
   id: string;
   image_url: string;
+  signed_url?: string;
   predictions: WasteItem[];
   created_at: string;
 }
@@ -60,13 +61,23 @@ const History = () => {
 
       if (error) throw error;
       
-      // Parse predictions from JSONB
-      const parsed = data?.map(item => ({
-        ...item,
-        predictions: item.predictions as unknown as WasteItem[]
-      })) || [];
+      // Parse predictions and get signed URLs for images
+      const parsedWithUrls = await Promise.all(
+        (data || []).map(async (item) => {
+          // Generate signed URL for the image (1 hour expiry)
+          const { data: signedUrlData } = await supabase.storage
+            .from("waste-images")
+            .createSignedUrl(item.image_url, 3600);
+          
+          return {
+            ...item,
+            predictions: item.predictions as unknown as WasteItem[],
+            signed_url: signedUrlData?.signedUrl || ''
+          };
+        })
+      );
       
-      setHistory(parsed);
+      setHistory(parsedWithUrls);
     } catch (error: any) {
       toast({
         title: "Error",
@@ -147,7 +158,7 @@ const History = () => {
                 <CardContent>
                   <div className="flex gap-4">
                     <img
-                      src={entry.image_url}
+                      src={entry.signed_url || ''}
                       alt="Uploaded waste"
                       className="w-24 h-24 object-cover rounded-lg border border-border"
                     />

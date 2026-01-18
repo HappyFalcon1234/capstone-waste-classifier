@@ -34,17 +34,15 @@ export const useUploadHistory = () => {
 
       if (uploadError) throw uploadError;
 
-      // Get public URL
-      const { data: urlData } = supabase.storage
-        .from("waste-images")
-        .getPublicUrl(fileName);
+      // Store the file path (not the URL) so we can generate signed URLs later
+      const imagePath = fileName;
 
-      // Save to history
+      // Save to history with the file path
       const { data, error } = await supabase
         .from("upload_history")
         .insert([{
           user_id: user.id,
-          image_url: urlData.publicUrl,
+          image_url: imagePath, // Store path, not URL
           predictions: JSON.parse(JSON.stringify(predictions))
         }])
         .select()
