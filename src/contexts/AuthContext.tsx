@@ -19,48 +19,53 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    // Set up auth state listener FIRST
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
-        setSession(session);
-        setUser(session?.user ?? null);
-        
-        if (session?.user) {
-          // Check if user is admin
-          const { data: roles } = await supabase
-            .from("user_roles")
-            .select("role")
-            .eq("user_id", session.user.id);
-          
-          setIsAdmin(roles?.some(r => r.role === "admin") ?? false);
-        } else {
-          setIsAdmin(false);
-        }
-        
-        setLoading(false);
-      }
-    );
-
-    // THEN get initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    // Set up auth state listener FIRST (keep callback synchronous)
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
       setSession(session);
       setUser(session?.user ?? null);
-      
-      if (session?.user) {
-        supabase
-          .from("user_roles")
-          .select("role")
-          .eq("user_id", session.user.id)
-          .then(({ data: roles }) => {
-            setIsAdmin(roles?.some(r => r.role === "admin") ?? false);
-          });
-      }
-      
       setLoading(false);
     });
 
+    // THEN get initial session
+    supabase.auth
+      .getSession()
+      .then(({ data: { session } }) => {
+        setSession(session);
+        setUser(session?.user ?? null);
+      })
+      .finally(() => setLoading(false));
+
     return () => subscription.unsubscribe();
   }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    const userId = user?.id;
+    if (!userId) {
+      setIsAdmin(false);
+      return;
+    }
+
+    // Use a SECURITY DEFINER backend function to avoid RLS recursion / visibility issues
+    supabase
+      .rpc("has_role", { _user_id: userId, _role: "admin" })
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          // Fail closed: if we can't verify admin, don't show admin UI.
+          setIsAdmin(false);
+          return;
+        }
+        setIsAdmin(Boolean(data));
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
 
   const signOut = async () => {
     await supabase.auth.signOut();
