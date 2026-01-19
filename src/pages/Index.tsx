@@ -271,22 +271,17 @@ const Index = () => {
                 </div>
                 
                 {/* Project Info Section */}
-                <div className="mt-8 p-4 bg-card rounded-lg border border-border">
-                  <div className="flex items-start gap-3">
-                    <Info className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-sm text-muted-foreground leading-relaxed">
-                      {t("projectDescription")}{" "}
-                      <a 
-                        href="https://ipcaworld.co.in" 
-                        target="_blank" 
-                        rel="noopener noreferrer"
-                        className="text-primary hover:underline font-medium"
-                      >
-                        {t("visitIpca")}
-                      </a>
-                    </p>
-                  </div>
-                </div>
+                <p className="mt-8 text-sm text-muted-foreground leading-relaxed text-center">
+                  {t("projectDescription")}{" "}
+                  <a 
+                    href="https://ipcaworld.co.in" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="text-primary hover:underline font-medium"
+                  >
+                    {t("visitIpca")}
+                  </a>
+                </p>
               </div>
             </section>
           )}
