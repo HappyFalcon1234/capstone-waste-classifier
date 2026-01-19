@@ -34,6 +34,7 @@ const Index = () => {
   const [language, setLanguage] = useState<Language>("English");
   const [isHeaderVisible, setIsHeaderVisible] = useState(true);
   const [selectedBinColor, setSelectedBinColor] = useState<string | null>(null);
+  const [highlightedBin, setHighlightedBin] = useState<string | null>(null);
   const isMobile = useIsMobile();
   const { toast } = useToast();
   const { setTheme } = useTheme();
@@ -237,32 +238,32 @@ const Index = () => {
                 </p>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 stagger-children" data-tutorial="bins">
                   <button 
-                    onClick={() => setSelectedBinColor("Blue Bin")}
-                    className="p-4 bg-transparent rounded-lg border border-primary hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
+                    onClick={() => { setSelectedBinColor("Blue Bin"); setHighlightedBin("Blue Bin"); }}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Blue Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
                   >
                     <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("recyclable")}</p>
                   </button>
                   <button 
-                    onClick={() => setSelectedBinColor("Green Bin")}
-                    className="p-4 bg-transparent rounded-lg border border-primary hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
+                    onClick={() => { setSelectedBinColor("Green Bin"); setHighlightedBin("Green Bin"); }}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Green Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
                   >
                     <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("organic")}</p>
                   </button>
                   <button 
-                    onClick={() => setSelectedBinColor("Red Bin")}
-                    className="p-4 bg-transparent rounded-lg border border-primary hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
+                    onClick={() => { setSelectedBinColor("Red Bin"); setHighlightedBin("Red Bin"); }}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Red Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
                   >
                     <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
                     <p className="text-xs text-muted-foreground">{t("hazardous")}</p>
                   </button>
                   <button 
-                    onClick={() => setSelectedBinColor("Yellow Bin")}
-                    className="p-4 bg-transparent rounded-lg border border-primary hover:bg-primary/10 transition-all cursor-pointer hover-lift group"
+                    onClick={() => { setSelectedBinColor("Yellow Bin"); setHighlightedBin("Yellow Bin"); }}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Yellow Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
                   >
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
