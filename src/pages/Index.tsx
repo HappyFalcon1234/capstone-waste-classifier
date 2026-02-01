@@ -239,7 +239,7 @@ const Index = () => {
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-8 stagger-children" data-tutorial="bins">
                   <button 
                     onClick={() => { setSelectedBinColor("Blue Bin"); setHighlightedBin("Blue Bin"); }}
-                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Blue Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Blue Bin" ? "border-primary bg-primary/10 ring-1 ring-primary/30" : "border-primary/30"}`}
                   >
                     <div className="w-12 h-12 bg-recyclable rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("blueBin")}</p>
@@ -247,7 +247,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => { setSelectedBinColor("Green Bin"); setHighlightedBin("Green Bin"); }}
-                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Green Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Green Bin" ? "border-primary bg-primary/10 ring-1 ring-primary/30" : "border-primary/30"}`}
                   >
                     <div className="w-12 h-12 bg-organic rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("greenBin")}</p>
@@ -255,7 +255,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => { setSelectedBinColor("Red Bin"); setHighlightedBin("Red Bin"); }}
-                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Red Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Red Bin" ? "border-primary bg-primary/10 ring-1 ring-primary/30" : "border-primary/30"}`}
                   >
                     <div className="w-12 h-12 bg-hazardous rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("redBin")}</p>
@@ -263,7 +263,7 @@ const Index = () => {
                   </button>
                   <button 
                     onClick={() => { setSelectedBinColor("Yellow Bin"); setHighlightedBin("Yellow Bin"); }}
-                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Yellow Bin" ? "border-primary border-2 bg-primary/10 ring-2 ring-primary/20" : "border-primary/50"}`}
+                    className={`p-4 bg-transparent rounded-lg border hover:bg-primary/10 transition-all cursor-pointer hover-lift group ${highlightedBin === "Yellow Bin" ? "border-primary bg-primary/10 ring-1 ring-primary/30" : "border-primary/30"}`}
                   >
                     <div className="w-12 h-12 bg-yellow-500 rounded-full mx-auto mb-2 transition-transform group-hover:scale-110 group-hover:animate-bounce-soft"></div>
                     <p className="text-sm font-semibold">{t("yellowBin")}</p>
@@ -400,7 +400,12 @@ const Index = () => {
       <BinExamplesDialog
         binColor={selectedBinColor}
         open={selectedBinColor !== null}
-        onOpenChange={(open) => !open && setSelectedBinColor(null)}
+        onOpenChange={(open) => {
+          if (!open) {
+            setSelectedBinColor(null);
+            setHighlightedBin(null);
+          }
+        }}
         language={language}
       />
     </div>
