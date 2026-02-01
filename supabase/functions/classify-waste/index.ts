@@ -196,6 +196,7 @@ serve(async (req) => {
     }
 
     // Fetch learned corrections to improve classification
+    // Note: Using service_role client which bypasses RLS - corrections are now restricted to authenticated users only
     const { data: corrections, error: correctionsError } = await supabase
       .from('learned_corrections')
       .select('item_name, original_category, corrected_category, corrected_bin_color, correction_details')
