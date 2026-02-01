@@ -243,7 +243,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              minLength={6}
+              minLength={8}
               autoComplete={isSignUp ? "new-password" : "current-password"}
             />
           </div>
