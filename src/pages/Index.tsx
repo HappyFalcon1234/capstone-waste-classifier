@@ -179,10 +179,7 @@ const Index = () => {
                 <div className="p-2 bg-primary/10 rounded-lg group-hover:animate-wiggle transition-all">
                   <Leaf className="h-6 w-6 text-primary" />
                 </div>
-                <div className="text-left">
-                  <h1 className="text-foreground text-2xl font-bold">EcoSort</h1>
-                  <p className="text-sm text-muted-foreground">{t("subtitle")}</p>
-                </div>
+                <h1 className="text-foreground text-2xl font-bold">EcoSort</h1>
               </button>
             </div>
             <div className="flex items-center gap-3 animate-fade-in delay-100" data-tutorial="settings">
