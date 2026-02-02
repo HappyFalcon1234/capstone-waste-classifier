@@ -13,9 +13,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Leaf, Info } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
-import wasteGeneration from "@/assets/waste-generation.webp";
-import environmentalImpact from "@/assets/environmental-impact.webp";
-import wasteSegregationSolution from "@/assets/waste-segregation-solution.webp";
+import wasteGeneration from "@/assets/waste-generation-optimized.webp";
+import environmentalImpact from "@/assets/environmental-impact-optimized.webp";
+import wasteSegregationSolution from "@/assets/waste-segregation-optimized.webp";
 
 interface WasteItem {
   item: string;
@@ -305,6 +305,9 @@ const Index = () => {
                   alt={t("section1Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
+                  width={1024}
+                  height={576}
+                  decoding="async"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-left">
@@ -328,6 +331,9 @@ const Index = () => {
                   alt={t("section2Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
+                  width={1024}
+                  height={576}
+                  decoding="async"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-right">
@@ -351,6 +357,9 @@ const Index = () => {
                   alt={t("section3Title")} 
                   className="w-full h-[400px] md:h-[600px] object-cover transition-transform duration-700 hover:scale-105"
                   loading="lazy"
+                  width={1024}
+                  height={576}
+                  decoding="async"
                 />
               </div>
               <div className="max-w-4xl mx-auto space-y-6 px-6 animate-slide-in-left">
