@@ -7,7 +7,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { User, LogOut, History, Shield } from "lucide-react";
+import { User, LogOut, History, Shield, MapPin, BarChart3, Lightbulb } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { AuthDialog } from "./AuthDialog";
 import { useNavigate } from "react-router-dom";
@@ -41,6 +41,18 @@ export const UserMenu = () => {
         <DropdownMenuItem onClick={() => navigate("/history")}>
           <History className="h-4 w-4 mr-2" />
           History
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+          <BarChart3 className="h-4 w-4 mr-2" />
+          Dashboard
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/recycling-centers")}>
+          <MapPin className="h-4 w-4 mr-2" />
+          Recycling Centers
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/tips")}>
+          <Lightbulb className="h-4 w-4 mr-2" />
+          Eco Tips
         </DropdownMenuItem>
         {isAdmin && (
           <DropdownMenuItem onClick={() => navigate("/admin")}>

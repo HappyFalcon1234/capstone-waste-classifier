@@ -11,6 +11,9 @@ import { AuthProvider } from "@/contexts/AuthContext";
 const Index = lazy(() => import("./pages/Index"));
 const History = lazy(() => import("./pages/History"));
 const Admin = lazy(() => import("./pages/Admin"));
+const Dashboard = lazy(() => import("./pages/Dashboard"));
+const RecyclingCenters = lazy(() => import("./pages/RecyclingCenters"));
+const Tips = lazy(() => import("./pages/Tips"));
 const NotFound = lazy(() => import("./pages/NotFound"));
 
 const queryClient = new QueryClient();
@@ -27,6 +30,9 @@ const App = () => (
               <Routes>
                 <Route path="/" element={<Index />} />
                 <Route path="/history" element={<History />} />
+                <Route path="/dashboard" element={<Dashboard />} />
+                <Route path="/recycling-centers" element={<RecyclingCenters />} />
+                <Route path="/tips" element={<Tips />} />
                 <Route path="/admin" element={<Admin />} />
                 {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
                 <Route path="*" element={<NotFound />} />
