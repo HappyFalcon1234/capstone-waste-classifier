@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { RECYCLING_CENTERS, getUniqueStates, getCitiesForState, RecyclingCenter } from "@/data/recyclingCenters";
 import { LocationFilters } from "@/components/recycling/LocationFilters";
 import { CenterCard } from "@/components/recycling/CenterCard";
+import { getTranslation, Language } from "@/lib/translations";
 
 const RecyclingCenters = () => {
   const navigate = useNavigate();
@@ -13,6 +14,13 @@ const RecyclingCenters = () => {
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [selectedState, setSelectedState] = useState<string | null>(null);
   const [selectedCity, setSelectedCity] = useState<string | null>(null);
+  const [language, setLanguage] = useState<Language>("English");
+  const t = (key: string) => getTranslation(language, key as any);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) setLanguage(savedLanguage as Language);
+  }, []);
 
   const states = useMemo(() => getUniqueStates(), []);
   const cities = useMemo(() => 
@@ -46,8 +54,8 @@ const RecyclingCenters = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Recycling Centers</h1>
-            <p className="text-muted-foreground">Find facilities for proper waste disposal across India</p>
+            <h1 className="text-3xl font-bold">{t("recyclingCentersTitle")}</h1>
+            <p className="text-muted-foreground">{t("recyclingCentersSubtitle")}</p>
           </div>
         </div>
 

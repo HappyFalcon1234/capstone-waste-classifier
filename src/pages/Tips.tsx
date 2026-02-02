@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,6 +18,7 @@ import {
   CheckCircle2,
   XCircle
 } from "lucide-react";
+import { getTranslation, Language } from "@/lib/translations";
 
 interface Tip {
   id: string;
@@ -225,6 +226,13 @@ const Tips = () => {
   const navigate = useNavigate();
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [expandedTip, setExpandedTip] = useState<string | null>(null);
+  const [language, setLanguage] = useState<Language>("English");
+  const t = (key: string) => getTranslation(language, key as any);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) setLanguage(savedLanguage as Language);
+  }, []);
 
   const filteredTips = selectedCategory === "all" 
     ? TIPS_DATA 
@@ -239,8 +247,8 @@ const Tips = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Waste Reduction Tips</h1>
-            <p className="text-muted-foreground">Practical ways to reduce your environmental footprint</p>
+            <h1 className="text-3xl font-bold">{t("tipsTitle")}</h1>
+            <p className="text-muted-foreground">{t("tipsSubtitle")}</p>
           </div>
         </div>
 

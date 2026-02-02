@@ -5,6 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { ArrowLeft, Loader2, Leaf, TrendingUp, Recycle, TreePine, Droplets } from "lucide-react";
+import { getTranslation, Language } from "@/lib/translations";
 import { 
   BarChart, 
   Bar, 
@@ -58,7 +59,14 @@ const Dashboard = () => {
   const { user, loading: authLoading } = useAuth();
   const [history, setHistory] = useState<UploadHistory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState<Language>("English");
   const navigate = useNavigate();
+  const t = (key: string) => getTranslation(language, key as any);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) setLanguage(savedLanguage as Language);
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -156,16 +164,16 @@ const Dashboard = () => {
               <ArrowLeft className="h-5 w-5" />
             </Button>
             <div>
-              <h1 className="text-3xl font-bold">Waste Dashboard</h1>
-              <p className="text-muted-foreground">Track your environmental impact</p>
+              <h1 className="text-3xl font-bold">{t("dashboardTitle")}</h1>
+              <p className="text-muted-foreground">{t("dashboardSubtitle")}</p>
             </div>
           </div>
           <Card>
             <CardContent className="py-12 text-center">
               <Leaf className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-              <h2 className="text-xl font-semibold mb-2">No data yet</h2>
-              <p className="text-muted-foreground mb-4">Start classifying waste to see your environmental impact!</p>
-              <Button onClick={() => navigate("/")}>Classify Waste</Button>
+              <h2 className="text-xl font-semibold mb-2">{t("noDataYet")}</h2>
+              <p className="text-muted-foreground mb-4">{t("noDataDesc")}</p>
+              <Button onClick={() => navigate("/")}>{t("classifyWaste")}</Button>
             </CardContent>
           </Card>
         </div>
@@ -182,8 +190,8 @@ const Dashboard = () => {
             <ArrowLeft className="h-5 w-5" />
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">Waste Dashboard</h1>
-            <p className="text-muted-foreground">Track your environmental impact</p>
+            <h1 className="text-3xl font-bold">{t("dashboardTitle")}</h1>
+            <p className="text-muted-foreground">{t("dashboardSubtitle")}</p>
           </div>
         </div>
 
