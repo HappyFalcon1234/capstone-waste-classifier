@@ -205,7 +205,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{totalItems}</p>
-                  <p className="text-xs text-muted-foreground">Items Classified</p>
+                  <p className="text-xs text-muted-foreground">{t("itemsClassified")}</p>
                 </div>
               </div>
             </CardContent>
@@ -218,7 +218,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{totalScans}</p>
-                  <p className="text-xs text-muted-foreground">Total Scans</p>
+                  <p className="text-xs text-muted-foreground">{t("totalScans")}</p>
                 </div>
               </div>
             </CardContent>
@@ -231,7 +231,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{co2Saved.toFixed(1)}kg</p>
-                  <p className="text-xs text-muted-foreground">CO₂ Saved</p>
+                  <p className="text-xs text-muted-foreground">{t("co2Saved")}</p>
                 </div>
               </div>
             </CardContent>
@@ -244,7 +244,7 @@ const Dashboard = () => {
                 </div>
                 <div>
                   <p className="text-2xl font-bold">{waterSaved}L</p>
-                  <p className="text-xs text-muted-foreground">Water Saved</p>
+                  <p className="text-xs text-muted-foreground">{t("waterSaved")}</p>
                 </div>
               </div>
             </CardContent>
@@ -256,8 +256,8 @@ const Dashboard = () => {
           {/* Category Breakdown */}
           <Card>
             <CardHeader>
-              <CardTitle>Waste by Category</CardTitle>
-              <CardDescription>Distribution of classified items by bin type</CardDescription>
+              <CardTitle>{t("wasteByCategory")}</CardTitle>
+              <CardDescription>{t("categoryBreakdownDesc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -287,8 +287,8 @@ const Dashboard = () => {
           {/* Weekly Trend */}
           <Card>
             <CardHeader>
-              <CardTitle>Weekly Activity</CardTitle>
-              <CardDescription>Items classified over the last 7 days</CardDescription>
+              <CardTitle>{t("weeklyActivity")}</CardTitle>
+              <CardDescription>{t("weeklyActivityDesc")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="h-64">
@@ -317,26 +317,26 @@ const Dashboard = () => {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Leaf className="h-5 w-5 text-primary" />
-              Your Environmental Impact
+              {t("environmentalImpact")}
             </CardTitle>
-            <CardDescription>Estimated positive impact from proper waste segregation</CardDescription>
+            <CardDescription>{t("environmentalImpactDesc")}</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="grid sm:grid-cols-3 gap-6">
               <div className="text-center p-4 bg-background/50 rounded-lg">
                 <TreePine className="h-8 w-8 mx-auto mb-2 text-organic" />
                 <p className="text-2xl font-bold text-organic">{treesEquivalent.toFixed(2)}</p>
-                <p className="text-sm text-muted-foreground">Trees worth of CO₂</p>
+                <p className="text-sm text-muted-foreground">{t("treesWorthCO2")}</p>
               </div>
               <div className="text-center p-4 bg-background/50 rounded-lg">
                 <Recycle className="h-8 w-8 mx-auto mb-2 text-recyclable" />
                 <p className="text-2xl font-bold text-recyclable">{recyclableCount}</p>
-                <p className="text-sm text-muted-foreground">Recyclable items diverted</p>
+                <p className="text-sm text-muted-foreground">{t("recyclablesDiverted")}</p>
               </div>
               <div className="text-center p-4 bg-background/50 rounded-lg">
                 <Leaf className="h-8 w-8 mx-auto mb-2 text-primary" />
                 <p className="text-2xl font-bold text-primary">{organicCount}</p>
-                <p className="text-sm text-muted-foreground">Organic items composted</p>
+                <p className="text-sm text-muted-foreground">{t("organicsComposted")}</p>
               </div>
             </div>
           </CardContent>

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, Trash2, Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import { getTranslation, Language } from "@/lib/translations";
 
 interface WasteItem {
   item: string;
@@ -37,8 +38,15 @@ const History = () => {
   const { user, loading: authLoading } = useAuth();
   const [history, setHistory] = useState<UploadHistory[]>([]);
   const [loading, setLoading] = useState(true);
+  const [language, setLanguage] = useState<Language>("English");
   const navigate = useNavigate();
   const { toast } = useToast();
+  const t = (key: string) => getTranslation(language, key as any);
+
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem("preferredLanguage");
+    if (savedLanguage) setLanguage(savedLanguage as Language);
+  }, []);
 
   useEffect(() => {
     if (!authLoading && !user) {
@@ -100,8 +108,8 @@ const History = () => {
       
       setHistory(prev => prev.filter(h => h.id !== id));
       toast({
-        title: "Deleted",
-        description: "History entry removed",
+        title: t("deleteEntry"),
+        description: t("deletedEntry"),
       });
     } catch (error: any) {
       toast({
@@ -127,13 +135,13 @@ const History = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/")}>
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <h1 className="text-3xl font-bold">Classification History</h1>
+          <h1 className="text-3xl font-bold">{t("historyTitle")}</h1>
         </div>
 
         {history.length === 0 ? (
           <Card>
             <CardContent className="py-12 text-center">
-              <p className="text-muted-foreground">No history yet. Start classifying waste to see your history here!</p>
+              <p className="text-muted-foreground">{t("historyEmpty")}</p>
             </CardContent>
           </Card>
         ) : (
@@ -175,7 +183,7 @@ const History = () => {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-muted-foreground text-sm">No waste detected</p>
+                        <p className="text-muted-foreground text-sm">{t("noWasteDetected")}</p>
                       )}
                     </div>
                   </div>

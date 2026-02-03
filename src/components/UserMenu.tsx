@@ -13,9 +13,12 @@ import { AuthDialog } from "./AuthDialog";
 import { useNavigate } from "react-router-dom";
 
 export const UserMenu = () => {
-  const { user, isAdmin, signOut } = useAuth();
+  const { user, isAdmin, username, signOut } = useAuth();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Get display name: prefer username, fall back to email prefix
+  const displayName = username || user?.email?.split("@")[0] || "User";
 
   if (!user) {
     return (
@@ -34,7 +37,7 @@ export const UserMenu = () => {
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
           <User className="h-4 w-4 mr-2" />
-          {user.email?.split("@")[0]}
+          {displayName}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">

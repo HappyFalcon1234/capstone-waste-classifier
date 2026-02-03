@@ -75,8 +75,8 @@ const RecyclingCenters = () => {
 
         {/* Results Count */}
         <p className="text-sm text-muted-foreground mb-4">
-          Showing {filteredCenters.length} of {RECYCLING_CENTERS.length} centers
-          {selectedState && ` in ${selectedState}`}
+          {t("showing")} {filteredCenters.length} {t("of")} {RECYCLING_CENTERS.length} {t("centers")}
+          {selectedState && ` ${t("in")} ${selectedState}`}
           {selectedCity && `, ${selectedCity}`}
         </p>
 
@@ -85,8 +85,8 @@ const RecyclingCenters = () => {
           {filteredCenters.length === 0 ? (
             <Card>
               <CardContent className="py-12 text-center">
-                <p className="text-muted-foreground">No recycling centers found matching your criteria.</p>
-                <p className="text-sm text-muted-foreground mt-2">Try adjusting your filters or search terms.</p>
+                <p className="text-muted-foreground">{t("noCentersFound")}</p>
+                <p className="text-sm text-muted-foreground mt-2">{t("adjustFilters")}</p>
               </CardContent>
             </Card>
           ) : (
@@ -104,8 +104,7 @@ const RecyclingCenters = () => {
         <Card className="mt-8 bg-muted/50">
           <CardContent className="py-4">
             <p className="text-sm text-muted-foreground text-center">
-              💡 <strong>Tip:</strong> Before visiting, call ahead to confirm operating hours and accepted materials. 
-              Some facilities may require appointments for large quantities.
+              💡 <strong>{t("recyclingTip")}:</strong> {t("recyclingTipText")}
             </p>
           </CardContent>
         </Card>
