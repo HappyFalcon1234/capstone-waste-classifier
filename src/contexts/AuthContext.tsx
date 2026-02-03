@@ -7,6 +7,7 @@ interface AuthContextType {
   session: Session | null;
   loading: boolean;
   isAdmin: boolean;
+  username: string | null;
   signOut: () => Promise<void>;
 }
 
@@ -17,6 +18,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [username, setUsername] = useState<string | null>(null);
 
   useEffect(() => {
     // Set up auth state listener FIRST (keep callback synchronous)
@@ -46,6 +48,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const userId = user?.id;
     if (!userId) {
       setIsAdmin(false);
+      setUsername(null);
       return;
     }
 
@@ -62,6 +65,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setIsAdmin(Boolean(data));
       });
 
+    // Fetch username from profiles
+    supabase
+      .from("profiles")
+      .select("username, display_name")
+      .eq("user_id", userId)
+      .single()
+      .then(({ data, error }) => {
+        if (cancelled) return;
+        if (error) {
+          setUsername(null);
+          return;
+        }
+        setUsername(data?.username || data?.display_name || null);
+      });
+
     return () => {
       cancelled = true;
     };
@@ -72,10 +90,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(null);
     setSession(null);
     setIsAdmin(false);
+    setUsername(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, session, loading, isAdmin, signOut }}>
+    <AuthContext.Provider value={{ user, session, loading, isAdmin, username, signOut }}>
       {children}
     </AuthContext.Provider>
   );

@@ -208,10 +208,10 @@ const TIPS_DATA: Tip[] = [
 ];
 
 const CATEGORIES = [
-  { id: "all", label: "All Tips", icon: Lightbulb },
-  { id: "reduce", label: "Reduce", icon: ShoppingBag },
-  { id: "reuse", label: "Reuse", icon: Gift },
-  { id: "recycle", label: "Recycle", icon: Recycle }
+  { id: "all", label: "allTips", icon: Lightbulb },
+  { id: "reduce", label: "reduce", icon: ShoppingBag },
+  { id: "reuse", label: "reuse", icon: Gift },
+  { id: "recycle", label: "recycle", icon: Recycle }
 ];
 
 const getImpactColor = (impact: Tip["impact"]) => {
@@ -219,6 +219,14 @@ const getImpactColor = (impact: Tip["impact"]) => {
     case "high": return "bg-organic text-white";
     case "medium": return "bg-yellow-500 text-yellow-950";
     case "low": return "bg-blue-500 text-white";
+  }
+};
+
+const getImpactLabel = (impact: Tip["impact"], t: (key: string) => string) => {
+  switch (impact) {
+    case "high": return t("highImpact");
+    case "medium": return t("mediumImpact");
+    case "low": return t("lowImpact");
   }
 };
 
@@ -258,7 +266,7 @@ const Tips = () => {
             {CATEGORIES.map(cat => (
               <TabsTrigger key={cat.id} value={cat.id} className="gap-2">
                 <cat.icon className="h-4 w-4" />
-                <span className="hidden sm:inline">{cat.label}</span>
+                <span className="hidden sm:inline">{t(cat.label)}</span>
               </TabsTrigger>
             ))}
           </TabsList>
@@ -272,24 +280,24 @@ const Tips = () => {
                 <div className="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center mx-auto mb-2">
                   <ShoppingBag className="h-6 w-6 text-primary" />
                 </div>
-                <p className="font-semibold">Reduce</p>
-                <p className="text-xs text-muted-foreground">Consume less</p>
+                <p className="font-semibold">{t("reduce")}</p>
+                <p className="text-xs text-muted-foreground">{t("consumeLess")}</p>
               </div>
               <ChevronRight className="h-5 w-5 text-muted-foreground" />
               <div>
                 <div className="w-12 h-12 rounded-full bg-organic/20 flex items-center justify-center mx-auto mb-2">
                   <Gift className="h-6 w-6 text-organic" />
                 </div>
-                <p className="font-semibold">Reuse</p>
-                <p className="text-xs text-muted-foreground">Use again</p>
+                <p className="font-semibold">{t("reuse")}</p>
+                <p className="text-xs text-muted-foreground">{t("useAgain")}</p>
               </div>
               <ChevronRight className="h-5 w-5 text-muted-foreground" />
               <div>
                 <div className="w-12 h-12 rounded-full bg-recyclable/20 flex items-center justify-center mx-auto mb-2">
                   <Recycle className="h-6 w-6 text-recyclable" />
                 </div>
-                <p className="font-semibold">Recycle</p>
-                <p className="text-xs text-muted-foreground">Transform</p>
+                <p className="font-semibold">{t("recycle")}</p>
+                <p className="text-xs text-muted-foreground">{t("transform")}</p>
               </div>
             </div>
           </CardContent>
@@ -311,7 +319,7 @@ const Tips = () => {
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-lg">{tip.title}</CardTitle>
                       <Badge className={getImpactColor(tip.impact)}>
-                        {tip.impact} impact
+                        {getImpactLabel(tip.impact, t)}
                       </Badge>
                     </div>
                     <CardDescription>{tip.description}</CardDescription>
@@ -329,7 +337,7 @@ const Tips = () => {
                     <div>
                       <h4 className="flex items-center gap-2 font-semibold text-organic mb-3">
                         <CheckCircle2 className="h-4 w-4" />
-                        Do's
+                        {t("dos")}
                       </h4>
                       <ul className="space-y-2">
                         {tip.dos.map((item, i) => (
@@ -345,7 +353,7 @@ const Tips = () => {
                     <div>
                       <h4 className="flex items-center gap-2 font-semibold text-hazardous mb-3">
                         <XCircle className="h-4 w-4" />
-                        Don'ts
+                        {t("donts")}
                       </h4>
                       <ul className="space-y-2">
                         {tip.donts.map((item, i) => (
@@ -366,19 +374,19 @@ const Tips = () => {
         {/* Quick Stats */}
         <Card className="mt-8 bg-muted/50">
           <CardContent className="py-6">
-            <h3 className="font-semibold mb-4 text-center">Did You Know?</h3>
+            <h3 className="font-semibold mb-4 text-center">{t("didYouKnow")}</h3>
             <div className="grid grid-cols-3 gap-4 text-center">
               <div>
                 <p className="text-2xl font-bold text-primary">62M</p>
-                <p className="text-xs text-muted-foreground">Tonnes of waste India generates yearly</p>
+                <p className="text-xs text-muted-foreground">{t("wasteYearly")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-organic">30%</p>
-                <p className="text-xs text-muted-foreground">Waste can be composted at home</p>
+                <p className="text-xs text-muted-foreground">{t("wasteComposted")}</p>
               </div>
               <div>
                 <p className="text-2xl font-bold text-recyclable">75%</p>
-                <p className="text-xs text-muted-foreground">E-waste materials are recyclable</p>
+                <p className="text-xs text-muted-foreground">{t("eWasteRecyclable")}</p>
               </div>
             </div>
           </CardContent>

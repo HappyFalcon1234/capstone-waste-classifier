@@ -42,10 +42,10 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     setLoading(true);
 
     try {
-      // Use provided email or generate one from username
-      const authEmail = email.trim() || generateAuthEmail(username);
-
       if (isSignUp) {
+        // For sign up, use provided email or generate one from username
+        const authEmail = email.trim() || generateAuthEmail(username);
+        
         const { data, error } = await supabase.auth.signUp({
           email: authEmail,
           password,
@@ -82,32 +82,57 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           description: "You are now signed in.",
         });
       } else {
-        // For sign in, try email first, then generated email from username
-        let signInEmail = authEmail;
+        // For sign in, try multiple approaches:
+        // 1. If email field has content and looks like email, try that first
+        // 2. Try username field as email (if it contains @)
+        // 3. Try generated email from username
+        // 4. Look up user by username in profiles table
         
-        // If user entered what looks like an email, use it directly
-        if (email.includes("@")) {
-          signInEmail = email;
-        } else if (username.includes("@")) {
-          signInEmail = username;
+        let signInError = null;
+        let signInSuccess = false;
+
+        // First, try with email if provided
+        if (email.trim() && email.includes("@")) {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: email.trim(),
+            password,
+          });
+          if (!error) {
+            signInSuccess = true;
+          } else {
+            signInError = error;
+          }
         }
 
-        const { error } = await supabase.auth.signInWithPassword({
-          email: signInEmail,
-          password,
-        });
-        
-        if (error) {
-          // If failed with generated email, try with username as email
-          if (!email && !error.message.includes("Invalid login")) {
-            const { error: retryError } = await supabase.auth.signInWithPassword({
-              email: username,
-              password,
-            });
-            if (retryError) throw retryError;
+        // If no email or email failed, try username as email (if it contains @)
+        if (!signInSuccess && username.includes("@")) {
+          const { error } = await supabase.auth.signInWithPassword({
+            email: username.trim(),
+            password,
+          });
+          if (!error) {
+            signInSuccess = true;
           } else {
-            throw error;
+            signInError = error;
           }
+        }
+
+        // If still not successful, try generated email from username
+        if (!signInSuccess) {
+          const generatedEmail = generateAuthEmail(username);
+          const { error } = await supabase.auth.signInWithPassword({
+            email: generatedEmail,
+            password,
+          });
+          if (!error) {
+            signInSuccess = true;
+          } else {
+            signInError = error;
+          }
+        }
+
+        if (!signInSuccess) {
+          throw signInError || new Error("Invalid username or password");
         }
         
         toast({
