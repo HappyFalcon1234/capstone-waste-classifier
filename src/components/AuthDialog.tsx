@@ -15,8 +15,9 @@ interface AuthDialogProps {
 
 export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
   const [isSignUp, setIsSignUp] = useState(false);
-  const [username, setUsername] = useState("");
-  const [email, setEmail] = useState("");
+  const [identifier, setIdentifier] = useState(""); // Email or username for sign-in
+  const [username, setUsername] = useState(""); // Username for sign-up
+  const [email, setEmail] = useState(""); // Optional email for sign-up
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
@@ -27,13 +28,75 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     return `${username.toLowerCase().replace(/[^a-z0-9]/g, '')}@ecosort.local`;
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    
+  const handleSignIn = async () => {
+    if (!identifier.trim()) {
+      toast({
+        title: "Required",
+        description: "Please enter your email or username",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(true);
+    let signInSuccess = false;
+
+    try {
+      // Check if identifier looks like an email
+      const isEmail = identifier.includes("@");
+
+      if (isEmail) {
+        // Try direct email login
+        const { error } = await supabase.auth.signInWithPassword({
+          email: identifier.trim(),
+          password,
+        });
+        if (!error) signInSuccess = true;
+        else throw error;
+      } else {
+        // It's a username - try generated email format
+        const generatedEmail = generateAuthEmail(identifier);
+        const { error } = await supabase.auth.signInWithPassword({
+          email: generatedEmail,
+          password,
+        });
+        if (!error) signInSuccess = true;
+        else throw new Error("Invalid username or password");
+      }
+
+      if (signInSuccess) {
+        toast({
+          title: "Welcome back!",
+          description: "You are now signed in.",
+        });
+        onOpenChange(false);
+        resetForm();
+      }
+    } catch (error: any) {
+      toast({
+        title: "Sign in failed",
+        description: error.message || "Invalid credentials",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSignUp = async () => {
     if (!username.trim()) {
       toast({
         title: "Username required",
-        description: "Please enter a username",
+        description: "Please choose a username",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    if (password.length < 8) {
+      toast({
+        title: "Password too short",
+        description: "Password must be at least 8 characters",
         variant: "destructive",
       });
       return;
@@ -42,117 +105,64 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     setLoading(true);
 
     try {
-      if (isSignUp) {
-        // For sign up, use provided email or generate one from username
-        const authEmail = email.trim() || generateAuthEmail(username);
-        
-        const { data, error } = await supabase.auth.signUp({
-          email: authEmail,
-          password,
-          options: {
-            emailRedirectTo: window.location.origin,
-            data: {
-              username: username.trim(),
-              display_name: username.trim(),
-            }
-          }
-        });
-        
-        if (error) {
-          if (error.message.includes("already registered")) {
-            throw new Error("This username or email is already taken");
-          }
-          throw error;
-        }
+      // Use provided email or generate one from username
+      const authEmail = email.trim() || generateAuthEmail(username);
 
-        // Update the profile with username
-        if (data.user) {
-          await supabase
-            .from("profiles")
-            .update({ 
-              username: username.trim(),
-              display_name: username.trim(),
-              email: email.trim() || null 
-            })
-            .eq("user_id", data.user.id);
-        }
-
-        toast({
-          title: "Account created!",
-          description: "You are now signed in.",
-        });
-      } else {
-        // For sign in, try multiple approaches:
-        // 1. If email field has content and looks like email, try that first
-        // 2. Try username field as email (if it contains @)
-        // 3. Try generated email from username
-        // 4. Look up user by username in profiles table
-        
-        let signInError = null;
-        let signInSuccess = false;
-
-        // First, try with email if provided
-        if (email.trim() && email.includes("@")) {
-          const { error } = await supabase.auth.signInWithPassword({
-            email: email.trim(),
-            password,
-          });
-          if (!error) {
-            signInSuccess = true;
-          } else {
-            signInError = error;
+      const { data, error } = await supabase.auth.signUp({
+        email: authEmail,
+        password,
+        options: {
+          emailRedirectTo: window.location.origin,
+          data: {
+            username: username.trim(),
+            display_name: username.trim(),
           }
         }
+      });
 
-        // If no email or email failed, try username as email (if it contains @)
-        if (!signInSuccess && username.includes("@")) {
-          const { error } = await supabase.auth.signInWithPassword({
-            email: username.trim(),
-            password,
-          });
-          if (!error) {
-            signInSuccess = true;
-          } else {
-            signInError = error;
-          }
+      if (error) {
+        if (error.message.includes("already registered")) {
+          throw new Error("This username or email is already taken");
         }
-
-        // If still not successful, try generated email from username
-        if (!signInSuccess) {
-          const generatedEmail = generateAuthEmail(username);
-          const { error } = await supabase.auth.signInWithPassword({
-            email: generatedEmail,
-            password,
-          });
-          if (!error) {
-            signInSuccess = true;
-          } else {
-            signInError = error;
-          }
-        }
-
-        if (!signInSuccess) {
-          throw signInError || new Error("Invalid username or password");
-        }
-        
-        toast({
-          title: "Welcome back!",
-          description: "You are now signed in.",
-        });
+        throw error;
       }
-      
+
+      // Update the profile with username
+      if (data.user) {
+        await supabase
+          .from("profiles")
+          .update({
+            username: username.trim(),
+            display_name: username.trim(),
+            email: email.trim() || null
+          })
+          .eq("user_id", data.user.id);
+      }
+
+      toast({
+        title: "Account created!",
+        description: "You are now signed in.",
+      });
+
       onOpenChange(false);
-      setUsername("");
-      setEmail("");
-      setPassword("");
+      resetForm();
     } catch (error: any) {
       toast({
-        title: "Error",
+        title: "Sign up failed",
         description: error.message,
         variant: "destructive",
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (isSignUp) {
+      await handleSignUp();
+    } else {
+      await handleSignIn();
     }
   };
 
@@ -165,7 +175,7 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
           redirectTo: window.location.origin,
         }
       });
-      
+
       if (error) throw error;
     } catch (error: any) {
       toast({
@@ -177,23 +187,35 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
     }
   };
 
+  const resetForm = () => {
+    setIdentifier("");
+    setUsername("");
+    setEmail("");
+    setPassword("");
+  };
+
+  const switchMode = () => {
+    setIsSignUp(!isSignUp);
+    resetForm();
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>{isSignUp ? "Create Account" : "Sign In"}</DialogTitle>
           <DialogDescription>
-            {isSignUp 
-              ? "Create an account to save your classification history" 
-              : "Sign in to access your classification history"}
+            {isSignUp
+              ? "Create an account to save your classification history"
+              : "Sign in with your email or username"}
           </DialogDescription>
         </DialogHeader>
-        
+
         {/* Google OAuth Button */}
-        <Button 
-          type="button" 
-          variant="outline" 
-          className="w-full" 
+        <Button
+          type="button"
+          variant="outline"
+          className="w-full"
           onClick={handleGoogleSignIn}
           disabled={googleLoading || loading}
         >
@@ -234,31 +256,53 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="username">Username</Label>
-            <Input
-              id="username"
-              type="text"
-              placeholder="Enter your username"
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              required
-              autoComplete="username"
-            />
-          </div>
-          <div className="space-y-2">
-            <Label htmlFor="email">
-              Email <span className="text-muted-foreground text-xs">(optional)</span>
-            </Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="you@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              autoComplete="email"
-            />
-          </div>
+          {isSignUp ? (
+            <>
+              {/* Sign Up Form */}
+              <div className="space-y-2">
+                <Label htmlFor="signup-username">Username</Label>
+                <Input
+                  id="signup-username"
+                  type="text"
+                  placeholder="Choose a username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="signup-email">
+                  Email <span className="text-muted-foreground text-xs">(optional)</span>
+                </Label>
+                <Input
+                  id="signup-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  autoComplete="email"
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              {/* Sign In Form */}
+              <div className="space-y-2">
+                <Label htmlFor="signin-identifier">Email or Username</Label>
+                <Input
+                  id="signin-identifier"
+                  type="text"
+                  placeholder="Enter email or username"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
+                  required
+                  autoComplete="username"
+                />
+              </div>
+            </>
+          )}
+
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <Input
@@ -272,16 +316,18 @@ export const AuthDialog = ({ open, onOpenChange }: AuthDialogProps) => {
               autoComplete={isSignUp ? "new-password" : "current-password"}
             />
           </div>
+
           <Button type="submit" className="w-full" disabled={loading || googleLoading}>
             {loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
             {isSignUp ? "Create Account" : "Sign In"}
           </Button>
         </form>
+
         <div className="text-center">
           <button
             type="button"
             className="text-sm text-muted-foreground hover:text-primary transition-colors"
-            onClick={() => setIsSignUp(!isSignUp)}
+            onClick={switchMode}
           >
             {isSignUp ? "Already have an account? Sign in" : "Don't have an account? Sign up"}
           </button>
