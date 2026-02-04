@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Search, Zap, AlertTriangle, Recycle, MapPin, X } from "lucide-react";
+import { type Language } from "@/lib/translations";
 
 interface LocationFiltersProps {
   searchQuery: string;
@@ -20,6 +21,7 @@ interface LocationFiltersProps {
   onTypeChange: (type: string | null) => void;
   states: string[];
   cities: string[];
+  t: (key: string) => string;
 }
 
 const filterTypes = [
@@ -39,7 +41,8 @@ export const LocationFilters = ({
   selectedType,
   onTypeChange,
   states,
-  cities
+  cities,
+  t,
 }: LocationFiltersProps) => {
   const handleClearFilters = () => {
     onSearchChange("");
@@ -56,7 +59,7 @@ export const LocationFilters = ({
       <div className="relative">
         <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
         <Input
-          placeholder="Search by name or accepted items..."
+          placeholder={t("searchPlaceholder")}
           value={searchQuery}
           onChange={(e) => onSearchChange(e.target.value)}
           className="pl-10"
@@ -73,7 +76,7 @@ export const LocationFilters = ({
           }}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select State" />
+            <SelectValue placeholder={t("selectState")} />
           </SelectTrigger>
           <SelectContent className="max-h-[300px]">
             {states.map((state) => (
@@ -90,7 +93,7 @@ export const LocationFilters = ({
           disabled={!selectedState || cities.length === 0}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Select City" />
+            <SelectValue placeholder={t("selectCity")} />
           </SelectTrigger>
           <SelectContent className="max-h-[300px]">
             {cities.map((city) => (
@@ -109,7 +112,7 @@ export const LocationFilters = ({
             className="gap-1"
           >
             <X className="h-4 w-4" />
-            Clear Filters
+              {t("clearFilters")}
           </Button>
         )}
       </div>
@@ -121,7 +124,7 @@ export const LocationFilters = ({
           size="sm"
           onClick={() => onTypeChange(null)}
         >
-          All Types
+          {t("allTypes")}
         </Button>
         {filterTypes.map(filter => (
           <Button
@@ -132,7 +135,22 @@ export const LocationFilters = ({
             className="gap-2"
           >
             <filter.icon className="h-4 w-4" />
-            {filter.label}
+            {t(
+              ((): string => {
+                switch (filter.value) {
+                  case "e-waste":
+                    return "eWasteType";
+                  case "hazardous":
+                    return "hazardousType";
+                  case "recyclable":
+                    return "recyclableType";
+                  case "organic":
+                    return "organicType";
+                  default:
+                    return filter.label;
+                }
+              })()
+            )}
           </Button>
         ))}
       </div>

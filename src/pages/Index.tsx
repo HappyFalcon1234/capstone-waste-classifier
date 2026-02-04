@@ -183,7 +183,7 @@ const Index = () => {
               </button>
             </div>
             <div className="flex items-center gap-3 animate-fade-in delay-100" data-tutorial="settings">
-              <UserMenu />
+              <UserMenu language={language} />
               <SettingsDialog 
                 language={language}
                 onLanguageChange={handleLanguageChange}

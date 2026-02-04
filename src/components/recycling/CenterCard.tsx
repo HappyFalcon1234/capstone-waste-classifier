@@ -7,6 +7,7 @@ import { RecyclingCenter } from "@/data/recyclingCenters";
 interface CenterCardProps {
   center: RecyclingCenter;
   onGetDirections: (center: RecyclingCenter) => void;
+  t: (key: string) => string;
 }
 
 const getTypeConfig = (type: RecyclingCenter["type"]) => {
@@ -42,7 +43,7 @@ const getTypeConfig = (type: RecyclingCenter["type"]) => {
   }
 };
 
-export const CenterCard = ({ center, onGetDirections }: CenterCardProps) => {
+export const CenterCard = ({ center, onGetDirections, t }: CenterCardProps) => {
   const config = getTypeConfig(center.type);
   const Icon = config.icon;
 
@@ -59,7 +60,15 @@ export const CenterCard = ({ center, onGetDirections }: CenterCardProps) => {
           </div>
           <Badge className={config.color}>
             <Icon className="h-3 w-3 mr-1" />
-            {config.label}
+            {t(
+              center.type === "e-waste"
+                ? "eWasteType"
+                : center.type === "hazardous"
+                  ? "hazardousType"
+                  : center.type === "recyclable"
+                    ? "recyclableType"
+                    : "organicType"
+            )}
           </Badge>
         </div>
       </CardHeader>
@@ -78,7 +87,7 @@ export const CenterCard = ({ center, onGetDirections }: CenterCardProps) => {
         </div>
 
         <div>
-          <p className="text-sm font-medium mb-2">Accepted Items:</p>
+          <p className="text-sm font-medium mb-2">{t("acceptedItems")}:</p>
           <div className="flex flex-wrap gap-1">
             {center.acceptedItems.map(item => (
               <Badge key={item} variant="secondary" className="text-xs">
@@ -93,7 +102,7 @@ export const CenterCard = ({ center, onGetDirections }: CenterCardProps) => {
           className="w-full sm:w-auto gap-2"
         >
           <Navigation className="h-4 w-4" />
-          Get Directions
+          {t("getDirections")}
         </Button>
       </CardContent>
     </Card>

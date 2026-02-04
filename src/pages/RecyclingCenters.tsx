@@ -71,6 +71,7 @@ const RecyclingCenters = () => {
           onTypeChange={setSelectedType}
           states={states}
           cities={cities}
+          t={t}
         />
 
         {/* Results Count */}
@@ -95,6 +96,7 @@ const RecyclingCenters = () => {
                 key={center.id} 
                 center={center} 
                 onGetDirections={openInMaps}
+                t={t}
               />
             ))
           )}
