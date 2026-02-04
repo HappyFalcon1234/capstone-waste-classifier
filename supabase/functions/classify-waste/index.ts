@@ -128,19 +128,42 @@ serve(async (req) => {
 
   try {
     // Initialize Supabase client with service role for rate limiting and fetching corrections
-    const supabase = createClient(
+    const supabaseAdmin = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
+
+    // Check for authenticated user
+    let userId: string | null = null;
+    const authHeader = req.headers.get('Authorization');
+    
+    if (authHeader?.startsWith('Bearer ')) {
+      const supabaseUser = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: authHeader } } }
+      );
+      
+      const token = authHeader.replace('Bearer ', '');
+      const { data: claimsData, error: claimsError } = await supabaseUser.auth.getClaims(token);
+      
+      if (!claimsError && claimsData?.claims?.sub) {
+        userId = claimsData.claims.sub as string;
+        console.log('Authenticated request from user:', userId.substring(0, 8) + '...');
+      }
+    }
+
+    const isAuthenticated = userId !== null;
 
     // Get client IP for rate limiting
     const clientIP = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() || 
                      req.headers.get('x-real-ip') || 
                      'unknown';
 
-    // Check rate limit (5 requests per minute per IP - tightened for abuse prevention)
+    // Tiered rate limiting: 10 requests/min for authenticated, 3 for anonymous
+    const rateLimit = isAuthenticated ? 10 : 3;
     const oneMinuteAgo = new Date(Date.now() - 60000).toISOString();
-    const { data: recentRequests, error: rateLimitError } = await supabase
+    const { data: recentRequests, error: rateLimitError } = await supabaseAdmin
       .from('rate_limits')
       .select('request_count')
       .eq('ip_address', clientIP)
@@ -153,15 +176,18 @@ serve(async (req) => {
 
     const requestCount = recentRequests?.reduce((sum, r) => sum + r.request_count, 0) || 0;
 
-    if (requestCount >= 5) {
+    if (requestCount >= rateLimit) {
+      const message = isAuthenticated 
+        ? 'Rate limit exceeded. Maximum 10 requests per minute. Please try again later.'
+        : 'Rate limit exceeded. Sign in for higher limits (10/min) or try again later.';
       return new Response(
-        JSON.stringify({ error: 'Rate limit exceeded. Maximum 5 requests per minute. Please try again later.' }),
+        JSON.stringify({ error: message }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
     // Log this request
-    await supabase.from('rate_limits').insert({
+    await supabaseAdmin.from('rate_limits').insert({
       ip_address: clientIP,
       endpoint: 'classify-waste',
       request_count: 1
@@ -195,21 +221,26 @@ serve(async (req) => {
       );
     }
 
-    // Fetch learned corrections to improve classification
-    // Note: Using service_role client which bypasses RLS - corrections are now restricted to authenticated users only
-    const { data: corrections, error: correctionsError } = await supabase
-      .from('learned_corrections')
-      .select('item_name, original_category, corrected_category, corrected_bin_color, correction_details')
-      .order('created_at', { ascending: false })
-      .limit(50); // Limit to most recent 50 corrections to keep prompt size manageable
-
-    if (correctionsError) {
-      console.error('Failed to fetch corrections:', correctionsError.message);
-    }
-
-    const correctionsPrompt = formatCorrectionsForPrompt(corrections || []);
+    // Only fetch learned corrections for authenticated users
+    // This prevents anonymous users from indirectly accessing admin-reviewed correction data
+    let correctionsPrompt = "";
     
-    console.log(`Processing image analysis request with ${corrections?.length || 0} learned corrections`);
+    if (isAuthenticated) {
+      const { data: corrections, error: correctionsError } = await supabaseAdmin
+        .from('learned_corrections')
+        .select('item_name, original_category, corrected_category, corrected_bin_color, correction_details')
+        .order('created_at', { ascending: false })
+        .limit(50);
+
+      if (correctionsError) {
+        console.error('Failed to fetch corrections:', correctionsError.message);
+      } else {
+        correctionsPrompt = formatCorrectionsForPrompt(corrections || []);
+        console.log(`Processing authenticated request with ${corrections?.length || 0} learned corrections`);
+      }
+    } else {
+      console.log('Processing anonymous request without learned corrections');
+    }
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -217,8 +248,8 @@ serve(async (req) => {
         Authorization: `Bearer ${LOVABLE_API_KEY}`,
         "Content-Type": "application/json",
       },
-        body: JSON.stringify({
-          model: "google/gemini-2.5-flash-lite",
+      body: JSON.stringify({
+        model: "google/gemini-2.5-flash-lite",
         messages: [
           {
             role: "system",
