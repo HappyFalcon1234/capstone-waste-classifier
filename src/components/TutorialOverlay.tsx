@@ -54,8 +54,8 @@ const coachMarks: CoachMark[] = [
   },
 ];
 
-// Updated key to trigger new tutorial for existing users
-const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v2-seen';
+// Updated key to trigger new tutorial for existing users  
+const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v3-seen';
 
 interface HighlightRect {
   top: number;
