@@ -1,7 +1,8 @@
 import { useState, useEffect, useCallback } from 'react';
-import { X, ArrowDown, Upload, Palette, Settings, Info } from 'lucide-react';
+import { X, ArrowDown, Upload, Palette, Menu, Scroll } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
+import { useAuth } from '@/contexts/AuthContext';
 
 interface CoachMark {
   id: string;
@@ -34,10 +35,10 @@ const coachMarks: CoachMark[] = [
     preferredCardPosition: 'above',
   },
   {
-    id: 'settings',
-    title: 'Your Account & Settings',
-    description: 'Access your history, dashboard, recycling centers, and change language or theme settings',
-    icon: <Settings className="h-5 w-5" />,
+    id: 'menu',
+    title: 'Your EcoSort Menu',
+    description: 'Access Dashboard (track your impact), History (past scans), Recycling Centers (nearby facilities), Tips (eco guides), and Settings',
+    icon: <Menu className="h-5 w-5" />,
     selector: '[data-tutorial="settings"]',
     arrowDirection: 'down',
     preferredCardPosition: 'below',
@@ -45,15 +46,16 @@ const coachMarks: CoachMark[] = [
   {
     id: 'info',
     title: 'Why It Matters',
-    description: 'Scroll down to learn about India\'s waste crisis and how proper segregation helps',
-    icon: <Info className="h-5 w-5" />,
+    description: 'Scroll down to learn about India\'s waste crisis and how proper segregation makes a difference',
+    icon: <Scroll className="h-5 w-5" />,
     selector: '[data-tutorial="info"]',
     arrowDirection: 'up',
     preferredCardPosition: 'above',
   },
 ];
 
-const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-seen';
+// Updated key to trigger new tutorial for existing users
+const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v2-seen';
 
 interface HighlightRect {
   top: number;
@@ -68,6 +70,7 @@ export function TutorialOverlay() {
   const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
   const [actualCardPosition, setActualCardPosition] = useState<'above' | 'below'>('above');
   const isMobile = useIsMobile();
+  const { user, loading } = useAuth();
 
   const scrollToElement = useCallback((element: Element) => {
     const rect = element.getBoundingClientRect();
@@ -142,6 +145,10 @@ export function TutorialOverlay() {
   }, [currentStep, isVisible, isMobile, scrollToElement, updateHighlightPosition]);
 
   useEffect(() => {
+    // Only show tutorial for signed-in users who haven't seen it
+    if (loading) return;
+    if (!user) return;
+    
     const hasSeenTutorial = localStorage.getItem(TUTORIAL_STORAGE_KEY);
     if (!hasSeenTutorial) {
       const timer = setTimeout(() => {
@@ -151,7 +158,7 @@ export function TutorialOverlay() {
       }, 800);
       return () => clearTimeout(timer);
     }
-  }, []);
+  }, [user, loading]);
 
   useEffect(() => {
     if (isVisible) {

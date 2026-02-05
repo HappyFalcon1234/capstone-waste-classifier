@@ -82,19 +82,19 @@ export const UserMenu = ({ language }: UserMenuProps) => {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => navigate("/history")}>
-          <History className="h-4 w-4 mr-2" />
-          {t("historyTitle")}
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+        <DropdownMenuItem onClick={() => navigate("/dashboard")} data-tutorial="dashboard">
           <BarChart3 className="h-4 w-4 mr-2" />
           {t("dashboardTitle")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/recycling-centers")}>
+        <DropdownMenuItem onClick={() => navigate("/history")} data-tutorial="history">
+          <History className="h-4 w-4 mr-2" />
+          {t("historyTitle")}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => navigate("/recycling-centers")} data-tutorial="recycling">
           <MapPin className="h-4 w-4 mr-2" />
           {t("recyclingCentersTitle")}
         </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => navigate("/tips")}>
+        <DropdownMenuItem onClick={() => navigate("/tips")} data-tutorial="tips">
           <Lightbulb className="h-4 w-4 mr-2" />
           {t("tipsTitle")}
         </DropdownMenuItem>
