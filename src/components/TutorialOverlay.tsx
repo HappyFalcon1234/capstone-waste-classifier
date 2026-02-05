@@ -28,7 +28,7 @@ const coachMarks: CoachMark[] = [
   {
     id: 'bins',
     title: 'Indian Bin Color System',
-    description: 'Tap any bin to see example items. Blue = Recyclable, Green = Organic, Red = Hazardous, Yellow = E-Waste',
+    description: 'Tap any bin to see example items.',
     icon: <Palette className="h-5 w-5" />,
     selector: '[data-tutorial="bins"]',
     arrowDirection: 'up',
