@@ -17,8 +17,8 @@ interface CoachMark {
 const coachMarks: CoachMark[] = [
   {
     id: 'upload',
-    title: 'Upload an Image',
-    description: 'Take a photo or upload an image of waste to get started',
+    title: 'Classify Your Waste',
+    description: 'Upload or take a photo of any waste item to instantly identify the correct bin for disposal',
     icon: <Upload className="h-5 w-5" />,
     selector: '[data-tutorial="upload"]',
     arrowDirection: 'down',
@@ -26,8 +26,8 @@ const coachMarks: CoachMark[] = [
   },
   {
     id: 'bins',
-    title: 'Color-Coded Bins',
-    description: 'Learn about the different bin colors used in India',
+    title: 'Indian Bin Color System',
+    description: 'Tap any bin to see example items. Blue = Recyclable, Green = Organic, Red = Hazardous, Yellow = E-Waste',
     icon: <Palette className="h-5 w-5" />,
     selector: '[data-tutorial="bins"]',
     arrowDirection: 'up',
@@ -35,8 +35,8 @@ const coachMarks: CoachMark[] = [
   },
   {
     id: 'settings',
-    title: 'Settings',
-    description: 'Change language and theme preferences',
+    title: 'Your Account & Settings',
+    description: 'Access your history, dashboard, recycling centers, and change language or theme settings',
     icon: <Settings className="h-5 w-5" />,
     selector: '[data-tutorial="settings"]',
     arrowDirection: 'down',
@@ -44,8 +44,8 @@ const coachMarks: CoachMark[] = [
   },
   {
     id: 'info',
-    title: 'Scroll for More',
-    description: 'Learn about waste management challenges in India',
+    title: 'Why It Matters',
+    description: 'Scroll down to learn about India\'s waste crisis and how proper segregation helps',
     icon: <Info className="h-5 w-5" />,
     selector: '[data-tutorial="info"]',
     arrowDirection: 'up',
