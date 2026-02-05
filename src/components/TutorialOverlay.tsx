@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback } from 'react';
-import { X, ArrowDown, Upload, Palette, Menu, Scroll } from 'lucide-react';
+import { useState, useEffect, useCallback, useRef } from 'react';
+import { X, ArrowDown, Upload, Palette, Menu, Scroll, BarChart3, History, MapPin, Lightbulb } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -13,6 +13,7 @@ interface CoachMark {
   mobileSelector?: string;
   arrowDirection: 'up' | 'down' | 'left' | 'right';
   preferredCardPosition: 'above' | 'below';
+  requiresDropdown?: boolean;
 }
 
 const coachMarks: CoachMark[] = [
@@ -37,11 +38,51 @@ const coachMarks: CoachMark[] = [
   {
     id: 'menu',
     title: 'Your EcoSort Menu',
-    description: 'Access Dashboard (track your impact), History (past scans), Recycling Centers (nearby facilities), Tips (eco guides), and Settings',
+    description: 'Click here to access all your personal features',
     icon: <Menu className="h-5 w-5" />,
     selector: '[data-tutorial="settings"]',
     arrowDirection: 'down',
     preferredCardPosition: 'below',
+  },
+  {
+    id: 'dashboard',
+    title: 'Personal Dashboard',
+    description: 'Track your environmental impact with charts showing your waste classification stats and CO₂ saved',
+    icon: <BarChart3 className="h-5 w-5" />,
+    selector: '[data-tutorial="dashboard"]',
+    arrowDirection: 'left',
+    preferredCardPosition: 'below',
+    requiresDropdown: true,
+  },
+  {
+    id: 'history',
+    title: 'Classification History',
+    description: 'View all your past scans and results. Review what you\'ve classified and learn from patterns',
+    icon: <History className="h-5 w-5" />,
+    selector: '[data-tutorial="history"]',
+    arrowDirection: 'left',
+    preferredCardPosition: 'below',
+    requiresDropdown: true,
+  },
+  {
+    id: 'recycling',
+    title: 'Find Recycling Centers',
+    description: 'Locate nearby recycling facilities filtered by city and accepted waste types',
+    icon: <MapPin className="h-5 w-5" />,
+    selector: '[data-tutorial="recycling"]',
+    arrowDirection: 'left',
+    preferredCardPosition: 'below',
+    requiresDropdown: true,
+  },
+  {
+    id: 'tips',
+    title: 'Eco Tips & Guides',
+    description: 'Learn practical ways to reduce, reuse, and recycle with our comprehensive guides',
+    icon: <Lightbulb className="h-5 w-5" />,
+    selector: '[data-tutorial="tips"]',
+    arrowDirection: 'left',
+    preferredCardPosition: 'below',
+    requiresDropdown: true,
   },
   {
     id: 'info',
@@ -55,7 +96,7 @@ const coachMarks: CoachMark[] = [
 ];
 
 // Updated key to trigger new tutorial for existing users  
-const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v3-seen';
+const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v4-seen';
 
 interface HighlightRect {
   top: number;
@@ -69,8 +110,10 @@ export function TutorialOverlay() {
   const [currentStep, setCurrentStep] = useState(0);
   const [highlightRect, setHighlightRect] = useState<HighlightRect | null>(null);
   const [actualCardPosition, setActualCardPosition] = useState<'above' | 'below'>('above');
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const isMobile = useIsMobile();
   const { user, loading } = useAuth();
+  const dropdownTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   const scrollToElement = useCallback((element: Element) => {
     const rect = element.getBoundingClientRect();
@@ -126,23 +169,50 @@ export function TutorialOverlay() {
     }
   }, [currentStep, isMobile]);
 
-  // Auto-scroll when step changes
+  // Handle dropdown opening for menu item steps
+  const openDropdownIfNeeded = useCallback(() => {
+    const currentMark = coachMarks[currentStep];
+    if (currentMark.requiresDropdown && !dropdownOpen) {
+      // Find and click the user menu trigger to open dropdown
+      const menuTrigger = document.querySelector('[data-tutorial="settings"] button') as HTMLButtonElement;
+      if (menuTrigger) {
+        menuTrigger.click();
+        setDropdownOpen(true);
+      }
+    } else if (!currentMark.requiresDropdown && dropdownOpen) {
+      // Close dropdown by clicking outside or pressing escape
+      document.body.click();
+      setDropdownOpen(false);
+    }
+  }, [currentStep, dropdownOpen]);
+
+  // Auto-scroll and handle dropdown when step changes
   useEffect(() => {
     if (isVisible) {
       const currentMark = coachMarks[currentStep];
-      const selector = isMobile && currentMark.mobileSelector 
-        ? currentMark.mobileSelector 
-        : currentMark.selector;
-      const element = document.querySelector(selector);
       
-      if (element) {
-        scrollToElement(element);
-        // Update position after scroll animation
-        const timer = setTimeout(updateHighlightPosition, 400);
-        return () => clearTimeout(timer);
-      }
+      // Handle dropdown opening first
+      openDropdownIfNeeded();
+      
+      // Small delay to allow dropdown to render
+      const delay = currentMark.requiresDropdown ? 150 : 0;
+      
+      const timer = setTimeout(() => {
+        const selector = isMobile && currentMark.mobileSelector 
+          ? currentMark.mobileSelector 
+          : currentMark.selector;
+        const element = document.querySelector(selector);
+        
+        if (element) {
+          scrollToElement(element);
+          // Update position after scroll animation
+          setTimeout(updateHighlightPosition, 400);
+        }
+      }, delay);
+      
+      return () => clearTimeout(timer);
     }
-  }, [currentStep, isVisible, isMobile, scrollToElement, updateHighlightPosition]);
+  }, [currentStep, isVisible, isMobile, scrollToElement, updateHighlightPosition, openDropdownIfNeeded]);
 
   useEffect(() => {
     // Only show tutorial for signed-in users who haven't seen it
@@ -175,6 +245,13 @@ export function TutorialOverlay() {
   const handleDismiss = () => {
     setIsVisible(false);
     localStorage.setItem(TUTORIAL_STORAGE_KEY, 'true');
+    // Close dropdown if open
+    if (dropdownOpen) {
+      document.body.click();
+      setDropdownOpen(false);
+    }
+    // Scroll back to top
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   const handleNext = () => {
