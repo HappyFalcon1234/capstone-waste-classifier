@@ -19,7 +19,7 @@ interface SettingsDialogProps {
   onLanguageChange: (language: Language) => void;
 }
 
-const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v3-seen';
+const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v4-seen';
 
 const RTL_LANGUAGES: Language[] = ['Urdu', 'Kashmiri', 'Sindhi'];
 
