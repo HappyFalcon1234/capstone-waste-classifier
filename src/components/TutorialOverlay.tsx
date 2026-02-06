@@ -173,22 +173,12 @@ export function TutorialOverlay() {
   const openDropdownIfNeeded = useCallback(() => {
     const currentMark = coachMarks[currentStep];
     if (currentMark.requiresDropdown && !dropdownOpen) {
-      // Find the Radix dropdown trigger button inside the user menu
-      const menuTrigger = document.querySelector('[data-tutorial="settings"] button[data-slot="dropdown-menu-trigger"]') as HTMLButtonElement
-        || document.querySelector('[data-tutorial="settings"] button') as HTMLButtonElement;
-      if (menuTrigger) {
-        // Radix DropdownMenu opens on pointerdown, not click — dispatch proper events
-        menuTrigger.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
-        // Small delay then pointerup + click to complete the interaction
-        setTimeout(() => {
-          menuTrigger.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
-          menuTrigger.click();
-        }, 50);
-        setDropdownOpen(true);
-      }
+      // Use custom event to reliably open the controlled dropdown
+      window.dispatchEvent(new Event('tutorial-dropdown-open'));
+      setDropdownOpen(true);
     } else if (!currentMark.requiresDropdown && dropdownOpen) {
-      // Close dropdown by pressing Escape (works reliably with Radix)
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      // Use custom event to close the dropdown
+      window.dispatchEvent(new Event('tutorial-dropdown-close'));
       setDropdownOpen(false);
     }
   }, [currentStep, dropdownOpen]);
@@ -201,10 +191,12 @@ export function TutorialOverlay() {
       // Handle dropdown opening first
       openDropdownIfNeeded();
       
-      // Small delay to allow dropdown to render
-      const delay = currentMark.requiresDropdown ? 150 : 0;
+      // Dropdown items render in a Radix portal — retry until found
+      const delay = currentMark.requiresDropdown ? 200 : 0;
+      let retryCount = 0;
+      const maxRetries = 5;
       
-      const timer = setTimeout(() => {
+      const tryFindAndHighlight = () => {
         const selector = isMobile && currentMark.mobileSelector 
           ? currentMark.mobileSelector 
           : currentMark.selector;
@@ -212,10 +204,14 @@ export function TutorialOverlay() {
         
         if (element) {
           scrollToElement(element);
-          // Update position after scroll animation
           setTimeout(updateHighlightPosition, 400);
+        } else if (retryCount < maxRetries) {
+          retryCount++;
+          setTimeout(tryFindAndHighlight, 100);
         }
-      }, delay);
+      };
+      
+      const timer = setTimeout(tryFindAndHighlight, delay);
       
       return () => clearTimeout(timer);
     }
@@ -252,7 +248,7 @@ export function TutorialOverlay() {
   const handleDismiss = () => {
     // Close dropdown if open
     if (dropdownOpen) {
-      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+      window.dispatchEvent(new Event('tutorial-dropdown-close'));
       setDropdownOpen(false);
     }
     setIsVisible(false);
