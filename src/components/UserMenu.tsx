@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -51,7 +51,20 @@ const getMenuLabels = (language: Language) => {
 export const UserMenu = ({ language }: UserMenuProps) => {
   const { user, isAdmin, username, signOut } = useAuth();
   const [authDialogOpen, setAuthDialogOpen] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  // Listen for tutorial events to control dropdown open/close
+  useEffect(() => {
+    const handleOpen = () => setMenuOpen(true);
+    const handleClose = () => setMenuOpen(false);
+    window.addEventListener('tutorial-dropdown-open', handleOpen);
+    window.addEventListener('tutorial-dropdown-close', handleClose);
+    return () => {
+      window.removeEventListener('tutorial-dropdown-open', handleOpen);
+      window.removeEventListener('tutorial-dropdown-close', handleClose);
+    };
+  }, []);
 
   const resolvedLanguage =
     language || (localStorage.getItem("preferredLanguage") as Language) || "English";
@@ -74,7 +87,7 @@ export const UserMenu = ({ language }: UserMenuProps) => {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={menuOpen} onOpenChange={setMenuOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm">
           <User className="h-4 w-4 mr-2" />
