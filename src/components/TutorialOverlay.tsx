@@ -174,10 +174,16 @@ export function TutorialOverlay() {
     const currentMark = coachMarks[currentStep];
     if (currentMark.requiresDropdown && !dropdownOpen) {
       // Find the Radix dropdown trigger button inside the user menu
-      const menuTrigger = document.querySelector('[data-tutorial="settings"] [data-radix-collection-item]') as HTMLButtonElement
+      const menuTrigger = document.querySelector('[data-tutorial="settings"] button[data-slot="dropdown-menu-trigger"]') as HTMLButtonElement
         || document.querySelector('[data-tutorial="settings"] button') as HTMLButtonElement;
       if (menuTrigger) {
-        menuTrigger.click();
+        // Radix DropdownMenu opens on pointerdown, not click — dispatch proper events
+        menuTrigger.dispatchEvent(new PointerEvent('pointerdown', { bubbles: true, cancelable: true }));
+        // Small delay then pointerup + click to complete the interaction
+        setTimeout(() => {
+          menuTrigger.dispatchEvent(new PointerEvent('pointerup', { bubbles: true, cancelable: true }));
+          menuTrigger.click();
+        }, 50);
         setDropdownOpen(true);
       }
     } else if (!currentMark.requiresDropdown && dropdownOpen) {
