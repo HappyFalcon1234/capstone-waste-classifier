@@ -169,19 +169,20 @@ export function TutorialOverlay() {
     }
   }, [currentStep, isMobile]);
 
-  // Handle dropdown opening for menu item steps
+  // Handle dropdown opening/closing for menu item steps
   const openDropdownIfNeeded = useCallback(() => {
     const currentMark = coachMarks[currentStep];
     if (currentMark.requiresDropdown && !dropdownOpen) {
-      // Find and click the user menu trigger to open dropdown
-      const menuTrigger = document.querySelector('[data-tutorial="settings"] button') as HTMLButtonElement;
+      // Find the Radix dropdown trigger button inside the user menu
+      const menuTrigger = document.querySelector('[data-tutorial="settings"] [data-radix-collection-item]') as HTMLButtonElement
+        || document.querySelector('[data-tutorial="settings"] button') as HTMLButtonElement;
       if (menuTrigger) {
         menuTrigger.click();
         setDropdownOpen(true);
       }
     } else if (!currentMark.requiresDropdown && dropdownOpen) {
-      // Close dropdown by clicking outside or pressing escape
-      document.body.click();
+      // Close dropdown by pressing Escape (works reliably with Radix)
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
       setDropdownOpen(false);
     }
   }, [currentStep, dropdownOpen]);
@@ -243,13 +244,13 @@ export function TutorialOverlay() {
   }, [isVisible, updateHighlightPosition]);
 
   const handleDismiss = () => {
-    setIsVisible(false);
-    localStorage.setItem(TUTORIAL_STORAGE_KEY, 'true');
     // Close dropdown if open
     if (dropdownOpen) {
-      document.body.click();
+      document.dispatchEvent(new KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
       setDropdownOpen(false);
     }
+    setIsVisible(false);
+    localStorage.setItem(TUTORIAL_STORAGE_KEY, 'true');
     // Scroll back to top
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -323,9 +324,9 @@ export function TutorialOverlay() {
   const showArrowDown = actualCardPosition === 'above';
 
   return (
-    <div className="fixed inset-0 z-50">
+    <div className="fixed inset-0 z-50" style={{ pointerEvents: dropdownOpen ? 'none' : undefined }}>
       {/* Dark overlay with cutout */}
-      <svg className="absolute inset-0 w-full h-full pointer-events-auto" onClick={handleSkip}>
+      <svg className="absolute inset-0 w-full h-full" style={{ pointerEvents: 'auto' }} onClick={handleSkip}>
         <defs>
           <mask id="tutorial-mask">
             <rect x="0" y="0" width="100%" height="100%" fill="white" />
