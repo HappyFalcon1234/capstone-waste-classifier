@@ -113,14 +113,34 @@ export function TutorialOverlay() {
     const element = document.querySelector(selector);
     
     if (element) {
-      const rect = element.getBoundingClientRect();
       const padding = isMobile ? 8 : 12;
       const cardHeight = 180;
       const gap = 16;
+
+      let combinedRect: DOMRect;
+
+      // For the menu-content step, combine trigger + dropdown into one highlight
+      if (currentMark.id === 'menu-content') {
+        const trigger = document.querySelector('[data-tutorial="settings"]');
+        const content = element;
+        if (trigger) {
+          const tRect = trigger.getBoundingClientRect();
+          const cRect = content.getBoundingClientRect();
+          const top = Math.min(tRect.top, cRect.top);
+          const left = Math.min(tRect.left, cRect.left);
+          const right = Math.max(tRect.right, cRect.right);
+          const bottom = Math.max(tRect.bottom, cRect.bottom);
+          combinedRect = new DOMRect(left, top, right - left, bottom - top);
+        } else {
+          combinedRect = element.getBoundingClientRect();
+        }
+      } else {
+        combinedRect = element.getBoundingClientRect();
+      }
       
       // Determine actual card position based on available space
-      const spaceAbove = rect.top;
-      const spaceBelow = window.innerHeight - rect.bottom;
+      const spaceAbove = combinedRect.top;
+      const spaceBelow = window.innerHeight - combinedRect.bottom;
       
       let cardPos: 'above' | 'below';
       if (currentMark.preferredCardPosition === 'above') {
@@ -131,10 +151,10 @@ export function TutorialOverlay() {
       setActualCardPosition(cardPos);
       
       setHighlightRect({
-        top: rect.top - padding,
-        left: rect.left - padding,
-        width: rect.width + padding * 2,
-        height: rect.height + padding * 2,
+        top: combinedRect.top - padding,
+        left: combinedRect.left - padding,
+        width: combinedRect.width + padding * 2,
+        height: combinedRect.height + padding * 2,
       });
     }
   }, [currentStep, isMobile]);
@@ -257,7 +277,6 @@ export function TutorialOverlay() {
     ));
     
     if (actualCardPosition === 'above') {
-      // Calculate top position for the card (above the element)
       const cardTop = Math.max(minTopOffset, highlightRect.top - 180 - gap);
       return {
         top: cardTop,
@@ -265,8 +284,10 @@ export function TutorialOverlay() {
         width: cardWidth,
       };
     } else {
+      // Push the card further down for better visibility
+      const extraOffset = isMobile ? 16 : 8;
       return {
-        top: Math.max(minTopOffset, highlightRect.top + highlightRect.height + gap),
+        top: Math.max(minTopOffset, highlightRect.top + highlightRect.height + gap + extraOffset),
         left: horizontalLeft,
         width: cardWidth,
       };
