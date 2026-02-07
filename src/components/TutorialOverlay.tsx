@@ -1,5 +1,5 @@
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { X, ArrowDown, Upload, Palette, Menu, Scroll, BarChart3, History, MapPin, Lightbulb } from 'lucide-react';
+import { useState, useEffect, useCallback } from 'react';
+import { X, ArrowDown, Upload, Palette, Menu, Scroll } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useIsMobile } from '@/hooks/use-mobile';
 import { useAuth } from '@/contexts/AuthContext';
@@ -45,41 +45,11 @@ const coachMarks: CoachMark[] = [
     preferredCardPosition: 'below',
   },
   {
-    id: 'dashboard',
-    title: 'Personal Dashboard',
-    description: 'Track your environmental impact with charts showing your waste classification stats and CO₂ saved',
-    icon: <BarChart3 className="h-5 w-5" />,
-    selector: '[data-tutorial="dashboard"]',
-    arrowDirection: 'left',
-    preferredCardPosition: 'below',
-    requiresDropdown: true,
-  },
-  {
-    id: 'history',
-    title: 'Classification History',
-    description: 'View all your past scans and results. Review what you\'ve classified and learn from patterns',
-    icon: <History className="h-5 w-5" />,
-    selector: '[data-tutorial="history"]',
-    arrowDirection: 'left',
-    preferredCardPosition: 'below',
-    requiresDropdown: true,
-  },
-  {
-    id: 'recycling',
-    title: 'Find Recycling Centers',
-    description: 'Locate nearby recycling facilities filtered by city and accepted waste types',
-    icon: <MapPin className="h-5 w-5" />,
-    selector: '[data-tutorial="recycling"]',
-    arrowDirection: 'left',
-    preferredCardPosition: 'below',
-    requiresDropdown: true,
-  },
-  {
-    id: 'tips',
-    title: 'Eco Tips & Guides',
-    description: 'Learn practical ways to reduce, reuse, and recycle with our comprehensive guides',
-    icon: <Lightbulb className="h-5 w-5" />,
-    selector: '[data-tutorial="tips"]',
+    id: 'menu-content',
+    title: 'Explore Your Features',
+    description: 'Access your Dashboard, History, Recycling Centers, Eco Tips, and more from this menu',
+    icon: <Menu className="h-5 w-5" />,
+    selector: '[data-slot="dropdown-menu-content"]',
     arrowDirection: 'left',
     preferredCardPosition: 'below',
     requiresDropdown: true,
@@ -96,7 +66,7 @@ const coachMarks: CoachMark[] = [
 ];
 
 // Updated key to trigger new tutorial for existing users  
-const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v4-seen';
+const TUTORIAL_STORAGE_KEY = 'ecosort-tutorial-v5-seen';
 
 interface HighlightRect {
   top: number;
@@ -113,7 +83,7 @@ export function TutorialOverlay() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const isMobile = useIsMobile();
   const { user, loading } = useAuth();
-  const dropdownTriggerRef = useRef<HTMLButtonElement | null>(null);
+  
 
   const scrollToElement = useCallback((element: Element) => {
     const rect = element.getBoundingClientRect();
