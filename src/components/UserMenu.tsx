@@ -94,7 +94,7 @@ export const UserMenu = ({ language }: UserMenuProps) => {
           {displayName}
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end" className="w-48">
+      <DropdownMenuContent align="end" className="w-48" data-tutorial="menu-content">
         <DropdownMenuItem onClick={() => navigate("/dashboard")} data-tutorial="dashboard">
           <BarChart3 className="h-4 w-4 mr-2" />
           {t("dashboardTitle")}

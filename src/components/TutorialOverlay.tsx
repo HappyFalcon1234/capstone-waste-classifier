@@ -49,7 +49,7 @@ const coachMarks: CoachMark[] = [
     title: 'Explore Your Features',
     description: 'Access your Dashboard, History, Recycling Centers, Eco Tips, and more from this menu',
     icon: <Menu className="h-5 w-5" />,
-    selector: '[data-slot="dropdown-menu-content"]',
+    selector: '[data-tutorial="menu-content"]',
     arrowDirection: 'left',
     preferredCardPosition: 'below',
     requiresDropdown: true,
