@@ -119,24 +119,7 @@ export function TutorialOverlay() {
 
       let combinedRect: DOMRect;
 
-      // For the menu-content step, combine trigger + dropdown into one highlight
-      if (currentMark.id === 'menu-content') {
-        const trigger = document.querySelector('[data-tutorial="settings"]');
-        const content = element;
-        if (trigger) {
-          const tRect = trigger.getBoundingClientRect();
-          const cRect = content.getBoundingClientRect();
-          const top = Math.min(tRect.top, cRect.top);
-          const left = Math.min(tRect.left, cRect.left);
-          const right = Math.max(tRect.right, cRect.right);
-          const bottom = Math.max(tRect.bottom, cRect.bottom);
-          combinedRect = new DOMRect(left, top, right - left, bottom - top);
-        } else {
-          combinedRect = element.getBoundingClientRect();
-        }
-      } else {
-        combinedRect = element.getBoundingClientRect();
-      }
+      combinedRect = element.getBoundingClientRect();
       
       // Determine actual card position based on available space
       const spaceAbove = combinedRect.top;
@@ -285,7 +268,7 @@ export function TutorialOverlay() {
       };
     } else {
       // Push the card further down for better visibility
-      const extraOffset = isMobile ? 16 : 8;
+      const extraOffset = isMobile ? 32 : 24;
       return {
         top: Math.max(minTopOffset, highlightRect.top + highlightRect.height + gap + extraOffset),
         left: horizontalLeft,
