@@ -52,7 +52,7 @@ const CATEGORY_COLORS: Record<string, string> = {
   "Green Bin": "#22c55e",
   "Red Bin": "#ef4444",
   "Yellow Bin": "#eab308",
-  "Black Bin": "#6b7280"
+  "Black Bin": "#7f7f7f"
 };
 
 const Dashboard = () => {
