@@ -397,6 +397,15 @@ Respond in ${language} language. Return a JSON array with all items found. Be th
       );
     }
 
+    // Tag agreement with the on-device MobileNetV2 hint
+    if (validatedHint?.binColorHint) {
+      const hintLower = validatedHint.binColorHint.toLowerCase();
+      predictions = predictions.map((p) => ({
+        ...p,
+        mobileNetAgreement: p.binColor.toLowerCase().includes(hintLower),
+      }));
+    }
+
     return new Response(
       JSON.stringify({ predictions }),
       { headers: { ...corsHeaders, "Content-Type": "application/json" } }
