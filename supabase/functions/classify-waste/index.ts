@@ -69,6 +69,13 @@ interface PredictionItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  mobileNetAgreement?: boolean;
+}
+
+interface MobileNetHint {
+  binColorHint: string | null;
+  topLabels: { className: string; probability: number }[];
+  confidence: number;
 }
 
 interface LearnedCorrection {
@@ -77,6 +84,40 @@ interface LearnedCorrection {
   corrected_category: string | null;
   corrected_bin_color: string | null;
   correction_details: string | null;
+}
+
+const ALLOWED_BIN_COLORS = ["Blue", "Green", "Red", "Yellow", "Black"];
+
+function isValidMobileNetHint(value: unknown): value is MobileNetHint {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  if (
+    v.binColorHint !== null &&
+    !(typeof v.binColorHint === "string" && ALLOWED_BIN_COLORS.includes(v.binColorHint))
+  ) return false;
+  if (typeof v.confidence !== "number" || v.confidence < 0 || v.confidence > 100) return false;
+  if (!Array.isArray(v.topLabels)) return false;
+  if (v.topLabels.length > 10) return false;
+  return v.topLabels.every((l) =>
+    l && typeof l === "object" &&
+    typeof (l as any).className === "string" &&
+    (l as any).className.length < 200 &&
+    typeof (l as any).probability === "number"
+  );
+}
+
+function formatHintForPrompt(hint: MobileNetHint | null): string {
+  if (!hint || !hint.binColorHint) return "";
+  const labels = hint.topLabels
+    .slice(0, 5)
+    .map((l) => `"${l.className}" (${Math.round(l.probability * 100)}%)`)
+    .join(", ");
+  return `
+
+ON-DEVICE MODEL HINT (MobileNetV2):
+An on-device MobileNetV2 classifier analyzed this image and predicted the dominant bin color is **${hint.binColorHint}** (confidence ${hint.confidence}%).
+Top ImageNet labels detected: ${labels}.
+Treat this as a STRONG PRIOR for the most prominent item in the image. Only override the bin color if the visual evidence clearly disagrees. For additional items in the image, classify them independently on their own merits.`;
 }
 
 function validatePredictions(data: unknown): data is PredictionItem[] {
@@ -194,7 +235,7 @@ serve(async (req) => {
     });
 
     const body = await req.json();
-    const { imageBase64, language = "English" } = body;
+    const { imageBase64, language = "English", mobileNetHint } = body;
 
     // Validate inputs
     if (!isValidImageBase64(imageBase64)) {
@@ -210,6 +251,16 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    let validatedHint: MobileNetHint | null = null;
+    if (mobileNetHint !== undefined && mobileNetHint !== null) {
+      if (isValidMobileNetHint(mobileNetHint)) {
+        validatedHint = mobileNetHint;
+      } else {
+        console.warn("Ignoring invalid mobileNetHint payload");
+      }
+    }
+    const hintPrompt = formatHintForPrompt(validatedHint);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
@@ -270,7 +321,7 @@ serve(async (req) => {
    - Black: Non-recyclable waste
 5. Confidence level (0-100) indicating how certain you are about the classification
 
-Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.${correctionsPrompt}`,
+Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.${correctionsPrompt}${hintPrompt}`,
           },
           {
             role: "user",
@@ -344,6 +395,15 @@ Respond in ${language} language. Return a JSON array with all items found. Be th
         JSON.stringify({ error: "Unable to process AI response. Please try again." }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
+    }
+
+    // Tag agreement with the on-device MobileNetV2 hint
+    if (validatedHint?.binColorHint) {
+      const hintLower = validatedHint.binColorHint.toLowerCase();
+      predictions = predictions.map((p) => ({
+        ...p,
+        mobileNetAgreement: p.binColor.toLowerCase().includes(hintLower),
+      }));
     }
 
     return new Response(
