@@ -69,6 +69,13 @@ interface PredictionItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  mobileNetAgreement?: boolean;
+}
+
+interface MobileNetHint {
+  binColorHint: string | null;
+  topLabels: { className: string; probability: number }[];
+  confidence: number;
 }
 
 interface LearnedCorrection {
@@ -77,6 +84,40 @@ interface LearnedCorrection {
   corrected_category: string | null;
   corrected_bin_color: string | null;
   correction_details: string | null;
+}
+
+const ALLOWED_BIN_COLORS = ["Blue", "Green", "Red", "Yellow", "Black"];
+
+function isValidMobileNetHint(value: unknown): value is MobileNetHint {
+  if (!value || typeof value !== "object") return false;
+  const v = value as Record<string, unknown>;
+  if (
+    v.binColorHint !== null &&
+    !(typeof v.binColorHint === "string" && ALLOWED_BIN_COLORS.includes(v.binColorHint))
+  ) return false;
+  if (typeof v.confidence !== "number" || v.confidence < 0 || v.confidence > 100) return false;
+  if (!Array.isArray(v.topLabels)) return false;
+  if (v.topLabels.length > 10) return false;
+  return v.topLabels.every((l) =>
+    l && typeof l === "object" &&
+    typeof (l as any).className === "string" &&
+    (l as any).className.length < 200 &&
+    typeof (l as any).probability === "number"
+  );
+}
+
+function formatHintForPrompt(hint: MobileNetHint | null): string {
+  if (!hint || !hint.binColorHint) return "";
+  const labels = hint.topLabels
+    .slice(0, 5)
+    .map((l) => `"${l.className}" (${Math.round(l.probability * 100)}%)`)
+    .join(", ");
+  return `
+
+ON-DEVICE MODEL HINT (MobileNetV2):
+An on-device MobileNetV2 classifier analyzed this image and predicted the dominant bin color is **${hint.binColorHint}** (confidence ${hint.confidence}%).
+Top ImageNet labels detected: ${labels}.
+Treat this as a STRONG PRIOR for the most prominent item in the image. Only override the bin color if the visual evidence clearly disagrees. For additional items in the image, classify them independently on their own merits.`;
 }
 
 function validatePredictions(data: unknown): data is PredictionItem[] {
