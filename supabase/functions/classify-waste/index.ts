@@ -235,7 +235,7 @@ serve(async (req) => {
     });
 
     const body = await req.json();
-    const { imageBase64, language = "English" } = body;
+    const { imageBase64, language = "English", mobileNetHint } = body;
 
     // Validate inputs
     if (!isValidImageBase64(imageBase64)) {
@@ -251,6 +251,16 @@ serve(async (req) => {
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    let validatedHint: MobileNetHint | null = null;
+    if (mobileNetHint !== undefined && mobileNetHint !== null) {
+      if (isValidMobileNetHint(mobileNetHint)) {
+        validatedHint = mobileNetHint;
+      } else {
+        console.warn("Ignoring invalid mobileNetHint payload");
+      }
+    }
+    const hintPrompt = formatHintForPrompt(validatedHint);
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
 
@@ -311,7 +321,7 @@ serve(async (req) => {
    - Black: Non-recyclable waste
 5. Confidence level (0-100) indicating how certain you are about the classification
 
-Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.${correctionsPrompt}`,
+Respond in ${language} language. Return a JSON array with all items found. Be thorough and identify every visible waste item.${correctionsPrompt}${hintPrompt}`,
           },
           {
             role: "user",
