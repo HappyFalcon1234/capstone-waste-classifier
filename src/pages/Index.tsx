@@ -10,6 +10,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { useUploadHistory } from "@/hooks/useUploadHistory";
 import { supabase } from "@/integrations/supabase/client";
+import { classifyWithMobileNet } from "@/lib/mobilenetClassifier";
 import { Leaf, Info } from "lucide-react";
 import { useTheme } from "next-themes";
 import { getTranslation, type Language } from "@/lib/translations";
@@ -23,6 +24,7 @@ interface WasteItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  mobileNetAgreement?: boolean;
 }
 
 const Index = () => {
@@ -116,10 +118,16 @@ const Index = () => {
     setUploadedImage(base64Image);
     setPredictions([]);
     try {
+      // Step 1: on-device MobileNetV2 for top-level bin color hint
+      const mobileNetHint = await classifyWithMobileNet(base64Image);
+      console.log("MobileNetV2 hint:", mobileNetHint);
+
+      // Step 2: Gemini for multi-item detection + disposal instructions, primed with the hint
       const { data, error } = await supabase.functions.invoke("classify-waste", {
         body: {
           imageBase64: base64Image,
-          language
+          language,
+          mobileNetHint,
         }
       });
       if (error) throw error;
