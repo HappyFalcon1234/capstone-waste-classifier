@@ -12,6 +12,7 @@ interface WasteItem {
   disposal: string;
   binColor: string;
   confidence: number;
+  mobileNetAgreement?: boolean;
 }
 
 interface WasteResultsProps {
@@ -113,6 +114,15 @@ export const WasteResults = ({
                   <Badge variant="outline" className="text-xs transition-all duration-300 group-hover:border-primary/50 group-hover:bg-primary/5">
                     {item.confidence}% {t("confident")}
                   </Badge>
+                  {item.mobileNetAgreement && (
+                    <Badge
+                      variant="outline"
+                      className="text-[10px] border-primary/40 text-primary bg-primary/5"
+                      title="Bin color confirmed by on-device MobileNetV2 model"
+                    >
+                      ✓ MobileNetV2
+                    </Badge>
+                  )}
                 </div>
               </div>
             </CardHeader>
